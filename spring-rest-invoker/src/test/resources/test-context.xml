@@ -14,4 +14,11 @@
 		<property name="baseUrl" value="https://www.googleapis.com/books/v1" />
 		<property name="remoteServiceInterfaceClass" value="com.github.ggeorgovassilis.springjsonmapper.BookService"/>
 	</bean>
+
+	<bean id="RemoteAnimasciService"
+		class="com.github.ggeorgovassilis.springjsonmapper.HttpJsonInvokerFactoryProxyBean">
+		<property name="baseUrl" value="http://animasci.com/json/" />
+		<property name="remoteServiceInterfaceClass" value="com.github.ggeorgovassilis.springjsonmapper.AnimasciService"/>
+	</bean>
+
 </beans>
