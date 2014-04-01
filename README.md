@@ -4,7 +4,7 @@ spring-rest-invoker
 Spring invoker which maps remote REST services to local interfaces. 
 
 
-# Using
+## Using
 
 Make an interface, i.e:
 
@@ -30,3 +30,8 @@ and then map it to the remote REST URL you want to consume:
 		<property name="remoteServiceInterfaceClass" value="com.github.ggeorgovassilis.springjsonmapper.BookService"/>
 </bean>
 ```
+
+## TODO
+
+- Implement POST,PUT,DELETE etc
+- Post objects other than primitives
