@@ -31,6 +31,19 @@ and then map it to the remote REST URL you want to consume:
 </bean>
 ```
 
+You can also POST objects (only a single object, for now):
+
+```java
+public interface AnimasciService {
+
+    @RequestMapping(value="/", method=RequestMethod.POST)
+    Animation createNewAnimation(@RequestBody Animation animation);
+
+    @RequestMapping(value="/{id}", method=RequestMethod.GET)
+    Animation getAnimation(@PathVariable("id") String id);
+}
+```
+
 ## TODO
 
 - Implement POST,PUT,DELETE etc
