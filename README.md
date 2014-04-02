@@ -85,5 +85,4 @@ which will post a JSON object similar to this:
 
 ## TODO
 
-- Implement POST,PUT,DELETE etc
-- Post objects other than primitives
+- Implement PUT,DELETE etc
