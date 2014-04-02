@@ -1,0 +1,25 @@
+package com.github.ggeorgovassilis.springjsonmapper.bank;
+
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+
+/**
+ * Mapping to a hypothetical bank service REST API
+ * @author george georgovassilis
+ *
+ */
+public interface BankService {
+
+    @RequestMapping(value="/transfer", method=RequestMethod.POST)
+    Account transfer(
+	    @RequestBody @RequestParam("fromAccount") Account fromAccount, 
+	    @RequestBody @RequestParam("actor") Customer actor,
+	    @RequestBody @RequestParam("toAccount") Account toAccount,
+	    @RequestBody @RequestParam("amount") int amount,
+	    @RequestParam("sendConfirmationSms") boolean sendConfirmationSms);
+
+    @RequestMapping(value="/verify", method=RequestMethod.POST)
+    Boolean checkAccount(@RequestBody Account account);
+}

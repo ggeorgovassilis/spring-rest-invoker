@@ -1,4 +1,4 @@
-package com.github.ggeorgovassilis.springjsonmapper;
+package com.github.ggeorgovassilis.springjsonmapper.animasci;
 
 import java.io.Serializable;
 

@@ -18,7 +18,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.client.RestOperations;
 import org.springframework.web.client.RestTemplate;
+
+import com.github.ggeorgovassilis.springjsonmapper.MethodParameterDescriptor.Type;
 
 /**
  * Binds a java interface to a remote REST service. Provide the interface class
@@ -56,39 +59,61 @@ import org.springframework.web.client.RestTemplate;
  * @author george georgovassilis
  * 
  */
-public class HttpJsonInvokerFactoryProxyBean implements FactoryBean<Object>,
-	InvocationHandler {
+public class HttpJsonInvokerFactoryProxyBean implements FactoryBean<Object>, InvocationHandler {
 
-    private Class<?> remoteServiceInterfaceClass;
-    private String remoteServiceInterfaceClassName;
-    private Object remoteProxy;
-    private String baseUrl;
-    private RestTemplate restTemplate;
-    private RequestParamAnnotationParameterNameDiscoverer parameterNameDiscoverer;
-    private PathVariableAnnotationParameterNameDiscoverer pathVariableNameDiscoverer;
+    protected Class<?> remoteServiceInterfaceClass;
+    protected String remoteServiceInterfaceClassName;
+    protected Object remoteProxy;
+    protected String baseUrl;
+    protected RestOperations restTemplate;
+    protected MethodInspector methodInspector;
 
-    protected RestTemplate getRestTemplate() {
+    protected RestOperations getRestTemplate() {
 	return restTemplate;
     }
 
+    protected RestTemplate constructDefaultRestTemplate() {
+	RestTemplate restTemplate = new RestTemplate();
+	List<HttpMessageConverter<?>> messageConverters = new ArrayList<HttpMessageConverter<?>>();
+	MappingJacksonHttpMessageConverter jsonConverter = new MappingJacksonHttpMessageConverter();
+	messageConverters.add(jsonConverter);
+	restTemplate.setMessageConverters(messageConverters);
+	//	List<ClientHttpRequestInterceptor> interceptors = new ArrayList<>();
+	//	interceptors.add(new ClientHttpRequestInterceptor() {
+	//
+	//	    @Override
+	//	    public ClientHttpResponse intercept(HttpRequest request, byte[] body, ClientHttpRequestExecution execution)
+	//		    throws IOException {
+	//		System.out.println("+++ request +++");
+	//		System.out.println(new String(body));
+	//		ClientHttpResponse response = execution.execute(request, body);
+	//		InputStream is = response.getBody();
+	//		System.out.println("+++ response +++");
+	//		for (int i = is.read(); i != -1; i = is.read())
+	//		    System.out.print((char) i);
+	//		return response;
+	//	    }
+	//	});
+	//	restTemplate.setInterceptors(interceptors);
+	return restTemplate;
+    }
+
+    /**
+     * If instantiating this object programmatically then, after setting any dependencies, 
+     * call this method to finish object initialization. Spring will normally do that in an application context.
+     */
     @PostConstruct
     public void initialize() {
-	parameterNameDiscoverer = new RequestParamAnnotationParameterNameDiscoverer();
-	pathVariableNameDiscoverer = new PathVariableAnnotationParameterNameDiscoverer();
 	if (remoteServiceInterfaceClass == null) {
 	    try {
-		remoteServiceInterfaceClass = getClass().getClassLoader()
-			.loadClass(remoteServiceInterfaceClassName);
+		remoteServiceInterfaceClass = getClass().getClassLoader().loadClass(remoteServiceInterfaceClassName);
 	    } catch (ClassNotFoundException e) {
 		throw new RuntimeException(e);
 	    }
 	}
+	methodInspector = new MethodInspector();
 	if (restTemplate == null) {
-	    restTemplate = new RestTemplate();
-	    List<HttpMessageConverter<?>> messageConverters = new ArrayList<HttpMessageConverter<?>>();
-	    MappingJacksonHttpMessageConverter jsonConverter = new MappingJacksonHttpMessageConverter();
-	    messageConverters.add(jsonConverter);
-	    restTemplate.setMessageConverters(messageConverters);
+	    restTemplate = constructDefaultRestTemplate();
 	}
     }
 
@@ -98,7 +123,7 @@ public class HttpJsonInvokerFactoryProxyBean implements FactoryBean<Object>,
      * 
      * @param restTemplate
      */
-    public void setRestTemplate(RestTemplate restTemplate) {
+    public void setRestTemplate(RestOperations restTemplate) {
 	this.restTemplate = restTemplate;
     }
 
@@ -122,6 +147,7 @@ public class HttpJsonInvokerFactoryProxyBean implements FactoryBean<Object>,
 	this.remoteServiceInterfaceClassName = className;
     }
 
+    @Override
     public synchronized Object getObject() throws Exception {
 	if (remoteProxy == null) {
 	    remoteProxy = Proxy.newProxyInstance(getClass().getClassLoader(),
@@ -130,75 +156,78 @@ public class HttpJsonInvokerFactoryProxyBean implements FactoryBean<Object>,
 	return remoteProxy;
     }
 
+    @Override
     public Class<?> getObjectType() {
 	return getRemoteServiceInterfaceClass();
     }
 
+    @Override
     public boolean isSingleton() {
 	return true;
     }
 
-    RequestMapping getRequestMapping(Method method) {
+    protected RequestMapping getRequestMapping(Method method) {
 	return AnnotationUtils.findAnnotation(method, RequestMapping.class);
     }
 
-    RequestMethod getMethod(RequestMapping rm) {
+    protected RequestMethod getMethod(RequestMapping rm) {
 	if (rm.method() == null || rm.method().length == 0)
 	    return RequestMethod.GET;
 	if (rm.method().length != 1)
-	    throw new IllegalArgumentException(
-		    "Request mapping should not specify more than one methods");
+	    throw new IllegalArgumentException("Request mapping should not specify more than one methods");
 	return rm.method()[0];
     }
 
-    public Object invoke(Object proxy, Method method, Object[] args)
-	    throws Throwable {
+    @Override
+    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
 
 	String url = baseUrl;
 	Object result = null;
-	Map<String, Object> parameters = new HashMap<String, Object>();
-	RestTemplate rest = getRestTemplate();
-	String[] allVariables = null;
-
+	Map<String, Object> parameters = new HashMap<>();
+	Map<String, Object> dataObjects = new HashMap<>();
+	RestOperations rest = getRestTemplate();
+	UrlMapping urlMapping = null;
 	RequestMapping requestMapping = getRequestMapping(method);
+	RequestMethod httpMethod = getMethod(requestMapping);
+
+	// no request mapping on method means the programmer either forgot it
+	// (happens), or we're calling a method that's not meant to be exposed
+	// (equals, hashcode etc)
 	if (requestMapping == null) {
 	    return method.invoke(this, args);
-	}
-	allVariables = pathVariableNameDiscoverer.getParameterNames(method);
-	if (allVariables != null) {
-	    String requestMappingFragment = requestMapping.value()[0];
-	    for (int i = 0; i < allVariables.length; i++) {
-		String variableName = allVariables[i];
-		Object value = args[i];
-		String stringValue = (value == null) ? "" : value.toString();
-		requestMappingFragment = requestMappingFragment.replaceAll(
-			"\\{" + variableName + "\\}", stringValue);
+	} else
+	    url += requestMapping.value()[0];
+	urlMapping = methodInspector.inspect(method, args);
+
+	for (MethodParameterDescriptor descriptor : urlMapping.getParameters()) {
+	    if (descriptor.getType().equals(Type.httpParameter) && !urlMapping.hasRequestBody(descriptor.getName())) {
+		parameters.put(descriptor.getName(), descriptor.getValue());
+		if (url.contains("?"))
+		    url += "&";
+		else
+		    url += "?";
+		url += descriptor.getName() + "={" + descriptor.getName() + "}";
+	    } else if (descriptor.getType().equals(Type.pathVariable)) {
+		url = url.replaceAll("\\{" + descriptor.getName() + "\\}", "" + descriptor.getValue());
+	    } else if (descriptor.getType().equals(Type.requestBody)) {
+		dataObjects.put(descriptor.getName(), descriptor.getValue());
 	    }
-	    url += requestMappingFragment;
-	}
-	String[] argNames = parameterNameDiscoverer.getParameterNames(method);
-	if (argNames != null)
-	    for (int i = 0; i < argNames.length; i++) {
-		parameters.put(argNames[i], args[i]);
-	    }
-	String prefix = url.contains("?") ? "&" : "?";
-	for (String parameter : parameters.keySet()) {
-	    url = url + prefix + parameter + "={" + parameter + "}";
-	    prefix = "&";
 	}
 
-	RequestMethod httpMethod = getMethod(requestMapping);
 	if (RequestMethod.GET.equals(httpMethod)) {
 	    result = rest.getForObject(url, method.getReturnType(), parameters);
 	} else if (RequestMethod.POST.equals(httpMethod)) {
-	    if (args.length > 1)
+
+	    Object dataObject = dataObjects.get("");
+	    if (dataObjects.size() > 1 && dataObject != null)
 		throw new IllegalArgumentException(
-			"Can't currently post more than a single parameter");
-	    result = rest.postForObject(url, args[0], method.getReturnType(),
-		    parameters);
+			"Found both named and anonymous @RequestBody arguments on method. Use either a single, anonymous, method parameter or annotate every @RequestBody parameter together with @RequestParam on "
+				+ method);
+	    if (dataObject == null)
+		dataObject = dataObjects;
+	    result = rest.postForObject(url, dataObject, method.getReturnType(), parameters);
 	} else
-	    throw new IllegalArgumentException("Method "
-		    + requestMapping.method() + " not implemented");
+	    throw new IllegalArgumentException("Method " + requestMapping.method() + " not implemented");
 	return result;
     }
 }

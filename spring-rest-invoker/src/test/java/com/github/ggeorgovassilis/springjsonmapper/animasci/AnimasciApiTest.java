@@ -1,44 +1,34 @@
-package com.github.ggeorgovassilis.springjsonmapper;
+package com.github.ggeorgovassilis.springjsonmapper.animasci;
 
 import java.util.Date;
 
-import javax.annotation.Resource;
-
 import org.junit.runner.RunWith;
-import org.junit.Ignore;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import com.github.ggeorgovassilis.springjsonmapper.animasci.AnimasciService;
+import com.github.ggeorgovassilis.springjsonmapper.animasci.Animation;
+import com.github.ggeorgovassilis.springjsonmapper.animasci.Frame;
+
 import static org.junit.Assert.*;
 
+/**
+ * Integration test with the animasci.com REST api
+ * @author george georgovassilis
+ *
+ */
 @RunWith(value=SpringJUnit4ClassRunner.class)
-@ContextConfiguration("classpath:test-context.xml")
-public class SpringJsonMapperTest {
+@ContextConfiguration("classpath:test-context-animasci.xml")
+public class AnimasciApiTest {
 
-    @Resource
-    BookService bookService;
-
-    @Resource
+    @Autowired
     AnimasciService animasciService;
     
-    @Test
-    public void testFindBooksByTitle(){
-	QueryResult result = bookService.findBooksByTitle("\"Philosophiae naturalis principia mathematica\"");
-	assertTrue(result.getItems().size()>0);
-	VolumeInfo info = result.getItems().get(0).getVolumeInfo();
-	assertEquals("Philosophiae naturalis principia mathematica", info.getTitle());
-	assertEquals("Isaac Newton", info.getAuthors().get(0));
-    }
-
-    @Test
-    public void testFindBooksByid(){
-	Item item = bookService.findBookById("3h9_GY8v-hgC");
-	VolumeInfo info = item.getVolumeInfo();
-	assertEquals("Philosophiae naturalis principia mathematica", info.getTitle());
-	assertEquals("Isaac Newton", info.getAuthors().get(0));
-    }
-
+    /**
+     * Posts an anonymous animation and verifies that the result is ok
+     */
     @Test
     public void testCRUD(){
 	Animation a1 = new Animation();
@@ -61,5 +51,5 @@ public class SpringJsonMapperTest {
 	assertEquals(a1.getFrames().size(), a2.getFrames().size());
 	assertEquals(a1.getFrames().get(0).getText(), a2.getFrames().get(0).getText());
     }
-
+    
 }

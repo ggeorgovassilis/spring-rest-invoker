@@ -9,16 +9,10 @@
         http://www.springframework.org/schema/mvc
         http://www.springframework.org/schema/mvc/spring-mvc-3.1.xsd">
 
-	<bean id="RemoteBookService"
-		class="com.github.ggeorgovassilis.springjsonmapper.HttpJsonInvokerFactoryProxyBean">
-		<property name="baseUrl" value="https://www.googleapis.com/books/v1" />
-		<property name="remoteServiceInterfaceClass" value="com.github.ggeorgovassilis.springjsonmapper.BookService"/>
-	</bean>
-
 	<bean id="RemoteAnimasciService"
 		class="com.github.ggeorgovassilis.springjsonmapper.HttpJsonInvokerFactoryProxyBean">
 		<property name="baseUrl" value="http://animasci.com/json/" />
-		<property name="remoteServiceInterfaceClass" value="com.github.ggeorgovassilis.springjsonmapper.AnimasciService"/>
+		<property name="remoteServiceInterfaceClass" value="com.github.ggeorgovassilis.springjsonmapper.animasci.AnimasciService"/>
 	</bean>
 
 </beans>

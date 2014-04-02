@@ -1,9 +1,14 @@
-package com.github.ggeorgovassilis.springjsonmapper;
+package com.github.ggeorgovassilis.springjsonmapper.googlebooks;
 
 import java.io.Serializable;
 
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 
+/**
+ * 
+ * @author george georgovassilis
+ *
+ */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Item implements Serializable {
 
