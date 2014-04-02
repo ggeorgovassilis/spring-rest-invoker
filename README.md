@@ -1,12 +1,12 @@
 spring-rest-invoker
 ===================
 
-Spring invoker which maps remote REST services to local interfaces. 
+Spring proxy that allows you to use remote JSON REST services as local java interfaces. It uses spring web annotations such as @RequestParam to know which remote URL to contact (and how) when you call a method on the proxied service interface.
 
 
 ## Using
 
-Make an interface, i.e:
+### 1. Make an interface, i.e:
 
 ```java
 public interface BookService {
@@ -21,7 +21,7 @@ public interface BookService {
 
 Note that the annotations are from spring's web package.
 
-and then map it to the remote REST URL you want to consume:
+### 2. Then map it to the remote REST URL you want to consume:
 
 ```xml
 <bean id="RemoteBookService"
@@ -31,7 +31,21 @@ and then map it to the remote REST URL you want to consume:
 </bean>
 ```
 
-You can also POST objects (only a single object, for now):
+### 3. Use it in your code
+
+```java
+...
+@Autowired
+RemoteBookService bookService;
+
+...
+QueryResult results = bookService.findBooksByTitle("Alice in Wonderland");
+
+```
+
+### 4. Examples
+
+You can POST an object:
 
 ```java
 public interface AnimasciService {
@@ -39,8 +53,33 @@ public interface AnimasciService {
     @RequestMapping(value="/", method=RequestMethod.POST)
     Animation createNewAnimation(@RequestBody Animation animation);
 
-    @RequestMapping(value="/{id}", method=RequestMethod.GET)
-    Animation getAnimation(@PathVariable("id") String id);
+}
+```
+
+Or post multiple objects (in which case you also need to provide names for them with a @RequestParam):
+
+```java
+public interface BankService {
+    @RequestMapping(value="/transfer", method=RequestMethod.POST)
+    Account transfer(
+	    @RequestBody @RequestParam("fromAccount") Account fromAccount, 
+	    @RequestBody @RequestParam("actor") Customer actor,
+	    @RequestBody @RequestParam("toAccount") Account toAccount,
+	    @RequestBody @RequestParam("amount") int amount,
+	    @RequestParam("sendConfirmationSms") boolean sendConfirmationSms);
+
+    @RequestMapping(value="/verify", method=RequestMethod.POST)
+    Boolean checkAccount(@RequestBody Account account);
+}
+```
+
+which will post a JSON object similar to this:
+```javascript
+{
+	"fromAccount":{....},
+	"actor":{...},
+	"toAccount":{....},
+	"amount":123
 }
 ```
 
