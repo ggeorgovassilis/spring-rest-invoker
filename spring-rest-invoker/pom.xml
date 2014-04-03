@@ -3,7 +3,47 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.github.ggeorgovassilis</groupId>
 	<artifactId>spring-rest-invoker</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<name>spring-rest-invoker</name>
+	<version>0.0.2-SNAPSHOT</version>
+	<description>Spring factory that allows consumption of a remote REST JSON service by binding it to a local Java interface and exposing it as a proxy.</description>
+	<inceptionYear>2014</inceptionYear>
+	
+	<!-- run like this: 
+		mvn -DperformRelease=true clean deploy
+	 -->
+	<licenses>
+		<license>
+			<name>Apache License, Version 2.0</name>
+			<url>http://opensource.org/licenses/Apache-2.0</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
+	<developers>
+		<developer>
+			<id>ggeorgovassilis</id>
+			<name>George Georgovassilis</name>
+			<email>g.georgovassilis_gmail.com</email>
+			<url>http://georgovassilis.blogspot.com/</url>
+			<roles>
+				<role>Developer</role>
+			</roles>
+			<timezone>GMT</timezone>
+		</developer>
+	</developers>
+	<scm>
+		<connection>scm:git:git@github.com:ggeorgovassilis/spring-rest-invoker.git</connection>
+		<developerConnection>scm:git:git@github.com:ggeorgovassilis/spring-rest-invoker.git</developerConnection>
+		<url>git@github.com:ggeorgovassilis/spring-rest-invoker.git</url>
+	</scm>
+
+
+
+	<distributionManagement>
+		<repository>
+			<id>gh-pages</id>
+			<url>file:///${basedir}/../../spring-rest-invoker-gh-pages/repository/</url>
+		</repository>
+	</distributionManagement>
 
 	<dependencies>
 		<dependency>

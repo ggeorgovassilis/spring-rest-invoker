@@ -97,6 +97,18 @@ public class HttpJsonInvokerFactoryProxyBean implements FactoryBean<Object>, Inv
 	//	restTemplate.setInterceptors(interceptors);
 	return restTemplate;
     }
+    
+    protected MethodInspector constructDefaultMethodInspector(){
+	return new MethodInspector();
+    }
+
+    public MethodInspector getMethodInspector() {
+	return methodInspector;
+    }
+
+    public void setMethodInspector(MethodInspector methodInspector) {
+	this.methodInspector = methodInspector;
+    }
 
     /**
      * If instantiating this object programmatically then, after setting any dependencies, 
@@ -111,7 +123,8 @@ public class HttpJsonInvokerFactoryProxyBean implements FactoryBean<Object>, Inv
 		throw new RuntimeException(e);
 	    }
 	}
-	methodInspector = new MethodInspector();
+	if (methodInspector == null)
+	    methodInspector = constructDefaultMethodInspector();
 	if (restTemplate == null) {
 	    restTemplate = constructDefaultRestTemplate();
 	}
