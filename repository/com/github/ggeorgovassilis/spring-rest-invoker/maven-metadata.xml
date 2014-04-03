@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata>
+  <groupId>com.github.ggeorgovassilis</groupId>
+  <artifactId>spring-rest-invoker</artifactId>
+  <versioning>
+    <versions>
+      <version>0.0.1-SNAPSHOT</version>
+    </versions>
+    <lastUpdated>20140403125226</lastUpdated>
+  </versioning>
+</metadata>
