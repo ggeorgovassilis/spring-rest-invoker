@@ -6,6 +6,26 @@ Spring proxy that allows you to use remote JSON REST services as local java inte
 
 ## Using
 
+### 0. Getting
+
+Either build it yourself or add the repository to your pom:
+```xml
+<repository>
+  <id>spring-rest-invoker</id>
+  <url>http://ggeorgovassilis.github.com/spring-rest-invoker/repository/</url>
+</repository>
+```
+
+Then include the dependency:
+
+```xml
+<dependency>
+	<groupId>com.github.ggeorgovassilis</groupId>
+	<artifactId>spring-rest-invoker</artifactId>
+	<version>0.0.2-SNAPSHOT</version>
+</dependency>
+```
+
 ### 1. Make an interface, i.e:
 
 ```java
@@ -85,5 +105,4 @@ which will post a JSON object similar to this:
 
 ## TODO
 
-- Implement POST,PUT,DELETE etc
-- Post objects other than primitives
+- Implement PUT,DELETE etc
