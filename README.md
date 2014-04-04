@@ -1,3 +1,5 @@
+2014-04-04: version 0.0.3-SNAPSHOT is out with support for more HTTP methods such as PUT, DELETE etc.
+
 spring-rest-invoker
 ===================
 
@@ -22,7 +24,7 @@ Then include the dependency:
 <dependency>
 	<groupId>com.github.ggeorgovassilis</groupId>
 	<artifactId>spring-rest-invoker</artifactId>
-	<version>0.0.2-SNAPSHOT</version>
+	<version>0.0.3-SNAPSHOT</version>
 </dependency>
 ```
 
@@ -103,6 +105,3 @@ which will post a JSON object similar to this:
 }
 ```
 
-## TODO
-
-- Implement PUT,DELETE etc
