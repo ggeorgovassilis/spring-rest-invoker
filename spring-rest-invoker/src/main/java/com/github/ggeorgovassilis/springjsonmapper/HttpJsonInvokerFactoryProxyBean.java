@@ -12,6 +12,9 @@ import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.core.annotation.AnnotationUtils;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJacksonHttpMessageConverter;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -97,8 +100,8 @@ public class HttpJsonInvokerFactoryProxyBean implements FactoryBean<Object>, Inv
 	//	restTemplate.setInterceptors(interceptors);
 	return restTemplate;
     }
-    
-    protected MethodInspector constructDefaultMethodInspector(){
+
+    protected MethodInspector constructDefaultMethodInspector() {
 	return new MethodInspector();
     }
 
@@ -190,6 +193,10 @@ public class HttpJsonInvokerFactoryProxyBean implements FactoryBean<Object>, Inv
 	    throw new IllegalArgumentException("Request mapping should not specify more than one methods");
 	return rm.method()[0];
     }
+    
+    protected HttpMethod map(RequestMethod method){
+	return HttpMethod.valueOf(method.name());
+    }
 
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
@@ -202,6 +209,7 @@ public class HttpJsonInvokerFactoryProxyBean implements FactoryBean<Object>, Inv
 	UrlMapping urlMapping = null;
 	RequestMapping requestMapping = getRequestMapping(method);
 	RequestMethod httpMethod = getMethod(requestMapping);
+	Class returnType = method.getReturnType();
 
 	// no request mapping on method means the programmer either forgot it
 	// (happens), or we're calling a method that's not meant to be exposed
@@ -229,7 +237,7 @@ public class HttpJsonInvokerFactoryProxyBean implements FactoryBean<Object>, Inv
 
 	if (RequestMethod.GET.equals(httpMethod)) {
 	    result = rest.getForObject(url, method.getReturnType(), parameters);
-	} else if (RequestMethod.POST.equals(httpMethod)) {
+	} else {
 
 	    Object dataObject = dataObjects.get("");
 	    if (dataObjects.size() > 1 && dataObject != null)
@@ -238,9 +246,10 @@ public class HttpJsonInvokerFactoryProxyBean implements FactoryBean<Object>, Inv
 				+ method);
 	    if (dataObject == null)
 		dataObject = dataObjects;
-	    result = rest.postForObject(url, dataObject, method.getReturnType(), parameters);
-	} else
-	    throw new IllegalArgumentException("Method " + requestMapping.method() + " not implemented");
+	    HttpEntity<?> requestEntity = new HttpEntity<>(dataObject);
+	    ResponseEntity<?> responseEntity = rest.exchange(url, map(httpMethod), requestEntity, returnType, parameters);
+	    result = responseEntity.getBody();
+	}
 	return result;
     }
 }

@@ -1,12 +1,18 @@
 package com.github.ggeorgovassilis.springjsonmapper.bank;
 
+import java.lang.annotation.Annotation;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentMatcher;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.web.client.RestOperations;
@@ -32,11 +38,25 @@ public class BankServiceTest {
     HttpJsonInvokerFactoryProxyBean httpProxyFactory;
 
     RestOperations restTemplate;
-
+    
+    
+    
     @Before
     public void setup() {
 	restTemplate = mock(RestOperations.class);
 	httpProxyFactory.setRestTemplate(restTemplate);
+    }
+    
+    public HttpEntity httpEntityMatcher(final Object content){
+	return argThat(new ArgumentMatcher<HttpEntity<Object>>() {
+
+	    @Override
+	    public boolean matches(Object argument) {
+		HttpEntity e = (HttpEntity)argument;
+		boolean c = e.getBody().equals(content);
+		return c;
+	    }
+	});
     }
 
     @Test
@@ -57,10 +77,10 @@ public class BankServiceTest {
 	account2.setAccountNumber("account 2");
 	account2.setBalance(0);
 	account2.setOwner(customer2);
-	
+
 	// expected values
-	
-	Map<String, Object> expectedDataObjects = new HashMap<>();
+
+	final Map<String, Object> expectedDataObjects = new HashMap<>();
 	expectedDataObjects.put("fromAccount", account1);
 	expectedDataObjects.put("toAccount", account2);
 	expectedDataObjects.put("actor", customer1);
@@ -68,13 +88,28 @@ public class BankServiceTest {
 
 	Map<String, Object> expectedParameters = new HashMap<>();
 	expectedParameters.put("sendConfirmationSms", true);
-	
+	ResponseEntity<Account> responeEntity = new ResponseEntity<>(HttpStatus.OK);
+
+	when(restTemplate.exchange(
+		any(String.class),
+		any(HttpMethod.class), 
+		any(HttpEntity.class), 
+		eq(Account.class), 
+		any(Map.class)
+		)).thenReturn(responeEntity);
+
+	//rest.exchange(url, map(httpMethod), requestEntity, returnType, parameters);
+
 	bankService.transfer(account1, customer1, account2, 1, true);
 
-	verify(restTemplate).postForObject(eq("http://localhost/bankservice/transfer?sendConfirmationSms={sendConfirmationSms}"), eq(expectedDataObjects), eq(Account.class),
-		eq(expectedParameters));
+	verify(restTemplate).exchange(
+		eq("http://localhost/bankservice/transfer?sendConfirmationSms={sendConfirmationSms}"),
+		eq(HttpMethod.POST), 
+		httpEntityMatcher(expectedDataObjects), 
+		eq(Account.class), 
+		eq(expectedParameters)
+		);
     }
-
 
     @Test
     public void testBankService_verify() {
@@ -87,14 +122,28 @@ public class BankServiceTest {
 	account1.setBalance(1000);
 	account1.setOwner(customer1);
 
+	ResponseEntity<Account> responeEntity = new ResponseEntity<>(HttpStatus.OK);
+
 	// expected values
 	Map<String, Object> expectedParameters = new HashMap<>();
-	
+
+	when(restTemplate.exchange(
+		any(String.class),
+		any(HttpMethod.class), 
+		any(HttpEntity.class), 
+		eq(Boolean.class), 
+		any(Map.class)
+		)).thenReturn(responeEntity);
+
 	bankService.checkAccount(account1);
 
-	verify(restTemplate).postForObject(eq("http://localhost/bankservice/verify"), eq(account1), eq(Boolean.class),
-		eq(expectedParameters));
-
+	verify(restTemplate).exchange(
+		eq("http://localhost/bankservice/verify"),
+		eq(HttpMethod.POST), 
+		httpEntityMatcher(account1), 
+		eq(Boolean.class), 
+		eq(expectedParameters)
+		);
 
     }
 }
