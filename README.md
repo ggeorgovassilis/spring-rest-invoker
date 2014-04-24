@@ -3,6 +3,14 @@ spring-rest-invoker
 
 Spring proxy that imports remote JSON REST services as local java interfaces. It uses spring web annotations such as @RequestParam to know which remote URL to contact (and how) when you call a method on the proxied service interface.
 
+Features:
+
+- Declare a service interface and bind it to remote URLs with annotations
+- Convert JSON to Java POJOs and vice versa
+- Convert method arguments to GET parameters
+- POST one or more objects
+
+
 ## News
 
 2014-04-04: version 0.0.3-SNAPSHOT is out with support for more HTTP methods such as PUT, DELETE etc.
@@ -212,3 +220,28 @@ public interface BookService {
 ```
 
 Note the ```{id}``` notation in @RequestMapping; it needs to match the one specificed in @PathVariable
+
+
+#### How do I post a JSON object to a remote service?
+
+See the section earlier in this document about posting. In short: if you want to post just a single object, then a JSON object is posted to the remote service where fields have the name of member variables (this applies recursively for objects within objects).
+
+```java
+public interface BookService {
+
+    @RequestMapping(value="/books", method=RequestMethod.POST)
+    void saveBook(@RequestBody Book book);
+
+}
+```
+
+If you need to post multiple objects, then just add multiple parmeters to the method but also include a ```@RequestParam``` mapping so that the invoker knows under which field names to place the generated JSON objects:
+
+```java
+public interface BookService {
+
+    @RequestMapping(value="/books", method=RequestMethod.POST)
+    void saveBook(@RequestBody @RequestParam("book") Book book, @RequestBody @RequestParam("availability") availability);
+
+}
+```
