@@ -35,7 +35,7 @@ Then include the dependency:
 <dependency>
 	<groupId>com.github.ggeorgovassilis</groupId>
 	<artifactId>spring-rest-invoker</artifactId>
-	<version>0.0.3-SNAPSHOT</version>
+	<version>0.0.4-SNAPSHOT</version>
 </dependency>
 ```
 
