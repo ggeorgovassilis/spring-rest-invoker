@@ -258,5 +258,5 @@ Use the `produces` and `consumes` fields of the @RequestMapping annotation:
 ```
 
 Remember:
-consumer -> Content-Type
-produces -> Accept
+* consumes -> Content-Type
+* produces -> Accept
