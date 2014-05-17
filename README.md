@@ -13,6 +13,7 @@ Features:
 
 ## News
 
+2014-05-17: 0.0.4-SNAPSHOT is out with support for accept and content-type headers (thanks Maxime Guennec)
 2014-04-04: version 0.0.3-SNAPSHOT is out with support for more HTTP methods such as PUT, DELETE etc.
 
 
