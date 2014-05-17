@@ -12,14 +12,14 @@ import org.springframework.web.bind.annotation.RequestParam;
  */
 public interface BankService {
 
-    @RequestMapping(value="/transfer", method=RequestMethod.POST)
-    Account transfer(
-	    @RequestBody @RequestParam("fromAccount") Account fromAccount, 
-	    @RequestBody @RequestParam("actor") Customer actor,
-	    @RequestBody @RequestParam("toAccount") Account toAccount,
-	    @RequestBody @RequestParam("amount") int amount,
-	    @RequestParam("sendConfirmationSms") boolean sendConfirmationSms);
+	@RequestMapping(value = "/transfer", method = RequestMethod.POST)
+	Account transfer(@RequestBody @RequestParam("fromAccount") Account fromAccount, @RequestBody @RequestParam("actor") Customer actor,
+			@RequestBody @RequestParam("toAccount") Account toAccount, @RequestBody @RequestParam("amount") int amount,
+			@RequestParam("sendConfirmationSms") boolean sendConfirmationSms);
 
-    @RequestMapping(value="/verify", method=RequestMethod.POST)
-    Boolean checkAccount(@RequestBody Account account);
+	@RequestMapping(value = "/verify", method = RequestMethod.POST)
+	Boolean checkAccount(@RequestBody Account account);
+
+	@RequestMapping(value = "/photo", method = RequestMethod.POST, consumes = { "image/gif","image/jpeg","image/png" }, produces = { "image/jpeg"})
+	byte[] updatePhoto(@RequestParam("name") String name, @RequestBody byte[] photo);
 }
