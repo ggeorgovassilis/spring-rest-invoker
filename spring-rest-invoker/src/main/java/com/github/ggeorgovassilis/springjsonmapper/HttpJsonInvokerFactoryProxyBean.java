@@ -211,16 +211,19 @@ public class HttpJsonInvokerFactoryProxyBean implements FactoryBean<Object>, Inv
 		RestOperations rest = getRestTemplate();
 		UrlMapping urlMapping = null;
 		RequestMapping requestMapping = getRequestMapping(method);
-		RequestMethod httpMethod = getMethod(requestMapping);
-		Class<?> returnType = method.getReturnType();
+        RequestMethod httpMethod;
+        Class<?> returnType;
 
 		// no request mapping on method means the programmer either forgot it
 		// (happens), or we're calling a method that's not meant to be exposed
 		// (equals, hashcode etc)
 		if (requestMapping == null) {
 			return method.invoke(this, args);
-		} else
+        } else {
+            httpMethod = getMethod(requestMapping);
+            returnType = method.getReturnType();
 			url += requestMapping.value()[0];
+        }
 		urlMapping = methodInspector.inspect(method, args);
 
 		for (MethodParameterDescriptor descriptor : urlMapping.getParameters()) {
