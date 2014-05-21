@@ -17,8 +17,6 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJacksonHttpMessageConverter;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -210,16 +208,18 @@ public class HttpJsonInvokerFactoryProxyBean implements FactoryBean<Object>, Inv
 	RestOperations rest = getRestTemplate();
 	UrlMapping urlMapping = null;
 	RequestMapping requestMapping = getRequestMapping(method);
-	RequestMethod httpMethod = getMethod(requestMapping);
-	Class returnType = method.getReturnType();
-
+        RequestMethod httpMethod;
+        Class<?> returnType;
 	// no request mapping on method means the programmer either forgot it
 	// (happens), or we're calling a method that's not meant to be exposed
 	// (equals, hashcode etc)
 	if (requestMapping == null) {
 	    return method.invoke(this, args);
-	} else
-	    url += requestMapping.value()[0];
+        } else {
+            httpMethod = getMethod(requestMapping);
+            returnType = method.getReturnType();
+            url += requestMapping.value()[0];
+        }
 	urlMapping = methodInspector.inspect(method, args);
 
 	for (MethodParameterDescriptor descriptor : urlMapping.getParameters()) {
@@ -248,28 +248,10 @@ public class HttpJsonInvokerFactoryProxyBean implements FactoryBean<Object>, Inv
 				+ method);
 	    if (dataObject == null)
 		dataObject = dataObjects;
-            final MultiValueMap<String, String> headers = getHeaders(requestMapping);
-            final HttpEntity<?> requestEntity = new HttpEntity<Object>(dataObject, headers);
+            final HttpEntity<?> requestEntity = new HttpEntity<Object>(dataObject);
 	    ResponseEntity<?> responseEntity = rest.exchange(url, map(httpMethod), requestEntity, returnType, parameters);
 	    result = responseEntity.getBody();
 	}
 	return result;
-    }
-
-    private MultiValueMap<String, String> getHeaders(final RequestMapping requestMapping) {
-        MultiValueMap<String, String> result = new LinkedMultiValueMap<String, String>();
-        for (String header : requestMapping.headers()) {
-            final String[] split = header.split("=");
-            if (split.length > 1) {
-                result.add(split[0], split[1]);
-            }
-        }
-        for (String consume : requestMapping.consumes()) {
-            result.add("content-type", consume);
-        }
-        for (String produce : requestMapping.produces()) {
-            result.add("accept", produce);
-        }
-        return result;
     }
 }
