@@ -13,6 +13,8 @@ Features:
 
 ## News
 
+2014-05-17: 0.0.4-SNAPSHOT is out with support for accept and content-type headers (thanks Maxime Guennec)
+
 2014-04-04: version 0.0.3-SNAPSHOT is out with support for more HTTP methods such as PUT, DELETE etc.
 
 
@@ -34,7 +36,7 @@ Then include the dependency:
 <dependency>
 	<groupId>com.github.ggeorgovassilis</groupId>
 	<artifactId>spring-rest-invoker</artifactId>
-	<version>0.0.3-SNAPSHOT</version>
+	<version>0.0.4-SNAPSHOT</version>
 </dependency>
 ```
 
@@ -245,3 +247,16 @@ public interface BookService {
 
 }
 ```
+
+#### How do I change the `Accept` and `Content-Type` header?
+
+Use the `produces` and `consumes` fields of the @RequestMapping annotation:
+
+```java
+@RequestMapping(value = "/photo", method = RequestMethod.POST, consumes = { "image/gif","image/jpeg","image/png" }, produces = { "image/jpeg"})
+	byte[] updatePhoto(@RequestParam("name") String name, @RequestBody byte[] photo);
+```
+
+Remember:
+* consumes -> Content-Type
+* produces -> Accept
