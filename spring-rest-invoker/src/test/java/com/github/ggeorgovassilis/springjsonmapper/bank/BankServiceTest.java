@@ -1,5 +1,12 @@
 package com.github.ggeorgovassilis.springjsonmapper.bank;
 
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.argThat;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -21,8 +28,6 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestOperations;
 
 import com.github.ggeorgovassilis.springjsonmapper.HttpJsonInvokerFactoryProxyBean;
-
-import static org.mockito.Mockito.*;
 
 /**
  * Tests a more complex scenario with a mocked HTTP transfer mechanism
@@ -93,11 +98,11 @@ public class BankServiceTest {
 
 		// expected values
 
-		final Map<String, Object> expectedDataObjects = new HashMap<>();
-		expectedDataObjects.put("fromAccount", account1);
-		expectedDataObjects.put("toAccount", account2);
-		expectedDataObjects.put("actor", customer1);
-		expectedDataObjects.put("amount", 1);
+		final MultiValueMap<String, Object> expectedDataObjects = new LinkedMultiValueMap<>();
+		expectedDataObjects.add("fromAccount", account1);
+		expectedDataObjects.add("toAccount", account2);
+		expectedDataObjects.add("actor", customer1);
+		expectedDataObjects.add("amount", 1);
 
 		Map<String, Object> expectedParameters = new HashMap<>();
 		expectedParameters.put("sendConfirmationSms", true);
