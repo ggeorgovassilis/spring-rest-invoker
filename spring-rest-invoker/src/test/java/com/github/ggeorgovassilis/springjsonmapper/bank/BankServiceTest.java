@@ -23,7 +23,7 @@ import org.springframework.web.client.RestOperations;
 import com.github.ggeorgovassilis.springjsonmapper.HttpJsonInvokerFactoryProxyBean;
 
 import static org.mockito.Mockito.*;
-
+import static org.junit.Assert.*;
 /**
  * Tests a more complex scenario with a mocked HTTP transfer mechanism
  * 
@@ -164,5 +164,15 @@ public class BankServiceTest {
 		verify(restTemplate).exchange(eq("http://localhost/bankservice/photo?name={name}"), eq(HttpMethod.POST), httpEntityMatcher(photo, headers),
 				eq(byte[].class), eq(expectedParameters));
 
+	}
+	/**
+	 * Tests that hashcode, equals and toString are not mapped to a remote service
+	 */
+	@Test
+	public void testNonMappedMethods() {
+	    assertTrue(bankService.equals(bankService));
+	    assertFalse(bankService.equals(this));
+	    assertEquals(bankService.hashCode(), bankService.hashCode());
+	    assertTrue(bankService.toString().contains("BankService"));
 	}
 }
