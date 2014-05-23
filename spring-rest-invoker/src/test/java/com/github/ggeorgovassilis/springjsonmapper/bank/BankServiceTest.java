@@ -98,11 +98,11 @@ public class BankServiceTest {
 
 		// expected values
 
-		final MultiValueMap<String, Object> expectedDataObjects = new LinkedMultiValueMap<>();
-		expectedDataObjects.add("fromAccount", account1);
-		expectedDataObjects.add("toAccount", account2);
-		expectedDataObjects.add("actor", customer1);
-		expectedDataObjects.add("amount", 1);
+		final Map<String, Object> expectedDataObjects = new HashMap<>();
+		expectedDataObjects.put("fromAccount", account1);
+		expectedDataObjects.put("toAccount", account2);
+		expectedDataObjects.put("actor", customer1);
+		expectedDataObjects.put("amount", 1);
 
 		Map<String, Object> expectedParameters = new HashMap<>();
 		expectedParameters.put("sendConfirmationSms", true);

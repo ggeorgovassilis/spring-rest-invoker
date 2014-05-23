@@ -4,7 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.web.bind.annotation.RequestMapping;
-import static com.github.ggeorgovassilis.springjsonmapper.MethodParameterDescriptor.Type;
+
+import com.github.ggeorgovassilis.springjsonmapper.MethodParameterDescriptor.Type;
 
 /**
  * A collection of {@link MethodParameterDescriptor}s which describe the mapping of a method to a REST URL
@@ -38,7 +39,7 @@ public class UrlMapping {
     
     public boolean hasRequestBody(String parameter){
 	for (MethodParameterDescriptor descriptor:parameters)
-	    if (parameter.equals(descriptor.getName()) && descriptor.getType().equals(Type.requestBody))
+			if (parameter.equals(descriptor.getName()) && (descriptor.getType().equals(Type.requestBody) || descriptor.getType().equals(Type.requestPart)))
 		return true;
 	return false;
     }

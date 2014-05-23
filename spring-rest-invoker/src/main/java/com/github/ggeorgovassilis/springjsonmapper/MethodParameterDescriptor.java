@@ -8,7 +8,7 @@ package com.github.ggeorgovassilis.springjsonmapper;
 public class MethodParameterDescriptor {
 
     public enum Type {
-	httpParameter, pathVariable, requestBody
+		httpParameter, pathVariable, requestBody, requestPart
     };
 
     protected Type type = Type.httpParameter;

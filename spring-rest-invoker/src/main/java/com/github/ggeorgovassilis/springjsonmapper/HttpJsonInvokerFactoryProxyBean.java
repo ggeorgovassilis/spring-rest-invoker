@@ -207,7 +207,8 @@ public class HttpJsonInvokerFactoryProxyBean implements FactoryBean<Object>, Inv
 		String url = baseUrl;
 		Object result = null;
 		Map<String, Object> parameters = new HashMap<>();
-		MultiValueMap<String, Object> dataObjects = new LinkedMultiValueMap<>();
+		MultiValueMap<String, Object> formObjects = new LinkedMultiValueMap<>();
+		Map<String, Object> dataObjects = new HashMap<>();
 		RestOperations rest = getRestTemplate();
 		UrlMapping urlMapping = null;
 		RequestMapping requestMapping = getRequestMapping(method);
@@ -237,20 +238,22 @@ public class HttpJsonInvokerFactoryProxyBean implements FactoryBean<Object>, Inv
 			} else if (descriptor.getType().equals(Type.pathVariable)) {
 				url = url.replaceAll("\\{" + descriptor.getName() + "\\}", "" + descriptor.getValue());
 			} else if (descriptor.getType().equals(Type.requestBody)) {
-				dataObjects.add(descriptor.getName(), descriptor.getValue());
+				dataObjects.put(descriptor.getName(), descriptor.getValue());
+			} else if (descriptor.getType().equals(Type.requestPart)) {
+				formObjects.add(descriptor.getName(), descriptor.getValue());
 			}
 		}
 
 		if (RequestMethod.GET.equals(httpMethod)) {
 			result = rest.getForObject(url, method.getReturnType(), parameters);
 		} else {
-			Object dataObject = dataObjects.getFirst("");
+			Object dataObject = dataObjects.get("");
 			if (dataObjects.size() > 1 && dataObject != null)
 				throw new IllegalArgumentException(
 						"Found both named and anonymous @RequestBody arguments on method. Use either a single, anonymous, method parameter or annotate every @RequestBody parameter together with @RequestParam on "
 								+ method);
 			if (dataObject == null)
-				dataObject = dataObjects;
+				dataObject = formObjects.isEmpty() ? dataObjects : formObjects;
 			final MultiValueMap<String, String> headers = getHeaders(requestMapping);
 			final HttpEntity<?> requestEntity = new HttpEntity<Object>(dataObject, headers);
 			ResponseEntity<?> responseEntity = rest.exchange(url, map(httpMethod), requestEntity, returnType, parameters);
