@@ -207,7 +207,7 @@ public class HttpJsonInvokerFactoryProxyBean implements FactoryBean<Object>,
     protected HttpMethod map(RequestMethod method) {
 	return HttpMethod.valueOf(method.name());
     }
-    
+
     @Override
     public Object invoke(Object proxy, Method method, Object[] args)
 	    throws Throwable {
@@ -222,53 +222,74 @@ public class HttpJsonInvokerFactoryProxyBean implements FactoryBean<Object>,
 	RequestMethod httpMethod = null;
 	Class<?> returnType = method.getReturnType();
 
-	// no request mapping on method means the programmer either forgot it
-	// (happens), or we're calling a method that's not meant to be exposed
-	// (equals, hashcode etc)
+	// no request mapping on method -> call method directly on object
 	if (requestMapping == null) {
-	    return handleSelfMethodInvocation(proxy, method, args);
-	} else
+	    result = handleSelfMethodInvocation(proxy, method, args);
+	} else {
 	    url += requestMapping.value()[0];
 
-	httpMethod = getMethod(requestMapping);
-	urlMapping = methodInspector.inspect(method, args);
+	    httpMethod = getMethod(requestMapping);
+	    urlMapping = methodInspector.inspect(method, args);
 
-	for (MethodParameterDescriptor descriptor : urlMapping.getParameters()) {
-	    if (descriptor.getType().equals(Type.httpParameter)
-		    && !urlMapping.hasRequestBody(descriptor.getName())) {
-		parameters.put(descriptor.getName(), descriptor.getValue());
-		if (url.contains("?"))
-		    url += "&";
-		else
-		    url += "?";
-		url += descriptor.getName() + "={" + descriptor.getName() + "}";
-	    } else if (descriptor.getType().equals(Type.pathVariable)) {
-		url = url.replaceAll("\\{" + descriptor.getName() + "\\}", ""
-			+ descriptor.getValue());
-	    } else if (descriptor.getType().equals(Type.requestBody)) {
-		dataObjects.put(descriptor.getName(), descriptor.getValue());
+	    for (MethodParameterDescriptor descriptor : urlMapping
+		    .getParameters()) {
+		if (descriptor.getType().equals(Type.httpParameter)
+			&& !urlMapping.hasRequestBody(descriptor.getName())) {
+		    parameters.put(descriptor.getName(), descriptor.getValue());
+		    url = appendDescriptorNameParameterToUrl(url, descriptor);
+		} else if (descriptor.getType().equals(Type.pathVariable)) {
+		    url = replacePathVariableDescriptorInUrl(url, descriptor);
+		} else if (descriptor.getType().equals(Type.requestBody)) {
+		    dataObjects
+			    .put(descriptor.getName(), descriptor.getValue());
+		}
+	    }
+
+	    if (RequestMethod.GET.equals(httpMethod)) {
+		result = rest.getForObject(url, returnType, parameters);
+	    } else {
+		result = doPost(dataObjects, method, requestMapping, rest, url,
+			httpMethod, returnType, parameters);
 	    }
 	}
-
-	if (RequestMethod.GET.equals(httpMethod)) {
-	    result = rest.getForObject(url, method.getReturnType(), parameters);
-	} else {
-
-	    Object dataObject = dataObjects.get("");
-	    if (dataObjects.size() > 1 && dataObject != null)
-		throw new IllegalArgumentException(
-			"Found both named and anonymous @RequestBody arguments on method. Use either a single, anonymous, method parameter or annotate every @RequestBody parameter together with @RequestParam on "
-				+ method);
-	    if (dataObject == null)
-		dataObject = dataObjects;
-	    final MultiValueMap<String, String> headers = getHeaders(requestMapping);
-	    final HttpEntity<?> requestEntity = new HttpEntity<Object>(
-		    dataObject, headers);
-	    ResponseEntity<?> responseEntity = rest.exchange(url,
-		    map(httpMethod), requestEntity, returnType, parameters);
-	    result = responseEntity.getBody();
-	}
 	return result;
+    }
+
+    protected Object doPost(Map<String, Object> dataObjects, Method method,
+	    RequestMapping requestMapping, RestOperations rest, String url,
+	    RequestMethod httpMethod, Class<?> returnType,
+	    Map<String, Object> parameters) {
+	Object dataObject = dataObjects.get("");
+	if (dataObjects.size() > 1 && dataObject != null)
+	    throw new IllegalArgumentException(
+		    "Found both named and anonymous @RequestBody arguments on method. Use either a single, anonymous, method parameter or annotate every @RequestBody parameter together with @RequestParam on "
+			    + method);
+	if (dataObject == null)
+	    dataObject = dataObjects;
+	final MultiValueMap<String, String> headers = getHeaders(requestMapping);
+	final HttpEntity<?> requestEntity = new HttpEntity<Object>(dataObject,
+		headers);
+	ResponseEntity<?> responseEntity = rest.exchange(url, map(httpMethod),
+		requestEntity, returnType, parameters);
+	Object result = responseEntity.getBody();
+	return result;
+    }
+
+    protected String appendDescriptorNameParameterToUrl(String url,
+	    MethodParameterDescriptor descriptor) {
+	if (url.contains("?"))
+	    url += "&";
+	else
+	    url += "?";
+	url += descriptor.getName() + "={" + descriptor.getName() + "}";
+	return url;
+    }
+
+    protected String replacePathVariableDescriptorInUrl(String url,
+	    MethodParameterDescriptor descriptor) {
+	url = url.replaceAll("\\{" + descriptor.getName() + "\\}", ""
+		+ descriptor.getValue());
+	return url;
     }
 
     private MultiValueMap<String, String> getHeaders(
@@ -290,8 +311,10 @@ public class HttpJsonInvokerFactoryProxyBean implements FactoryBean<Object>,
     }
 
     /**
-     * Handles reflective method invocation, either invoking a method on the proxy (equals or hashcode) or directly on the target.
-     * Implementation copied from spring framework ServiceLocationInvocationHandler
+     * Handles reflective method invocation, either invoking a method on the
+     * proxy (equals or hashcode) or directly on the target. Implementation
+     * copied from spring framework ServiceLocationInvocationHandler
+     * 
      * @param proxy
      * @param method
      * @param args
@@ -309,7 +332,8 @@ public class HttpJsonInvokerFactoryProxyBean implements FactoryBean<Object>,
 	    // Use hashCode of service locator proxy.
 	    return System.identityHashCode(proxy);
 	} else if (ReflectionUtils.isToStringMethod(method)) {
-	    return remoteServiceInterfaceClass.getName()+"@"+System.identityHashCode(proxy);
+	    return remoteServiceInterfaceClass.getName() + "@"
+		    + System.identityHashCode(proxy);
 	} else {
 	    return method.invoke(this, args);
 	}
