@@ -248,7 +248,7 @@ public class HttpJsonInvokerFactoryProxyBean implements FactoryBean<Object>, Inv
 			result = rest.getForObject(url, method.getReturnType(), parameters);
 		} else {
 			Object dataObject = dataObjects.get("");
-			if (dataObjects.size() > 1 && dataObject != null)
+			if (dataObjects.size() + formObjects.size() > 1 && dataObject != null)
 				throw new IllegalArgumentException(
 						"Found both named and anonymous @RequestBody arguments on method. Use either a single, anonymous, method parameter or annotate every @RequestBody parameter together with @RequestParam on "
 								+ method);
