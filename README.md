@@ -261,4 +261,4 @@ Use ```@RequestPart``` instead of ```@RequestBody``` :
 
 #### Dependencies?
 
-Mostly spring-web 3.2.8 & friends. 
+Spring-web and jackson.
