@@ -13,6 +13,8 @@ Features:
 
 ## News
 
+2014-05-25: version 0.0.5-SNAPSHOT is out with support for multipart form encoding
+
 2014-04-04: version 0.0.3-SNAPSHOT is out with support for more HTTP methods such as PUT, DELETE etc.
 
 
@@ -34,7 +36,7 @@ Then include the dependency:
 <dependency>
 	<groupId>com.github.ggeorgovassilis</groupId>
 	<artifactId>spring-rest-invoker</artifactId>
-	<version>0.0.3-SNAPSHOT</version>
+	<version>0.0.5-SNAPSHOT</version>
 </dependency>
 ```
 
@@ -244,4 +246,15 @@ public interface BookService {
     void saveBook(@RequestBody @RequestParam("book") Book book, @RequestBody @RequestParam("availability") availability);
 
 }
+```
+
+#### The remote service requires messages to be submitted as multipart form posts...
+
+... for example Twitter https://dev.twitter.com/docs/api/1.1/post/statuses/update_with_media
+
+Use ```@RequestPart``` instead of ```@RequestBody``` :
+
+```java
+	@RequestMapping(value = "/join-accounts", method = RequestMethod.POST)
+	Account joinAccounts(@RequestPart @RequestParam("account1") Account account1, @RequestPart @RequestParam("account2") Account account2);
 ```
