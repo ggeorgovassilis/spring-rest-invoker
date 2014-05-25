@@ -258,3 +258,7 @@ Use ```@RequestPart``` instead of ```@RequestBody``` :
 	@RequestMapping(value = "/join-accounts", method = RequestMethod.POST)
 	Account joinAccounts(@RequestPart @RequestParam("account1") Account account1, @RequestPart @RequestParam("account2") Account account2);
 ```
+
+#### Dependencies?
+
+Mostly spring-web 3.2.8 & friends. 
