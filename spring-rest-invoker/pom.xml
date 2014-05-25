@@ -7,10 +7,8 @@
 	<version>0.0.5-SNAPSHOT</version>
 	<description>Spring factory that allows consumption of a remote REST JSON service by binding it to a local Java interface and exposing it as a proxy.</description>
 	<inceptionYear>2014</inceptionYear>
-	
-	<!-- run like this: 
-		mvn -DperformRelease=true clean deploy
-	 -->
+
+	<!-- run like this: mvn -DperformRelease=true clean deploy -->
 	<licenses>
 		<license>
 			<name>Apache License, Version 2.0</name>
@@ -70,6 +68,21 @@
 			<version>3.2.8.RELEASE</version>
 			<scope>test</scope>
 		</dependency>
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-webmvc</artifactId>
+			<version>3.2.8.RELEASE</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>javax.servlet-api</artifactId>
+			<version>3.0.1</version>
+			<scope>test</scope>
+		</dependency>
+
 
 		<dependency>
 			<groupId>org.mockito</groupId>

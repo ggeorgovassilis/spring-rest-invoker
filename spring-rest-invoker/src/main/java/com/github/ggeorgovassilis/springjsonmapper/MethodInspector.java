@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 
 import com.github.ggeorgovassilis.springjsonmapper.MethodParameterDescriptor.Type;
 
@@ -37,8 +38,8 @@ public class MethodInspector {
 	for (Annotation[] annotations : parameterAnnotations) {
 	    Object value = args[i];
 	    i++;
-	    boolean isRequestBody = false;
 	    String parameterName = "";
+	    Type parameterType = null;
 	    for (Annotation annotation : annotations) {
 		if (PathVariable.class.isAssignableFrom(annotation
 			.annotationType())) {
@@ -56,11 +57,15 @@ public class MethodInspector {
 		}
 		if (RequestBody.class.isAssignableFrom(annotation
 			.annotationType())) {
-		    isRequestBody = true;
+		    parameterType = Type.requestBody;
+		}
+		if (RequestPart.class.isAssignableFrom(annotation
+			.annotationType())) {
+		    parameterType = Type.requestPart;
 		}
 	    }
-	    if (isRequestBody) {
-		urlMapping.addDescriptor(new MethodParameterDescriptor(Type.requestBody, parameterName, value));
+	    if (parameterType!=null) {
+		urlMapping.addDescriptor(new MethodParameterDescriptor(parameterType, parameterName, value));
 	    }
 	}
 	return urlMapping;

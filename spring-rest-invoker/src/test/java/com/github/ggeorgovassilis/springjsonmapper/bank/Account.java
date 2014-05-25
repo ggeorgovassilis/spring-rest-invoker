@@ -2,11 +2,14 @@ package com.github.ggeorgovassilis.springjsonmapper.bank;
 
 import java.io.Serializable;
 
+import org.codehaus.jackson.annotate.JsonPropertyOrder;
+
 /**
  * Models a bank account
  * @author george georgovassilis
  *
  */
+@JsonPropertyOrder({"accountNumber","balance","owner"})
 public class Account implements Serializable {
 
     private String accountNumber;

@@ -38,7 +38,7 @@ public class UrlMapping {
     
     public boolean hasRequestBody(String parameter){
 	for (MethodParameterDescriptor descriptor:parameters)
-	    if (parameter.equals(descriptor.getName()) && descriptor.getType().equals(Type.requestBody))
+	    if (parameter.equals(descriptor.getName()) && (descriptor.getType().equals(Type.requestBody)||descriptor.getType().equals(Type.requestPart)))
 		return true;
 	return false;
     }

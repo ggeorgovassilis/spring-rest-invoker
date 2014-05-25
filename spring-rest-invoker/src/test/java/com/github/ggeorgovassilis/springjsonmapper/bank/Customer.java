@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 /**
  * 
- * @author geogeo
+ * @author george georgovassilis
  *
  */
 public class Customer implements Serializable{

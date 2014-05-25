@@ -216,6 +216,7 @@ public class HttpJsonInvokerFactoryProxyBean implements FactoryBean<Object>,
 	Object result = null;
 	Map<String, Object> parameters = new HashMap<>();
 	Map<String, Object> dataObjects = new HashMap<>();
+	MultiValueMap<String, Object> formObjects = new LinkedMultiValueMap<>();
 	RestOperations rest = getRestTemplate();
 	UrlMapping urlMapping = null;
 	RequestMapping requestMapping = getRequestMapping(method);
@@ -242,6 +243,9 @@ public class HttpJsonInvokerFactoryProxyBean implements FactoryBean<Object>,
 		} else if (descriptor.getType().equals(Type.requestBody)) {
 		    dataObjects
 			    .put(descriptor.getName(), descriptor.getValue());
+		} else if (descriptor.getType().equals(Type.requestPart)) {
+		    formObjects
+			    .add(descriptor.getName(), descriptor.getValue());
 		}
 	    }
 
@@ -249,7 +253,7 @@ public class HttpJsonInvokerFactoryProxyBean implements FactoryBean<Object>,
 		result = rest.getForObject(url, returnType, parameters);
 	    } else {
 		result = doPost(dataObjects, method, requestMapping, rest, url,
-			httpMethod, returnType, parameters);
+			httpMethod, returnType, parameters, formObjects);
 	    }
 	}
 	return result;
@@ -258,14 +262,14 @@ public class HttpJsonInvokerFactoryProxyBean implements FactoryBean<Object>,
     protected Object doPost(Map<String, Object> dataObjects, Method method,
 	    RequestMapping requestMapping, RestOperations rest, String url,
 	    RequestMethod httpMethod, Class<?> returnType,
-	    Map<String, Object> parameters) {
+	    Map<String, Object> parameters, MultiValueMap<String, Object> formObjects) {
 	Object dataObject = dataObjects.get("");
 	if (dataObjects.size() > 1 && dataObject != null)
 	    throw new IllegalArgumentException(
 		    "Found both named and anonymous @RequestBody arguments on method. Use either a single, anonymous, method parameter or annotate every @RequestBody parameter together with @RequestParam on "
 			    + method);
 	if (dataObject == null)
-	    dataObject = dataObjects;
+	    dataObject = formObjects.isEmpty() ? dataObjects : formObjects;
 	final MultiValueMap<String, String> headers = getHeaders(requestMapping);
 	final HttpEntity<?> requestEntity = new HttpEntity<Object>(dataObject,
 		headers);
