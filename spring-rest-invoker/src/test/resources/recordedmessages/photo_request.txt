@@ -1,0 +1,5 @@
+POST http://localhost/bankservice/photo?name=customer%201
+Accept=image/jpeg
+Content-Length=5
+Content-Type=image/gif,image/jpeg,image/png
+

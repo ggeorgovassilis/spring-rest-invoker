@@ -1,0 +1,5 @@
+POST http://localhost/bankservice/verify
+Accept=application/json, application/*+json
+Content-Type=application/json;charset=UTF-8
+
+{"accountNumber":"account 1","balance":1000,"owner":{"name":"Customer 1"}}

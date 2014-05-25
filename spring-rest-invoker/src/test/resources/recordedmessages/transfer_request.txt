@@ -1,0 +1,5 @@
+POST http://localhost/bankservice/transfer?sendConfirmationSms=true
+Accept=application/json, application/*+json
+Content-Type=application/json;charset=UTF-8
+
+{"amount":1,"toAccount":{"accountNumber":"account 2","balance":0,"owner":{"name":"Customer 2"}},"fromAccount":{"accountNumber":"account 1","balance":1000,"owner":{"name":"Customer 1"}},"actor":{"name":"Customer 1"}}

@@ -1,5 +1,6 @@
 package com.github.ggeorgovassilis.springjsonmapper.bank;
 
+import java.io.InputStream;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -7,8 +8,10 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.web.client.RestTemplate;
 
 import com.github.ggeorgovassilis.springjsonmapper.HttpJsonInvokerFactoryProxyBean;
@@ -19,7 +22,7 @@ import com.github.ggeorgovassilis.springjsonmapper.support.MockRequestFactory.Mo
 import static org.junit.Assert.*;
 
 /**
- * Tests a more complex scenario with a mocked HTTP transfer mechanism
+ * Tests a more complex scenario with recorded HTTP requests and responses
  * 
  * @author george georgovassilis
  * 
@@ -35,7 +38,7 @@ public class BankServiceTest {
     HttpJsonInvokerFactoryProxyBean httpProxyFactory;
 
     MockRequestFactory requestFactory;
-
+    
     @Before
     public void setup() {
 	requestFactory = new MockRequestFactory();
@@ -44,8 +47,20 @@ public class BankServiceTest {
 	requestFactory.createResponse();
     }
 
+    byte[] get(String classpathResource) throws Exception{
+	ClassPathResource r = new ClassPathResource(classpathResource);
+	InputStream in = r.getInputStream();
+	byte[] b = FileCopyUtils.copyToByteArray(in);
+	in.close();
+	return b;
+    }
+
+    String sget(String classpathResource) throws Exception{
+	return new String(get(classpathResource), "UTF-8");
+    }
+    
     @Test
-    public void testBankService_transfer() {
+    public void testBankService_transfer() throws Exception{
 	// setup test
 	Customer customer1 = new Customer();
 	customer1.setName("Customer 1");
@@ -64,8 +79,7 @@ public class BankServiceTest {
 	account2.setOwner(customer2);
 
 	MockResponse response = requestFactory.createResponse();
-	response.setBody("{\"accountNumber\":\"account 1\",\"balance\":999,\"owner\":{\"name\":\"Customer 1\"}}"
-		.getBytes());
+	response.setBody(get("recordedmessages/transfer_response.txt"));
 
 	// execute test
 	Account result = bankService.transfer(account1, customer1, account2, 1,
@@ -79,13 +93,13 @@ public class BankServiceTest {
 	// verify http request
 	MockRequest request = requestFactory.getLastRequest();
 	assertEquals(
-		"POST http://localhost/bankservice/transfer?sendConfirmationSms=true\nAccept=application/json, application/*+json\nContent-Type=application/json;charset=UTF-8\n\n{\"amount\":1,\"toAccount\":{\"accountNumber\":\"account 2\",\"balance\":0,\"owner\":{\"name\":\"Customer 2\"}},\"fromAccount\":{\"accountNumber\":\"account 1\",\"balance\":1000,\"owner\":{\"name\":\"Customer 1\"}},\"actor\":{\"name\":\"Customer 1\"}}",
+		sget("recordedmessages/transfer_request.txt"),
 		request.serializeToString());
 
     }
 
     @Test
-    public void testBankService_checkAccount() {
+    public void testBankService_checkAccount() throws Exception{
 	// setup test
 	Customer customer1 = new Customer();
 	customer1.setName("Customer 1");
@@ -106,8 +120,7 @@ public class BankServiceTest {
 
 	// verify http request
 	MockRequest request = requestFactory.getLastRequest();
-	assertEquals(
-		"POST http://localhost/bankservice/verify\nAccept=application/json, application/*+json\nContent-Type=application/json;charset=UTF-8\n\n{\"accountNumber\":\"account 1\",\"balance\":1000,\"owner\":{\"name\":\"Customer 1\"}}",
+	assertEquals(sget("recordedmessages/checkaccount_request.txt"),
 		request.serializeToString());
     }
 
@@ -115,7 +128,7 @@ public class BankServiceTest {
      * Tests http headers
      */
     @Test
-    public void testBankService_photo() {
+    public void testBankService_photo() throws Exception{
 	// setup test
 	byte[] photo = { 1, 2, 3, 4, 5 };
 	MockResponse response = requestFactory.createResponse();
@@ -126,16 +139,15 @@ public class BankServiceTest {
 	assertArrayEquals(photo, result);
 	// verify http request
 	MockRequest request = requestFactory.getLastRequest();
-	assertEquals(
-		"POST http://localhost/bankservice/photo?name=customer%201\nAccept=image/jpeg\nContent-Length=5\nContent-Type=image/gif,image/jpeg,image/png\n\n"
-			+ new String(photo), request.serializeToString());
+	String expectedRequest = sget("recordedmessages/photo_request.txt") + new String(photo);
+	assertEquals(expectedRequest, request.serializeToString());
     }
     
     /**
      * Tests @RequestPart implementation
      */
     @Test
-    public void testBankService_joinAccounts() {
+    public void testBankService_joinAccounts() throws Exception{
 	//setup test
 	Customer customer1 = new Customer();
 	customer1.setName("Customer 1");
@@ -152,7 +164,7 @@ public class BankServiceTest {
 	account2.setOwner(customer2);
 
 	MockResponse response = requestFactory.createResponse();
-	response.setBody("{\"accountNumber\":\"account 1+2\",\"balance\":1100,\"owner\":{\"name\":\"Customer 1\"}}".getBytes());
+	response.setBody(get("recordedmessages/joinaccounts_response.txt"));
 
 	//execute test
 	Account joinedAccount = bankService.joinAccounts(account1, account2);
@@ -169,7 +181,9 @@ public class BankServiceTest {
 	String b1 = matcher.group(1);
 
 	httpString = httpString.replace(b1,"BOUNDARY");
-	String expected = "POST http://localhost/bankservice/join-accounts\nAccept=application/json, application/*+json\nContent-Type=multipart/form-data;boundary=BOUNDARY\n\n--BOUNDARY\r\nContent-Disposition: form-data; name=\"account1\"\r\nContent-Type: application/json;charset=UTF-8\r\n\r\n{\"accountNumber\":\"account 1\",\"balance\":1000,\"owner\":{\"name\":\"Customer 1\"}}\r\n--BOUNDARY\r\nContent-Disposition: form-data; name=\"account2\"\r\nContent-Type: application/json;charset=UTF-8\r\n\r\n{\"accountNumber\":\"account 2\",\"balance\":100,\"owner\":{\"name\":\"Customer 2\"}}\r\n--BOUNDARY--\r\n";
+	//The expected response contains a mix of line delimiters: some are \n and others are \r\n.
+	//Someone will sooner or later trip over it, so we're encoding the \r as ~ and replacing it at runtime.
+	String expected = sget("recordedmessages/joinaccounts_request.txt").replace('~', '\r');
 
 	assertEquals(expected, httpString);
     }
