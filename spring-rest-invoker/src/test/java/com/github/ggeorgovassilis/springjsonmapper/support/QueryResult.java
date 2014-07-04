@@ -1,4 +1,4 @@
-package com.github.ggeorgovassilis.springjsonmapper.googlebooks;
+package com.github.ggeorgovassilis.springjsonmapper.support;
 
 import java.io.Serializable;
 import java.util.List;

@@ -9,10 +9,16 @@
         http://www.springframework.org/schema/mvc
         http://www.springframework.org/schema/mvc/spring-mvc-3.1.xsd">
 
-	<bean id="RemoteBankService"
-		class="com.github.ggeorgovassilis.springjsonmapper.HttpJsonInvokerFactoryProxyBean">
+	<bean id="RemoteBankServiceSpring"
+		class="com.github.ggeorgovassilis.springjsonmapper.spring.SpringAnnotationsHttpJsonInvokerFactoryProxyBean">
 		<property name="baseUrl" value="http://localhost/bankservice" />
-		<property name="remoteServiceInterfaceClass" value="com.github.ggeorgovassilis.springjsonmapper.bank.BankService"/>
+		<property name="remoteServiceInterfaceClass" value="com.github.ggeorgovassilis.springjsonmapper.spring.BankServiceSpring"/>
+	</bean>
+
+	<bean id="RemoteBankServiceJaxRs"
+		class="com.github.ggeorgovassilis.springjsonmapper.jaxrs.JaxRsAnnotationsHttpJsonInvokerFactoryProxyBean">
+		<property name="baseUrl" value="http://localhost/bankservice" />
+		<property name="remoteServiceInterfaceClass" value="com.github.ggeorgovassilis.springjsonmapper.jaxrs.BankServiceJaxRs"/>
 	</bean>
 
 </beans>

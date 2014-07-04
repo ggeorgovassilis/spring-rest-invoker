@@ -1,4 +1,4 @@
-package com.github.ggeorgovassilis.springjsonmapper.bank;
+package com.github.ggeorgovassilis.springjsonmapper.spring;
 
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -6,12 +6,15 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 
+import com.github.ggeorgovassilis.springjsonmapper.support.Account;
+import com.github.ggeorgovassilis.springjsonmapper.support.Customer;
+
 /**
- * Mapping to a hypothetical bank service REST API
+ * Mapping to a hypothetical bank service REST API using Spring annotations
  * @author george georgovassilis
  *
  */
-public interface BankService {
+public interface BankServiceSpring {
 
 	@RequestMapping(value = "/transfer", method = RequestMethod.POST)
 	Account transfer(@RequestBody @RequestParam("fromAccount") Account fromAccount, @RequestBody @RequestParam("actor") Customer actor,

@@ -1,8 +1,10 @@
-package com.github.ggeorgovassilis.springjsonmapper.bank;
+package com.github.ggeorgovassilis.springjsonmapper.tests;
 
 import java.io.InputStream;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import javax.annotation.Resource;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -14,7 +16,11 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.client.RestTemplate;
 
-import com.github.ggeorgovassilis.springjsonmapper.HttpJsonInvokerFactoryProxyBean;
+import com.github.ggeorgovassilis.springjsonmapper.BaseHttpJsonInvokerFactoryProxyBean;
+import com.github.ggeorgovassilis.springjsonmapper.spring.BankServiceSpring;
+import com.github.ggeorgovassilis.springjsonmapper.spring.SpringAnnotationsHttpJsonInvokerFactoryProxyBean;
+import com.github.ggeorgovassilis.springjsonmapper.support.Account;
+import com.github.ggeorgovassilis.springjsonmapper.support.Customer;
 import com.github.ggeorgovassilis.springjsonmapper.support.MockRequestFactory;
 import com.github.ggeorgovassilis.springjsonmapper.support.MockRequestFactory.MockRequest;
 import com.github.ggeorgovassilis.springjsonmapper.support.MockRequestFactory.MockResponse;
@@ -22,20 +28,20 @@ import com.github.ggeorgovassilis.springjsonmapper.support.MockRequestFactory.Mo
 import static org.junit.Assert.*;
 
 /**
- * Tests a more complex scenario with recorded HTTP requests and responses
+ * Tests a more complex scenario with recorded HTTP requests and responses using the {@link SpringAnnotationsHttpJsonInvokerFactoryProxyBean}
  * 
  * @author george georgovassilis
  * 
  */
 @RunWith(value = SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath:test-context-bank.xml")
-public class BankServiceTest {
+public class BankServiceSpringTest {
 
     @Autowired
-    BankService bankService;
+    BankServiceSpring bankService;
 
-    @Autowired
-    HttpJsonInvokerFactoryProxyBean httpProxyFactory;
+    @Resource(name="&RemoteBankServiceSpring")
+    BaseHttpJsonInvokerFactoryProxyBean httpProxyFactory;
 
     MockRequestFactory requestFactory;
     
@@ -197,6 +203,6 @@ public class BankServiceTest {
 	assertTrue(bankService.equals(bankService));
 	assertFalse(bankService.equals(this));
 	assertEquals(bankService.hashCode(), bankService.hashCode());
-	assertTrue(bankService.toString().contains("BankService"));
+	assertTrue(bankService.toString().contains("BankServiceSpring"));
     }
 }

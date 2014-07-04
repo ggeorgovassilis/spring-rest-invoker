@@ -1,7 +1,7 @@
-package com.github.ggeorgovassilis.springjsonmapper;
+package com.github.ggeorgovassilis.springjsonmapper.model;
 
 /**
- * Maps the relation of a method parameter with an url (fragment) such as part in a path or parameter name
+ * Models the relation of a method parameter with an url (fragment) such as part in a path or parameter name
  * @author george georgovassilis
  *
  */

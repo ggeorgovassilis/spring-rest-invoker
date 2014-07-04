@@ -19,6 +19,6 @@
 	    ">
 
 	<context:annotation-config />
-	<context:component-scan base-package="com.github.ggeorgovassilis.springjsonmapper.bank.impl" />
+	<context:component-scan base-package="com.github.ggeorgovassilis.springjsonmapper.spring.impl" />
 	<mvc:annotation-driven />
 </beans>

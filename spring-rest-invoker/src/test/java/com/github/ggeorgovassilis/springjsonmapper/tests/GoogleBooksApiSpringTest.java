@@ -1,4 +1,4 @@
-package com.github.ggeorgovassilis.springjsonmapper.googlebooks;
+package com.github.ggeorgovassilis.springjsonmapper.tests;
 
 import org.junit.runner.RunWith;
 import org.junit.Test;
@@ -6,18 +6,24 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import com.github.ggeorgovassilis.springjsonmapper.spring.SpringAnnotationsHttpJsonInvokerFactoryProxyBean;
+import com.github.ggeorgovassilis.springjsonmapper.support.BookServiceSpring;
+import com.github.ggeorgovassilis.springjsonmapper.support.Item;
+import com.github.ggeorgovassilis.springjsonmapper.support.QueryResult;
+import com.github.ggeorgovassilis.springjsonmapper.support.VolumeInfo;
+
 import static org.junit.Assert.*;
 
 /**
- * Integration test with the google books API
+ * Integration test with the google books API using the {@link SpringAnnotationsHttpJsonInvokerFactoryProxyBean}
  * @author george georgovassilis
  */
 @RunWith(value = SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath:test-context-googlebooks.xml")
-public class GoogleBooksApiTest {
+public class GoogleBooksApiSpringTest {
 
 	@Autowired
-	BookService bookService;
+	BookServiceSpring bookService;
 
 	@Test
 	public void testFindBooksByTitle() {
