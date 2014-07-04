@@ -262,3 +262,12 @@ Use ```@RequestPart``` instead of ```@RequestBody``` :
 #### Dependencies?
 
 Spring-web and jackson.
+
+
+#### Is the spring-rest-invoker a JAX-RS implementation?
+
+No. We're trying to minimize dependencies by making use of the spring framework as much as possible.
+
+#### Are there any alternatives?
+
+Have a look at RESTEasy http://resteasy.jboss.org/
