@@ -26,7 +26,6 @@ import org.springframework.web.client.RestTemplate;
 import com.github.ggeorgovassilis.springjsonmapper.model.MethodParameterDescriptor;
 import com.github.ggeorgovassilis.springjsonmapper.model.UrlMapping;
 import com.github.ggeorgovassilis.springjsonmapper.model.MethodParameterDescriptor.Type;
-import com.github.ggeorgovassilis.springjsonmapper.spring.SpringAnnotationsHttpJsonInvokerFactoryProxyBean;
 
 /**
  * Base component for proxy factories that bind java interfaces to a remote REST
@@ -328,7 +327,7 @@ public abstract class BaseHttpJsonInvokerFactoryProxyBean implements
 	    IllegalAccessException {
 	if (ReflectionUtils.isEqualsMethod(method)) {
 	    // Only consider equal when proxies are identical.
-	    return (proxy == args[0]);
+	    return proxy == args[0];
 	} else if (ReflectionUtils.isHashCodeMethod(method)) {
 	    // Use hashCode of service locator proxy.
 	    return System.identityHashCode(proxy);

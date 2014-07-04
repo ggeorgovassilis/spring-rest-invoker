@@ -1,10 +1,8 @@
 package com.github.ggeorgovassilis.springjsonmapper.model;
 
+
 import java.util.ArrayList;
 import java.util.List;
-
-import org.springframework.http.HttpMethod;
-import org.springframework.web.bind.annotation.RequestMapping;
 
 import static com.github.ggeorgovassilis.springjsonmapper.model.MethodParameterDescriptor.Type;
 

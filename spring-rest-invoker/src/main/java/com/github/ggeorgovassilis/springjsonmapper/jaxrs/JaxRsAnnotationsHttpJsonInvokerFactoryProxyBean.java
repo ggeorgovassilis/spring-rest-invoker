@@ -5,7 +5,6 @@ import java.lang.reflect.Method;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.FormParam;
-import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
@@ -20,8 +19,6 @@ import com.github.ggeorgovassilis.springjsonmapper.BaseHttpJsonInvokerFactoryPro
 import com.github.ggeorgovassilis.springjsonmapper.MethodInspector;
 import com.github.ggeorgovassilis.springjsonmapper.model.UrlMapping;
 import com.github.ggeorgovassilis.springjsonmapper.spring.SpringAnnotationsHttpJsonInvokerFactoryProxyBean;
-import com.github.ggeorgovassilis.springjsonmapper.support.Account;
-import com.github.ggeorgovassilis.springjsonmapper.support.Customer;
 
 /**
  * Similarly to {@link SpringAnnotationsHttpJsonInvokerFactoryProxyBean}, this factory binds a remote REST service to a local java interface and forwards method
