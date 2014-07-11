@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# script from here: http://blog.kaltepoth.de/posts/2010/09/06/github-maven-repositories.html
+
 for DIR in $(find ./repository -type d); do
   (
     echo -e "<html>\n<body>\n<h1>Directory listing</h1>\n<hr/>\n<pre>"
