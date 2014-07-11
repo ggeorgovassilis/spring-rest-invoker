@@ -4,6 +4,8 @@ package com.github.ggeorgovassilis.springjsonmapper.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.http.HttpMethod;
+
 import static com.github.ggeorgovassilis.springjsonmapper.model.MethodParameterDescriptor.Type;
 
 /**
@@ -13,12 +15,21 @@ import static com.github.ggeorgovassilis.springjsonmapper.model.MethodParameterD
  */
 public class UrlMapping {
 
-    protected String httpMethod;
+    protected HttpMethod httpMethod = HttpMethod.GET;
     protected List<MethodParameterDescriptor> parameters = new ArrayList<>();
-    protected String[] headers;
-    protected String[] consumes;
-    protected String[] produces;
+    protected String[] headers = new String[0];
+    protected String[] consumes = new String[0];
+    protected String[] produces = new String[0];
+    protected String[] cookies = new String[0];
     
+    public String[] getCookies() {
+        return cookies;
+    }
+
+    public void setCookies(String[] cookies) {
+        this.cookies = cookies;
+    }
+
     public String[] getConsumes() {
         return consumes;
     }
@@ -53,11 +64,11 @@ public class UrlMapping {
         this.url = url;
     }
 
-    public String getHttpMethod() {
+    public HttpMethod getHttpMethod() {
         return httpMethod;
     }
 
-    public void setHttpMethod(String httpMethod) {
+    public void setHttpMethod(HttpMethod httpMethod) {
         this.httpMethod = httpMethod;
     }
 
@@ -68,6 +79,7 @@ public class UrlMapping {
     public void setParameters(List<MethodParameterDescriptor> parameters) {
 	this.parameters = parameters;
     }
+
 
     public void addDescriptor(MethodParameterDescriptor descriptor) {
 	parameters.add(descriptor);

@@ -1,0 +1,5 @@
+GET http://localhost/bankservice/session/check
+Accept=application/json, application/*+json
+Content-Length=0
+X-SessionId=56789
+

@@ -20,16 +20,20 @@ import org.springframework.http.converter.json.MappingJacksonHttpMessageConverte
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.util.ReflectionUtils;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.client.RestOperations;
 import org.springframework.web.client.RestTemplate;
 
+import com.github.ggeorgovassilis.springjsonmapper.jaxrs.JaxRsAnnotationsHttpJsonInvokerFactoryProxyBean;
+import com.github.ggeorgovassilis.springjsonmapper.model.MappingDeclarationException;
 import com.github.ggeorgovassilis.springjsonmapper.model.MethodParameterDescriptor;
-import com.github.ggeorgovassilis.springjsonmapper.model.UrlMapping;
 import com.github.ggeorgovassilis.springjsonmapper.model.MethodParameterDescriptor.Type;
+import com.github.ggeorgovassilis.springjsonmapper.model.UrlMapping;
 
 /**
  * Base component for proxy factories that bind java interfaces to a remote REST
- * service. For more information look up {@link JaxRsAnnotationsHttpJsonInvokerFactoryProxyBean}
+ * service. For more information look up
+ * {@link JaxRsAnnotationsHttpJsonInvokerFactoryProxyBean}
  * 
  * @see JaxRsAnnotationsHttpJsonInvokerFactoryProxyBean
  * @author george georgovassilis
@@ -47,8 +51,10 @@ public abstract class BaseHttpJsonInvokerFactoryProxyBean implements
     protected MethodInspector methodInspector;
 
     /**
-     * Return an implementation of a {@link MethodInspector} which can look at methods and return a {@link RequestMapping} describing
-     * how that method is to be mapped to a URL of a remote REST service.
+     * Return an implementation of a {@link MethodInspector} which can look at
+     * methods and return a {@link RequestMapping} describing how that method is
+     * to be mapped to a URL of a remote REST service.
+     * 
      * @return
      */
     protected abstract MethodInspector constructDefaultMethodInspector();
@@ -58,32 +64,24 @@ public abstract class BaseHttpJsonInvokerFactoryProxyBean implements
      * {@link RequestMapping}.
      * 
      * @param method
+     * @param args
+     *            method arguments
      * @return Must always return a {@link RequestMapping}. If there's a problem
      *         then implementations must throw an exception instead of returning
      *         null.
      */
-    protected abstract UrlMapping getRequestMapping(Method method);
-
-    /**
-     * Return the RequestBody annotation name for error messages.
-     * 
-     * @return
-     */
-    protected abstract String getRequestBodyAnnotationNameDisplayText();
-
-    /**
-     * Return the RequestParam annotation name for error messages.
-     * 
-     * @return
-     */
-    protected abstract String getRequestParamAnnotationNameDisplayText();
+    protected UrlMapping getRequestMapping(Method method, Object[] args) {
+	return methodInspector.inspect(method, args);
+    }
 
     public MethodInspector getMethodInspector() {
 	return methodInspector;
     }
 
     /**
-     * Override the default method inspector provided by the extending implementation.
+     * Override the default method inspector provided by the extending
+     * implementation.
+     * 
      * @param methodInspector
      */
     public void setMethodInspector(MethodInspector methodInspector) {
@@ -109,8 +107,10 @@ public abstract class BaseHttpJsonInvokerFactoryProxyBean implements
     }
 
     /**
-     * Set the base URL of the remote REST service for HTTP requests. Further mappings specified on service interfaces are resolved
-     * relatively to this URL.
+     * Set the base URL of the remote REST service for HTTP requests. Further
+     * mappings specified on service interfaces are resolved relatively to this
+     * URL.
+     * 
      * @param baseUrl
      */
     public void setBaseUrl(String baseUrl) {
@@ -122,7 +122,9 @@ public abstract class BaseHttpJsonInvokerFactoryProxyBean implements
     }
 
     /**
-     * Set the class of the remote service interface. Use either this setter or {@link #setRemoteServiceInterfaceClassName(String)}
+     * Set the class of the remote service interface. Use either this setter or
+     * {@link #setRemoteServiceInterfaceClassName(String)}
+     * 
      * @param c
      */
     public void setRemoteServiceInterfaceClass(Class<?> c) {
@@ -130,7 +132,10 @@ public abstract class BaseHttpJsonInvokerFactoryProxyBean implements
     }
 
     /**
-     * Set the absolute class name of the remote service interface to map to the remote REST service. Use either this setter or {@link #setRemoteServiceInterfaceClass(Class)}
+     * Set the absolute class name of the remote service interface to map to the
+     * remote REST service. Use either this setter or
+     * {@link #setRemoteServiceInterfaceClass(Class)}
+     * 
      * @param className
      */
     public void setRemoteServiceInterfaceClassName(String className) {
@@ -155,7 +160,8 @@ public abstract class BaseHttpJsonInvokerFactoryProxyBean implements
     public void initialize() {
 	if (remoteServiceInterfaceClass == null) {
 	    if (remoteServiceInterfaceClassName == null)
-		throw new IllegalArgumentException("Must provide the remote service interface class or classname.");
+		throw new IllegalArgumentException(
+			"Must provide the remote service interface class or classname.");
 	    try {
 		remoteServiceInterfaceClass = getClass().getClassLoader()
 			.loadClass(remoteServiceInterfaceClassName);
@@ -196,39 +202,44 @@ public abstract class BaseHttpJsonInvokerFactoryProxyBean implements
 	Object result = null;
 	Map<String, Object> parameters = new HashMap<>();
 	Map<String, Object> dataObjects = new HashMap<>();
+	MultiValueMap<String, String> headers = getHeaders(requestMapping);
+	Map<String, String> cookies = new HashMap<>();
 	MultiValueMap<String, Object> formObjects = new LinkedMultiValueMap<>();
 	RestOperations rest = getRestTemplate();
-	UrlMapping urlMapping = null;
-	String httpMethod = null;
+
 	Class<?> returnType = method.getReturnType();
 	String url = baseUrl;
 	url += requestMapping.getUrl();
 
-	httpMethod = requestMapping.getHttpMethod();
-	urlMapping = methodInspector.inspect(method, args);
+	HttpMethod httpMethod = requestMapping.getHttpMethod();
+	UrlMapping urlMapping = methodInspector.inspect(method, args);
 
 	for (MethodParameterDescriptor descriptor : urlMapping.getParameters()) {
 	    if (descriptor.getType().equals(Type.httpParameter)
 		    && !urlMapping.hasRequestBody(descriptor.getName())) {
+		if (parameters.containsKey(descriptor.getName()))
+		    throw new MappingDeclarationException("Duplicate parameter "+descriptor.getName()+" on "+method, method, null, -1);
 		parameters.put(descriptor.getName(), descriptor.getValue());
 		url = appendDescriptorNameParameterToUrl(url, descriptor);
+	    } else if (descriptor.getType().equals(Type.cookie)) {
+		cookies.put(descriptor.getName(),
+			(String) descriptor.getValue());
 	    } else if (descriptor.getType().equals(Type.pathVariable)) {
 		url = replacePathVariableDescriptorInUrl(url, descriptor);
 	    } else if (descriptor.getType().equals(Type.requestBody)) {
 		if (dataObjects.containsKey(descriptor.getName()))
-		    throw new IllegalArgumentException(String.format("Duplicate requestBody with name '%s' on method %s", descriptor.getName(),method));
+		    throw new MappingDeclarationException(
+			    String.format(
+				    "Duplicate requestBody with name '%s' on method %s",
+				    descriptor.getName(), method), method, null, -1);
 		dataObjects.put(descriptor.getName(), descriptor.getValue());
 	    } else if (descriptor.getType().equals(Type.requestPart)) {
 		formObjects.add(descriptor.getName(), descriptor.getValue());
 	    }
 	}
 
-	if (HttpMethod.GET.equals(httpMethod)) {
-	    result = rest.getForObject(url, returnType, parameters);
-	} else {
-	    result = doPost(dataObjects, method, requestMapping, rest, url,
-		    httpMethod, returnType, parameters, formObjects);
-	}
+	result = executeRequest(dataObjects, method, rest, url,
+		httpMethod, returnType, parameters, formObjects, cookies, headers);
 	return result;
     }
 
@@ -236,7 +247,7 @@ public abstract class BaseHttpJsonInvokerFactoryProxyBean implements
     public Object invoke(Object proxy, Method method, Object[] args)
 	    throws Throwable {
 	// no request mapping on method -> call method directly on object
-	UrlMapping requestMapping = getRequestMapping(method);
+	UrlMapping requestMapping = getRequestMapping(method, args);
 	Object result = null;
 	if (requestMapping == null) {
 	    result = handleSelfMethodInvocation(proxy, method, args);
@@ -246,30 +257,48 @@ public abstract class BaseHttpJsonInvokerFactoryProxyBean implements
 	return result;
     }
 
-    protected Object doPost(Map<String, Object> dataObjects, Method method,
-	    UrlMapping requestMapping, RestOperations rest, String url,
-	    String httpMethod, Class<?> returnType,
+    protected Object executeRequest(Map<String, Object> dataObjects, Method method,
+	    RestOperations rest, String url,
+	    HttpMethod httpMethod, Class<?> returnType,
 	    Map<String, Object> parameters,
-	    MultiValueMap<String, Object> formObjects) {
+	    MultiValueMap<String, Object> formObjects,
+	    Map<String, String> cookies, MultiValueMap<String, String> headers) {
+	HttpEntity<?> requestEntity = null;
 	Object dataObject = dataObjects.get("");
 	if (dataObjects.size() > 1 && dataObject != null)
-	    throw new IllegalArgumentException(
+	    throw new MappingDeclarationException(
 		    String.format(
-			    "Found both named and anonymous %s arguments on method. Use either a single, anonymous, method parameter or annotate every %s parameter together with %s on %s",
-			    getRequestBodyAnnotationNameDisplayText(),
-			    getRequestBodyAnnotationNameDisplayText(),
-			    getRequestParamAnnotationNameDisplayText(),
-			    method.toGenericString()));
+			    "Found both named and anonymous arguments on method %s, that's ambiguous.",
+			    method.toGenericString()), method, null, -1);
 	if (dataObject == null)
 	    dataObject = formObjects.isEmpty() ? dataObjects : formObjects;
-	MultiValueMap<String, String> headers = getHeaders(requestMapping);
-	HttpEntity<?> requestEntity = new HttpEntity<Object>(dataObject,
-		headers);
-	ResponseEntity<?> responseEntity = rest.exchange(url,
-		mapStringToHttpMethod(httpMethod), requestEntity, returnType,
-		parameters);
+
+	LinkedMultiValueMap<String, String> finalHeaders = new LinkedMultiValueMap<String, String>(headers);
+	augmentHeadersWithCookies(finalHeaders, cookies);
+	boolean hasBody = !HttpMethod.GET.equals(httpMethod);
+	if (hasBody)
+	    requestEntity = new HttpEntity<Object>(dataObject, finalHeaders);
+	else
+	    requestEntity = new HttpEntity<Object>(headers);
+	ResponseEntity<?> responseEntity = rest.exchange(url, httpMethod,
+		requestEntity, returnType, parameters);
 	Object result = responseEntity.getBody();
 	return result;
+    }
+
+    protected void augmentHeadersWithCookies(
+	    LinkedMultiValueMap<String, String> headers, Map<String, String> cookies) {
+	if (cookies.isEmpty())
+	    return;
+	String cookieHeader = "";
+	String prefix = "";
+	for (String cookieName : cookies.keySet()) {
+	    cookieHeader = cookieHeader + prefix + cookieName + "="
+		    + cookies.get(cookieName);
+	    prefix = "&";
+	}
+	headers.add("Cookie", cookieHeader);
+
     }
 
     protected String appendDescriptorNameParameterToUrl(String url,
@@ -291,22 +320,32 @@ public abstract class BaseHttpJsonInvokerFactoryProxyBean implements
 
     private MultiValueMap<String, String> getHeaders(UrlMapping requestMapping) {
 	MultiValueMap<String, String> result = new LinkedMultiValueMap<String, String>();
-	if (requestMapping.getHeaders()!=null)
-	for (String header : requestMapping.getHeaders()) {
-	    String[] split = header.split("=");
-	    if (split.length > 1) {
-		result.add(split[0], split[1]);
+	if (requestMapping.getHeaders() != null)
+	    for (String header : requestMapping.getHeaders()) {
+		int index = header.indexOf("=");
+		if (index == -1)
+		    throw new MappingDeclarationException(
+			    "Missing equals sign in header annotation "
+				    + header + ": must be like KEY=VALUE", null, null, -1);
+		String key = header.substring(0, index);
+		String value = header.substring(index + 1);
+		result.add(key, value);
 	    }
-	}
-	
-	if (requestMapping.getConsumes()!=null)
-	for (String consume : requestMapping.getConsumes()) {
-	    result.add("Content-Type", consume);
-	}
-	if (requestMapping.getProduces()!=null)
-	for (String produce : requestMapping.getProduces()) {
-	    result.add("Accept", produce);
-	}
+
+	if (requestMapping.getConsumes() != null)
+	    for (String consume : requestMapping.getConsumes()) {
+		result.add("Content-Type", consume);
+	    }
+	if (requestMapping.getProduces() != null)
+	    for (String produce : requestMapping.getProduces()) {
+		result.add("Accept", produce);
+	    }
+	for (MethodParameterDescriptor mpd:requestMapping.getParameters())
+	    if (mpd.getType().equals(Type.httpHeader)) {
+		Object value = mpd.getValue();
+		String stringValue = value==null?"":value.toString();
+		result.add(mpd.getName(), stringValue);
+	    }
 	return result;
     }
 

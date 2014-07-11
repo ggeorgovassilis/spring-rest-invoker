@@ -1,15 +1,10 @@
 package com.github.ggeorgovassilis.springjsonmapper.spring;
 
-import java.lang.reflect.Method;
-
-import org.springframework.core.annotation.AnnotationUtils;
-import org.springframework.http.HttpMethod;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.github.ggeorgovassilis.springjsonmapper.BaseHttpJsonInvokerFactoryProxyBean;
 import com.github.ggeorgovassilis.springjsonmapper.MethodInspector;
-import com.github.ggeorgovassilis.springjsonmapper.model.UrlMapping;
 
 /**
  * Binds a java interface to a remote REST service. Provide the interface class
@@ -43,48 +38,27 @@ import com.github.ggeorgovassilis.springjsonmapper.model.UrlMapping;
  *                                 findBooksByTitle(&#064;RequestParam("q") String
  *                                 q);<br> <br>
  * &#064;RequestMapping("/volumes/{id ")<br> Item findBookById(&#064;PathVariable("id")
- *                               String id);<br> }<br><br> </code>
+ *                               String id);<br> }</code>
+ * <br>
+ * <br>
+ * Annotations understood are:
+ * 
+ * <ul>
+ * <li>{@link RequestMapping} which specifies the relative URL to contact, the HTTP method to use and content types
+ * <li>{@link RequestParam} which specifies a name for the method argument. This name can be used as a URL query parameter, a multipart form parameter or a field name in a JSON document
+ * <li>{@link RequestBody} which specifies that the parameter value is to be encoded as JSON. If it's the only such annotated parameter, then the generated JSON will be the entire body submitted during the request.
+ * If there are multiple annotated parameters, then a {@link RequestParam} must be used to distinguish them.
+ * <li>{@link RequestPart} which specifies that the parameter is to be encoded as part of a multipart form request
+ * <li>{@link PathVariable} which specifies that the parameter value is to be encoded into the URL as part of the path. Use a notation like <code>/users/{name}/details</code> in the URL of {@link RequestMapping} to escape
+ * the parameter name <code>&#064;PathVariable("name")</code>
+ * </ul>
+ * 
  * @author george georgovassilis
  * @author Maxime Guennec
  * 
  */
 public class SpringAnnotationsHttpJsonInvokerFactoryProxyBean extends
 	BaseHttpJsonInvokerFactoryProxyBean {
-
-    @Override
-    protected UrlMapping getRequestMapping(Method method) {
-	org.springframework.web.bind.annotation.RequestMapping annotation = AnnotationUtils
-		.findAnnotation(
-			method,
-			org.springframework.web.bind.annotation.RequestMapping.class);
-	if (annotation == null)
-	    return null;
-	UrlMapping mapping = new UrlMapping();
-	mapping.setUrl(annotation.value()[0]);
-	mapping.setConsumes(annotation.consumes());
-	mapping.setHeaders(annotation.headers());
-	mapping.setProduces(annotation.produces());
-	if (annotation.method() == null || annotation.method().length == 0) {
-	    mapping.setHttpMethod(HttpMethod.GET.name());
-	} else if (annotation.method().length > 1) {
-	    throw new IllegalArgumentException(
-		    String.format("Can't handle more than one request methods on annotation %s on method %s",
-			    annotation, method));
-	} else {
-	    mapping.setHttpMethod(annotation.method()[0].name());
-	}
-	return mapping;
-    }
-
-    @Override
-    protected String getRequestBodyAnnotationNameDisplayText() {
-	return "@RequestBody";
-    }
-
-    @Override
-    protected String getRequestParamAnnotationNameDisplayText() {
-	return "@RequestParam";
-    }
 
     @Override
     protected MethodInspector constructDefaultMethodInspector() {

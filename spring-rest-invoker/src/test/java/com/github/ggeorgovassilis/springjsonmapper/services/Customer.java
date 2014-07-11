@@ -1,4 +1,4 @@
-package com.github.ggeorgovassilis.springjsonmapper.support;
+package com.github.ggeorgovassilis.springjsonmapper.services;
 
 import java.io.Serializable;
 

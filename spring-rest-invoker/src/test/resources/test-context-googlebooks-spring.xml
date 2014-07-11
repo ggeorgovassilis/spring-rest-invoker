@@ -9,16 +9,10 @@
         http://www.springframework.org/schema/mvc
         http://www.springframework.org/schema/mvc/spring-mvc-3.1.xsd">
 
-	<bean id="RemoteBankServiceSpring"
+	<bean id="BookService"
 		class="com.github.ggeorgovassilis.springjsonmapper.spring.SpringAnnotationsHttpJsonInvokerFactoryProxyBean">
-		<property name="baseUrl" value="http://localhost/bankservice" />
-		<property name="remoteServiceInterfaceClass" value="com.github.ggeorgovassilis.springjsonmapper.spring.BankServiceSpring"/>
-	</bean>
-
-	<bean id="RemoteBankServiceJaxRs"
-		class="com.github.ggeorgovassilis.springjsonmapper.jaxrs.JaxRsAnnotationsHttpJsonInvokerFactoryProxyBean">
-		<property name="baseUrl" value="http://localhost/bankservice" />
-		<property name="remoteServiceInterfaceClass" value="com.github.ggeorgovassilis.springjsonmapper.jaxrs.BankServiceJaxRs"/>
+		<property name="baseUrl" value="https://www.googleapis.com/books/v1" />
+		<property name="remoteServiceInterfaceClass" value="com.github.ggeorgovassilis.springjsonmapper.services.spring.BookServiceSpring"/>
 	</bean>
 
 </beans>

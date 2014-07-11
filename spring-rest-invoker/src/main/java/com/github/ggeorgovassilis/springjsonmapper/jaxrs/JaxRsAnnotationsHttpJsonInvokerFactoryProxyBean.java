@@ -1,23 +1,17 @@
 package com.github.ggeorgovassilis.springjsonmapper.jaxrs;
 
-import java.lang.reflect.Method;
-
+import javax.ws.rs.BeanParam;
 import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
 import javax.ws.rs.FormParam;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 
-import org.springframework.core.annotation.AnnotationUtils;
-import org.springframework.http.HttpMethod;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestPart;
 
 import com.github.ggeorgovassilis.springjsonmapper.BaseHttpJsonInvokerFactoryProxyBean;
 import com.github.ggeorgovassilis.springjsonmapper.MethodInspector;
-import com.github.ggeorgovassilis.springjsonmapper.model.UrlMapping;
 import com.github.ggeorgovassilis.springjsonmapper.spring.SpringAnnotationsHttpJsonInvokerFactoryProxyBean;
 
 /**
@@ -27,12 +21,14 @@ import com.github.ggeorgovassilis.springjsonmapper.spring.SpringAnnotationsHttpJ
  * 
  * Annotations understood by this implementation are:
  * 
- * {@link Path} which maps a method to a REST URL
- * {@link QueryParam} which maps a method argument to a URL query parameter
- * {@link FormParam} which maps a method argument to a JSON field. For a plain request body use an empty string as the parameter name. This is similar to {@link RequestBody} of
- * the {@link SpringAnnotationsHttpJsonInvokerFactoryProxyBean} and doesn't require a {@link QueryParam}
- * {@link Consumes} and {@link Produces}
- * 
+ * <ul>
+ * <li>{@link Path} which maps a method to a REST URL
+ * <li>{@link QueryParam} which maps a method argument to a URL query parameter
+ * <li>{@link BeanParam} which must be used together with a {@link QueryParam} means that the object is to be encoded as a JSON field with the name
+ * denoted by {@link QueryParam} in the request body. Similar to {@link RequestBody} from the {@link SpringAnnotationsHttpJsonInvokerFactoryProxyBean}
+ * <li>{@link FormParam} which means that the parameter is to be encoded as part of a multi-form request. Similar to {@link RequestPart} from the {@link SpringAnnotationsHttpJsonInvokerFactoryProxyBean}
+ * <li>{@link Consumes} and {@link Produces}
+ * </ul>
  * <p>
  * <code><pre>
 	&lt;bean id=&quot;RemoteBankServiceJaxRs&quot;
@@ -45,64 +41,36 @@ import com.github.ggeorgovassilis.springjsonmapper.spring.SpringAnnotationsHttpJ
  * <p>
  * An example of the annotated service interface:
  * </p>
- * <br>
  * <code><pre> 
  * interface BankServiceJaxRs {
  *
- *	&#064;Path("/transfer")
- *	&#064;POST
- *	Account transfer(&#064;FormParam("fromAccount") Account fromAccount, &#064;FormParam("actor") Customer actor,
- *			&#064;FormParam("toAccount") Account toAccount, &#064;FormParam("amount") int amount,
- *			&#064;QueryParam("sendConfirmationSms") boolean sendConfirmationSms);
+ *	&#064POST
+ *	&#064Path("/transfer")
+ *	Account transfer(&#064BeanParam &#064QueryParam("fromAccount") Account fromAccount, &#064BeanParam &#064QueryParam("actor") Customer actor,
+ *			&#064BeanParam &#064QueryParam("toAccount") Account toAccount, &#064BeanParam &#064QueryParam("amount") int amount,
+ *			&#064QueryParam("sendConfirmationSms") boolean sendConfirmationSms);
  *
  * }
  *                               
- *                               </pre></code>
+ * </pre></code>
+ * 
+ * This will result in a HTTP request similar to:
+ * <code><pre>
+ * 
+ * POST http://localhost/bankservice/transfer?sendConfirmationSms=true
+ * Accept=application/json, application/*+json
+ * Content-Type=application/json;charset=UTF-8
+ *
+ * {"amount":1,"toAccount":{"accountNumber":"account 2","balance":0,"owner":{"name":"Customer 2"}},"fromAccount":{"accountNumber":"account 1","balance":1000,"owner":{"name":"Customer 1"}},"actor":{"name":"Customer 1"}}
+ *
+ * </pre>
+ * </code>
+ *
  * @author george georgovassilis
  * 
  */
 public class JaxRsAnnotationsHttpJsonInvokerFactoryProxyBean extends
 	BaseHttpJsonInvokerFactoryProxyBean {
-
-    @Override
-    protected UrlMapping getRequestMapping(Method method) {
-	Path path = AnnotationUtils.findAnnotation(method, Path.class);
-	if (path == null)
-	    return null;
-	UrlMapping mapping = new UrlMapping();
-	mapping.setUrl(path.value());
-
-	Consumes consumes = AnnotationUtils.findAnnotation(method,
-		Consumes.class);
-	if (consumes != null)
-	    mapping.setConsumes(consumes.value());
-
-	// TODO: how to handle headers?
-	Produces produces = AnnotationUtils.findAnnotation(method,
-		Produces.class);
-	if (produces != null)
-	    mapping.setProduces(produces.value());
-
-	mapping.setHttpMethod(HttpMethod.GET.name());
-	if (AnnotationUtils.findAnnotation(method, POST.class) != null)
-	    mapping.setHttpMethod(HttpMethod.POST.name());
-	if (AnnotationUtils.findAnnotation(method, PUT.class) != null)
-	    mapping.setHttpMethod(HttpMethod.PUT.name());
-	if (AnnotationUtils.findAnnotation(method, DELETE.class) != null)
-	    mapping.setHttpMethod(HttpMethod.DELETE.name());
-
-	return mapping;
-    }
-
-    @Override
-    protected String getRequestBodyAnnotationNameDisplayText() {
-	return "@RequestBody";
-    }
-
-    @Override
-    protected String getRequestParamAnnotationNameDisplayText() {
-	return "@RequestParam";
-    }
 
     @Override
     protected MethodInspector constructDefaultMethodInspector() {
