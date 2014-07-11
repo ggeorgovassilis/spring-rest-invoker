@@ -5,13 +5,15 @@ Spring proxy that imports remote JSON REST services as local java interfaces. It
 
 Features:
 
-- Declare a service interface and bind it to remote URLs with annotations
+- Declare a service interface and bind it to remote URLs with annotations (spring or jax-rs)
 - Convert JSON to Java POJOs and vice versa
 - Convert method arguments to GET parameters
 - POST one or more objects
 
 
 ## News
+
+2014-07-12: version 0.0.6-SNAPSHOT is out with support for jax-rs annotations, arguments as HTTP headers, arguments as cookies
 
 2014-05-25: version 0.0.5-SNAPSHOT is out with support for multipart form encoding
 
@@ -36,8 +38,18 @@ Then include the dependency:
 <dependency>
 	<groupId>com.github.ggeorgovassilis</groupId>
 	<artifactId>spring-rest-invoker</artifactId>
-	<version>0.0.5-SNAPSHOT</version>
+	<version>0.0.6-SNAPSHOT</version>
 </dependency>
+```
+
+If you require jax-rs support you must provide a dependency with the annotations, i.e.:
+
+```xml
+	<dependency>
+		<groupId>org.jboss.resteasy</groupId>
+		<artifactId>jaxrs-api</artifactId>
+		<version>3.0.8.Final</version>
+	</dependency>
 ```
 
 ### 1. Make an interface, i.e:
@@ -55,14 +67,41 @@ public interface BookService {
 
 Note that the annotations are from spring's web package.
 
+Or, if you prefer jax-rs annotations:
+
+```java
+public interface BookServiceJaxRs extends BookService{
+
+    @Override
+    @GET
+    @Path("/volumes")
+    QueryResult findBooksByTitle(@QueryParam("q") String q);
+    
+    @Override
+    @GET
+    @Path("/volumes/{id}")
+    Item findBookById(@PathParam("id") String id);
+}
+```
+
 ### 2. Then map it to the remote REST URL you want to consume:
 
 ```xml
-<bean id="RemoteBookService"
-		class="com.github.ggeorgovassilis.springjsonmapper.HttpJsonInvokerFactoryProxyBean">
+	<bean id="BookService"
+		class="com.github.ggeorgovassilis.springjsonmapper.spring.SpringAnnotationsHttpJsonInvokerFactoryProxyBean">
 		<property name="baseUrl" value="https://www.googleapis.com/books/v1" />
-		<property name="remoteServiceInterfaceClass" value="com.github.ggeorgovassilis.springjsonmapper.BookService"/>
-</bean>
+		<property name="remoteServiceInterfaceClass" value="com.github.ggeorgovassilis.springjsonmapper.services.spring.BookServiceSpring"/>
+	</bean>
+```
+
+or if you're using jax-rs
+
+```xml
+	<bean id="BookService"
+		class="com.github.ggeorgovassilis.springjsonmapper.jaxrs.JaxRsAnnotationsHttpJsonInvokerFactoryProxyBean">
+		<property name="baseUrl" value="https://www.googleapis.com/books/v1" />
+		<property name="remoteServiceInterfaceClass" value="com.github.ggeorgovassilis.springjsonmapper.services.jaxrs.BookServiceJaxRs"/>
+	</bean>
 ```
 
 ### 3. Use it in your code
@@ -82,13 +121,26 @@ QueryResult results = bookService.findBooksByTitle("Alice in Wonderland");
 You can POST an object:
 
 ```java
-public interface AnimasciService {
+public interface BankService {
 
-    @RequestMapping(value="/", method=RequestMethod.POST)
-    Animation createNewAnimation(@RequestBody Animation animation);
+	@RequestMapping(value = "/verify", method = RequestMethod.POST)
+	Boolean checkAccount(@RequestBody Account account);
 
 }
 ```
+
+or the jax-rs way:
+
+```java
+public interface BankService {
+
+	@POST
+	@Path("/verify")
+	Boolean checkAccount(@BeanParam Account account);
+
+}
+```
+
 
 Or post multiple objects (in which case you also need to provide names for them with a @RequestParam):
 
@@ -102,17 +154,42 @@ public interface BankService {
 	    @RequestBody @RequestParam("amount") int amount,
 	    @RequestParam("sendConfirmationSms") boolean sendConfirmationSms);
 
-    @RequestMapping(value="/verify", method=RequestMethod.POST)
-    Boolean checkAccount(@RequestBody Account account);
+}
+```
+
+Or the respective jax-rs declaration:
+
+```java
+public interface BankService {
+	@POST
+	@Path("/transfer")
+	Account transfer(@BeanParam @QueryParam("fromAccount") Account fromAccount, @BeanParam @QueryParam("actor") Customer actor,
+			@BeanParam @QueryParam("toAccount") Account toAccount, @BeanParam @QueryParam("amount") int amount,
+			@QueryParam("sendConfirmationSms") boolean sendConfirmationSms);
 }
 ```
 
 which will post a JSON object similar to this:
+
 ```javascript
 {
-	"fromAccount":{....},
-	"actor":{...},
-	"toAccount":{....},
+	"fromAccount":	{
+			"accountNumber":1234,
+			"balance":99,
+			"customer":{
+					"name":"joe doe"
+				}
+			},
+	"actor":{
+		"name":"joe doe"
+		},
+	"toAccount":	{
+			"accountNumber":7890,
+			"balance":0,
+			"customer":{
+					"name":"jane doe"
+				}
+			},
 	"amount":123
 }
 ```
@@ -155,7 +232,6 @@ public interface BookService {
     void saveBook(@RequestBody Book book);
 
 }
-
 ...
 
 bookService.saveBook(book);
@@ -221,6 +297,16 @@ public interface BookService {
 }
 ```
 
+or jax-rs:
+
+```
+public interface BookService {
+
+    @Path("/volumes/{id}")
+    Item findBookById(@PathParam("id") String id);
+}
+```
+
 Note the ```{id}``` notation in @RequestMapping; it needs to match the one specificed in @PathVariable
 
 
@@ -229,10 +315,22 @@ Note the ```{id}``` notation in @RequestMapping; it needs to match the one speci
 See the section earlier in this document about posting. In short: if you want to post just a single object, then a JSON object is posted to the remote service where fields have the name of member variables (this applies recursively for objects within objects).
 
 ```java
+public interface BankService {
+
+	@RequestMapping(value = "/verify", method = RequestMethod.POST)
+	Boolean checkAccount(@RequestBody Account account);
+
+}
+```
+
+or jax-rs:
+
+```java
 public interface BookService {
 
-    @RequestMapping(value="/books", method=RequestMethod.POST)
-    void saveBook(@RequestBody Book book);
+	@POST
+	@Path("/verify")
+	Boolean checkAccount(@BeanParam Account account);
 
 }
 ```
@@ -240,10 +338,26 @@ public interface BookService {
 If you need to post multiple objects, then just add multiple parmeters to the method but also include a ```@RequestParam``` mapping so that the invoker knows under which field names to place the generated JSON objects:
 
 ```java
-public interface BookService {
+public interface BankService {
 
-    @RequestMapping(value="/books", method=RequestMethod.POST)
-    void saveBook(@RequestBody @RequestParam("book") Book book, @RequestBody @RequestParam("availability") availability);
+	@RequestMapping(value = "/transfer", method = RequestMethod.POST)
+	Account transfer(@RequestBody @RequestParam("fromAccount") Account fromAccount, @RequestBody @RequestParam("actor") Customer actor,
+			@RequestBody @RequestParam("toAccount") Account toAccount, @RequestBody @RequestParam("amount") int amount,
+			@RequestParam("sendConfirmationSms") boolean sendConfirmationSms);
+
+}
+```
+
+or jax-rs:
+
+```java
+public interface BankService {
+
+	@POST
+	@Path("/transfer")
+	Account transfer(@BeanParam @QueryParam("fromAccount") Account fromAccount, @BeanParam @QueryParam("actor") Customer actor,
+			@BeanParam @QueryParam("toAccount") Account toAccount, @BeanParam @QueryParam("amount") int amount,
+			@QueryParam("sendConfirmationSms") boolean sendConfirmationSms);
 
 }
 ```
@@ -259,14 +373,26 @@ Use ```@RequestPart``` instead of ```@RequestBody``` :
 	Account joinAccounts(@RequestPart @RequestParam("account1") Account account1, @RequestPart @RequestParam("account2") Account account2);
 ```
 
+or the jax-rs way:
+
+```java
+	@POST
+	@Path("/join-accounts")
+	Account joinAccounts(@FormParam("") @QueryParam("account1") Account account1, @FormParam("") @QueryParam("account2") Account account2);
+```
+
 #### Dependencies?
 
-Spring-web and jackson.
+Spring-web, jackson and optionally some jax-rs implementation.
 
 
 #### Is the spring-rest-invoker a JAX-RS implementation?
 
-No. We're trying to minimize dependencies by making use of the spring framework as much as possible.
+Yes, since 0.0.6-SNAPSHOT. See the introduction.
+
+#### Where can I find more examples?
+
+Have a look at mapping declarations for the unit test: https://github.com/ggeorgovassilis/spring-rest-invoker/tree/master/spring-rest-invoker/src/test/java/com/github/ggeorgovassilis/springjsonmapper/services
 
 #### Are there any alternatives?
 
