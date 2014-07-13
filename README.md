@@ -174,8 +174,8 @@ which will post a JSON object similar to this:
 ```javascript
 {
 	"fromAccount":	{
-			"accountNumber":1234,
-			"balance":99,
+			"accountNumber": 1234,
+			"balance": 99,
 			"customer":{
 					"name":"joe doe"
 				}
@@ -184,14 +184,43 @@ which will post a JSON object similar to this:
 		"name":"joe doe"
 		},
 	"toAccount":	{
-			"accountNumber":7890,
-			"balance":0,
-			"customer":{
+			"accountNumber": 7890,
+			"balance": 0,
+			"customer": {
 					"name":"jane doe"
 				}
 			},
-	"amount":123
+	"amount": 123
 }
+```
+
+## Supported Annotations
+
+### Spring
+
+```java
+@RequestMapping	// Specify the URL to bind to. Variable parts are written as {varname} and are replaced with the values of @PathParam
+@PathVariable	// Replace parts of the @Path with the (string) value of this argument
+@RequestParam	// Pass argument value as URL parameter (or JSON field, see below)
+@Header		// Pass argument (string) value as HTTP header 
+@RequestBody	// Pass argument as JSON in the request body. If a @QueryParam has been specified, then encode it with that JSON field name
+@RequestPart	// Pass argument as multipart form request
+@CookieValue	// Pass argument as cookie
+```
+
+
+### JAX-RS
+
+```java
+@Path		// Specify the URL to bind to. Variable parts are written as {varname} and are replaced with the values of @PathParam
+@GET, @POST etc	// Specify the HTTP request method to use
+@Produces	// Value of the Accept HTTP header
+@Consumes	// Value of the Content-Type HTTP header
+@PathParam	// Replace parts of the @Path with the (string) value of this argument
+@QueryParam	// Pass argument value as URL parameter (or JSON field, see below)
+@HeaderParam	// Pass argument (string) value as HTTP header 
+@BeanParam	// Pass argument as JSON in the request body. If a @QueryParam has been specified, then encode it with that JSON field name
+@FormParam	// Pass argument as multipart form request. Mandatory argument can be blank
 ```
 
 ## F.A.Q.
