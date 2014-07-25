@@ -13,6 +13,8 @@ Features:
 
 ## News
 
+2014-07-25: version 0.0.7-SNAPSHOT adds support for logging HTTP traffic
+
 2014-07-12: version 0.0.6-SNAPSHOT is out with support for jax-rs annotations, arguments as HTTP headers, arguments as cookies
 
 2014-05-25: version 0.0.5-SNAPSHOT is out with support for multipart form encoding
@@ -421,7 +423,12 @@ Yes, since 0.0.6-SNAPSHOT. See the introduction.
 
 #### How do I log the entire HTTP communication with the remote service?
 
-You need to provide your own RestTemplate, have a look at this http://stackoverflow.com/a/22620168/3194801
+You need to provide your own RestTemplate, have a look at this http://stackoverflow.com/a/22620168/3194801 which enables logging. If you want to use the logging interceptor that comes with this library, then have a look at the configuration example in the unit tests: https://github.com/ggeorgovassilis/spring-rest-invoker/blob/master/spring-rest-invoker/src/test/resources/test-context-googlebooks-spring.xml
+
+Also enable logging in your log4j configuration:
+
+log4j.logger.com.github.ggeorgovassilis.springjsonmapper.Request=DEBUG
+log4j.logger.com.github.ggeorgovassilis.springjsonmapper.Response=DEBUG
 
 #### Where can I find more examples?
 
