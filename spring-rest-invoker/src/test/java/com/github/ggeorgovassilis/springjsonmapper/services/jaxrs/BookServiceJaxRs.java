@@ -24,4 +24,5 @@ public interface BookServiceJaxRs extends BookService{
     @Override
     @Path("/volumes/{id}")
     Item findBookById(@PathParam("id") String id);
+    
 }

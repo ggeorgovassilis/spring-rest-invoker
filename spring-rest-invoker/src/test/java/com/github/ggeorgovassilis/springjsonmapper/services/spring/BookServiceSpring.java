@@ -24,4 +24,5 @@ public interface BookServiceSpring extends BookService{
     @Override
     @RequestMapping("/volumes/{id}")
     Item findBookById(@PathVariable("id") String id);
+
 }

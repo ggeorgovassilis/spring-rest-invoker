@@ -48,5 +48,6 @@ public abstract class AbstractGoogleBooksApiTest {
 		info.getTitle());
 	assertEquals("Isaac Newton", info.getAuthors().get(0));
     }
+    
 
 }

@@ -4,9 +4,7 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.annotation.PostConstruct;
@@ -15,8 +13,6 @@ import org.springframework.beans.factory.FactoryBean;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.converter.HttpMessageConverter;
-import org.springframework.http.converter.json.MappingJacksonHttpMessageConverter;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.util.ReflectionUtils;
@@ -144,10 +140,20 @@ public abstract class BaseHttpJsonInvokerFactoryProxyBean implements
 
     protected RestTemplate constructDefaultRestTemplate() {
 	RestTemplate restTemplate = new RestTemplate();
-	List<HttpMessageConverter<?>> messageConverters = new ArrayList<HttpMessageConverter<?>>();
-	MappingJacksonHttpMessageConverter jsonConverter = new MappingJacksonHttpMessageConverter();
-	messageConverters.add(jsonConverter);
-	restTemplate.setMessageConverters(messageConverters);
+
+//	ClientHttpRequestInterceptor ri = new LoggingRequestInterceptor();
+//	List<ClientHttpRequestInterceptor> ris = new ArrayList<ClientHttpRequestInterceptor>();
+//	ris.add(ri);
+//	restTemplate.setInterceptors(ris);
+//	restTemplate
+//		.setRequestFactory(new InterceptingClientHttpRequestFactory(
+//			new BufferingClientHttpRequestFactory(
+//				new SimpleClientHttpRequestFactory()), ris));
+//
+//	List<HttpMessageConverter<?>> messageConverters = new ArrayList<HttpMessageConverter<?>>();
+//	MappingJacksonHttpMessageConverter jsonConverter = new MappingJacksonHttpMessageConverter();
+//	messageConverters.add(jsonConverter);
+//	restTemplate.setMessageConverters(messageConverters);
 	return restTemplate;
     }
 
@@ -218,7 +224,9 @@ public abstract class BaseHttpJsonInvokerFactoryProxyBean implements
 	    if (descriptor.getType().equals(Type.httpParameter)
 		    && !urlMapping.hasRequestBody(descriptor.getName())) {
 		if (parameters.containsKey(descriptor.getName()))
-		    throw new MappingDeclarationException("Duplicate parameter "+descriptor.getName()+" on "+method, method, null, -1);
+		    throw new MappingDeclarationException(
+			    "Duplicate parameter " + descriptor.getName()
+				    + " on " + method, method, null, -1);
 		parameters.put(descriptor.getName(), descriptor.getValue());
 		url = appendDescriptorNameParameterToUrl(url, descriptor);
 	    } else if (descriptor.getType().equals(Type.cookie)) {
@@ -231,15 +239,16 @@ public abstract class BaseHttpJsonInvokerFactoryProxyBean implements
 		    throw new MappingDeclarationException(
 			    String.format(
 				    "Duplicate requestBody with name '%s' on method %s",
-				    descriptor.getName(), method), method, null, -1);
+				    descriptor.getName(), method), method,
+			    null, -1);
 		dataObjects.put(descriptor.getName(), descriptor.getValue());
 	    } else if (descriptor.getType().equals(Type.requestPart)) {
 		formObjects.add(descriptor.getName(), descriptor.getValue());
 	    }
 	}
 
-	result = executeRequest(dataObjects, method, rest, url,
-		httpMethod, returnType, parameters, formObjects, cookies, headers);
+	result = executeRequest(dataObjects, method, rest, url, httpMethod,
+		returnType, parameters, formObjects, cookies, headers);
 	return result;
     }
 
@@ -257,8 +266,8 @@ public abstract class BaseHttpJsonInvokerFactoryProxyBean implements
 	return result;
     }
 
-    protected Object executeRequest(Map<String, Object> dataObjects, Method method,
-	    RestOperations rest, String url,
+    protected Object executeRequest(Map<String, Object> dataObjects,
+	    Method method, RestOperations rest, String url,
 	    HttpMethod httpMethod, Class<?> returnType,
 	    Map<String, Object> parameters,
 	    MultiValueMap<String, Object> formObjects,
@@ -273,7 +282,8 @@ public abstract class BaseHttpJsonInvokerFactoryProxyBean implements
 	if (dataObject == null)
 	    dataObject = formObjects.isEmpty() ? dataObjects : formObjects;
 
-	LinkedMultiValueMap<String, String> finalHeaders = new LinkedMultiValueMap<String, String>(headers);
+	LinkedMultiValueMap<String, String> finalHeaders = new LinkedMultiValueMap<String, String>(
+		headers);
 	augmentHeadersWithCookies(finalHeaders, cookies);
 	boolean hasBody = !HttpMethod.GET.equals(httpMethod);
 	if (hasBody)
@@ -287,7 +297,8 @@ public abstract class BaseHttpJsonInvokerFactoryProxyBean implements
     }
 
     protected void augmentHeadersWithCookies(
-	    LinkedMultiValueMap<String, String> headers, Map<String, String> cookies) {
+	    LinkedMultiValueMap<String, String> headers,
+	    Map<String, String> cookies) {
 	if (cookies.isEmpty())
 	    return;
 	String cookieHeader = "";
@@ -326,7 +337,8 @@ public abstract class BaseHttpJsonInvokerFactoryProxyBean implements
 		if (index == -1)
 		    throw new MappingDeclarationException(
 			    "Missing equals sign in header annotation "
-				    + header + ": must be like KEY=VALUE", null, null, -1);
+				    + header + ": must be like KEY=VALUE",
+			    null, null, -1);
 		String key = header.substring(0, index);
 		String value = header.substring(index + 1);
 		result.add(key, value);
@@ -340,10 +352,10 @@ public abstract class BaseHttpJsonInvokerFactoryProxyBean implements
 	    for (String produce : requestMapping.getProduces()) {
 		result.add("Accept", produce);
 	    }
-	for (MethodParameterDescriptor mpd:requestMapping.getParameters())
+	for (MethodParameterDescriptor mpd : requestMapping.getParameters())
 	    if (mpd.getType().equals(Type.httpHeader)) {
 		Object value = mpd.getValue();
-		String stringValue = value==null?"":value.toString();
+		String stringValue = value == null ? "" : value.toString();
 		result.add(mpd.getName(), stringValue);
 	    }
 	return result;

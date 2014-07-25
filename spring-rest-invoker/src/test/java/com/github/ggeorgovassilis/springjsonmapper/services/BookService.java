@@ -12,4 +12,5 @@ public interface BookService {
     QueryResult findBooksByTitle(String q);
     
     Item findBookById(String id);
+    
 }
