@@ -419,6 +419,10 @@ Spring-web, jackson and optionally some jax-rs implementation.
 
 Yes, since 0.0.6-SNAPSHOT. See the introduction.
 
+#### How do I log the entire HTTP communication with the remote service?
+
+You need to provide your own RestTemplate, have a look at this http://stackoverflow.com/a/22620168/3194801
+
 #### Where can I find more examples?
 
 Have a look at mapping declarations for the unit test: https://github.com/ggeorgovassilis/spring-rest-invoker/tree/master/spring-rest-invoker/src/test/java/com/github/ggeorgovassilis/springjsonmapper/services
