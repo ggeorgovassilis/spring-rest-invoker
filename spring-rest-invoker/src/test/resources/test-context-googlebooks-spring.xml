@@ -13,8 +13,8 @@
         http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd">
 
 <!-- 
-	Here is an example of how to set up logging. It won't do anything, it won't even lead to a visible result in the logs
-	because
+	Here is an example of how to set up logging. For a much simplified, normal, production setup you don't need any of these declarations up to and
+	including restTemplate.
  -->
 	<util:list id="interceptors">
 		<bean
