@@ -1,7 +1,7 @@
 spring-rest-invoker
 ===================
 
-Spring proxy that imports remote JSON REST services as local java interfaces. It uses spring web annotations such as @RequestParam to know which remote URL to contact (and how) when you call a method on the proxied service interface.
+Spring proxy that binds remote JSON REST services to java interfaces. Invoking methods on those interfaces will make a corresponding HTTP request to the remote service and (de)serializa any objects to/from JSON. The concrete mapping between an interface and a remote service can be done programmatically or by annotating interfaces with Spring or JAX-RS annotations.
 
 Features:
 
