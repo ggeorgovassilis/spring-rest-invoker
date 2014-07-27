@@ -2,7 +2,8 @@ package com.github.ggeorgovassilis.springjsonmapper.utils;
 
 import java.io.IOException;
 
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.http.HttpRequest;
 import org.springframework.http.client.ClientHttpRequestExecution;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
@@ -17,11 +18,11 @@ import org.springframework.util.FileCopyUtils;
  */
 public class LoggingRequestInterceptor implements ClientHttpRequestInterceptor {
 
-    private static final Logger requestLog = Logger
-	    .getLogger("com.github.ggeorgovassilis.springjsonmapper.Request");
+    private static final Log requestLog = LogFactory
+	    .getLog("com.github.ggeorgovassilis.springjsonmapper.Request");
 
-    private static final Logger responseLog = Logger
-	    .getLogger("com.github.ggeorgovassilis.springjsonmapper.Response");
+    private static final Log responseLog = LogFactory
+	    .getLog("com.github.ggeorgovassilis.springjsonmapper.Response");
 
     @Override
     public ClientHttpResponse intercept(HttpRequest request, byte[] body,

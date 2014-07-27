@@ -4,7 +4,7 @@
 	<groupId>com.github.ggeorgovassilis</groupId>
 	<artifactId>spring-rest-invoker</artifactId>
 	<name>spring-rest-invoker</name>
-	<version>0.0.7-SNAPSHOT</version>
+	<version>0.0.8-SNAPSHOT</version>
 	<description>Spring factory that allows consumption of a remote REST JSON service by binding it to a local Java interface and exposing it as a proxy.</description>
 	<inceptionYear>2014</inceptionYear>
 
@@ -55,9 +55,9 @@
 		</dependency>
 
 		<dependency>
-			<groupId>org.jboss.resteasy</groupId>
-			<artifactId>jaxrs-api</artifactId>
-			<version>3.0.8.Final</version>
+			<groupId>javax.ws.rs</groupId>
+			<artifactId>javax.ws.rs-api</artifactId>
+			<version>2.0</version>
 			<scope>provided</scope>
 		</dependency>
 
@@ -86,7 +86,7 @@
 			<groupId>log4j</groupId>
 			<artifactId>log4j</artifactId>
 			<version>1.2.17</version>
-			<scope>provided</scope>
+			<scope>test</scope>
 		</dependency>
 
 	</dependencies>
@@ -121,11 +121,7 @@
 	<reports>
 		<report>maven-pmd-plugin</report>
 	</reports>
-	
-	<!-- 
-	Steps for performing a release:
-	mvn -DperformRelease=true clean deploy
-	
-	./update-index.sh	
-	 -->
+
+	<!-- Steps for performing a release: mvn -DperformRelease=true clean deploy 
+		./update-index.sh -->
 </project>
