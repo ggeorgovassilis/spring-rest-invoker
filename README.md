@@ -414,8 +414,25 @@ or the jax-rs way:
 
 #### Dependencies?
 
-Spring-web, jackson and optionally some jax-rs implementation.
+The maven pom will pull in dependencies required for the spring mapper to work. If you need jax-rs support, then some more dependencies are required:
 
+```xml
+<dependency>
+	<groupId>javax.ws.rs</groupId>
+	<artifactId>javax.ws.rs-api</artifactId>
+	<version>2.0</version>
+</dependency>
+```
+
+If you use the loggin interceptor then you'll also need some logging implementation for commons logging, i.e. log4j:
+
+```xml
+<dependency>
+	<groupId>log4j</groupId>
+	<artifactId>log4j</artifactId>
+	<version>1.2.17</version>
+</dependency>
+```
 
 #### Is the spring-rest-invoker a JAX-RS implementation?
 
