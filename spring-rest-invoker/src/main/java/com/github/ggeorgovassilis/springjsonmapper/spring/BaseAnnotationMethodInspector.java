@@ -19,6 +19,12 @@ public abstract class BaseAnnotationMethodInspector implements MethodInspector, 
 	this.valueResolver = resolver;
     }
     
+    /**
+     * Will replace property placeholders with their values, e.g. ${serverUrl}/customer with http://example.com/js/customer if
+     * serverUrl is a property that the application context resolves to http://example.com.js
+     * @param expression
+     * @return
+     */
     protected String resolveExpression(String expression){
 	return valueResolver.resolveStringValue(expression);
     }

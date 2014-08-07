@@ -51,6 +51,6 @@ public interface BankServiceSpring extends BankService{
     	boolean isSessionAlive(@Header(	"X-SessionId") String sid);
     	
     	@Override
-	@RequestMapping(value = "/${baseUrl}/customer/{name}")
+	@RequestMapping(value = "/${domain}/customer/{name}")
     	boolean doesCustomerExist(@PathVariable("name") String name);
 }
