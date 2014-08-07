@@ -21,11 +21,11 @@ import javax.ws.rs.QueryParam;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.http.HttpMethod;
 
-import com.github.ggeorgovassilis.springjsonmapper.MethodInspector;
 import com.github.ggeorgovassilis.springjsonmapper.model.MappingDeclarationException;
 import com.github.ggeorgovassilis.springjsonmapper.model.MethodParameterDescriptor;
 import com.github.ggeorgovassilis.springjsonmapper.model.UrlMapping;
 import com.github.ggeorgovassilis.springjsonmapper.model.MethodParameterDescriptor.Type;
+import com.github.ggeorgovassilis.springjsonmapper.spring.BaseAnnotationMethodInspector;
 
 /**
  * Looks at methods and extracts {@link Path}, {@link GET}, {@link QueryParam}
@@ -34,7 +34,7 @@ import com.github.ggeorgovassilis.springjsonmapper.model.MethodParameterDescript
  * @author george georgovassilis
  * 
  */
-public class JaxRsAnnotationMethodInspector implements MethodInspector {
+public class JaxRsAnnotationMethodInspector extends BaseAnnotationMethodInspector {
 
     /*
      * RequestMapping -> PATH, GET, POST RequestParam -> QueryParam PathVariable
@@ -46,7 +46,7 @@ public class JaxRsAnnotationMethodInspector implements MethodInspector {
 	Path path = AnnotationUtils.findAnnotation(method, Path.class);
 	if (path == null || path.value() == null)
 	    return null;
-	urlMapping.setUrl(path.value());
+	urlMapping.setUrl(resolveExpression(path.value()));
 	if (urlMapping.getUrl() == null)
 	    throw new MappingDeclarationException(
 		    "Missing @Path on method " + method, method, path, -1);

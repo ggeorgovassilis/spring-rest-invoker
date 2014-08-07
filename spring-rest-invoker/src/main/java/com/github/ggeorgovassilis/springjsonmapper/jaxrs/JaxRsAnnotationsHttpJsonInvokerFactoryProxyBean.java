@@ -69,12 +69,13 @@ import com.github.ggeorgovassilis.springjsonmapper.spring.SpringAnnotationsHttpJ
  * @author george georgovassilis
  * 
  */
-public class JaxRsAnnotationsHttpJsonInvokerFactoryProxyBean extends
-	BaseHttpJsonInvokerFactoryProxyBean {
+public class JaxRsAnnotationsHttpJsonInvokerFactoryProxyBean extends BaseHttpJsonInvokerFactoryProxyBean {
 
     @Override
     protected MethodInspector constructDefaultMethodInspector() {
-	return new JaxRsAnnotationMethodInspector();
+	JaxRsAnnotationMethodInspector inspector =  new JaxRsAnnotationMethodInspector();
+	inspector.setEmbeddedValueResolver(expressionResolver);
+	return inspector;
     }
 
 }

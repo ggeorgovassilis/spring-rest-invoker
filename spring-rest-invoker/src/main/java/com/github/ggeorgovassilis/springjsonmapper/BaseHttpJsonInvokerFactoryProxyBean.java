@@ -10,12 +10,14 @@ import java.util.Map;
 import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.FactoryBean;
+import org.springframework.context.EmbeddedValueResolverAware;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.util.ReflectionUtils;
+import org.springframework.util.StringValueResolver;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.client.RestOperations;
 import org.springframework.web.client.RestTemplate;
@@ -37,7 +39,7 @@ import com.github.ggeorgovassilis.springjsonmapper.model.UrlMapping;
  * 
  */
 public abstract class BaseHttpJsonInvokerFactoryProxyBean implements
-	FactoryBean<Object>, InvocationHandler {
+	FactoryBean<Object>, InvocationHandler,EmbeddedValueResolverAware {
 
     protected Class<?> remoteServiceInterfaceClass;
     protected String remoteServiceInterfaceClassName;
@@ -45,6 +47,8 @@ public abstract class BaseHttpJsonInvokerFactoryProxyBean implements
     protected String baseUrl;
     protected RestOperations restTemplate;
     protected MethodInspector methodInspector;
+    protected StringValueResolver expressionResolver;
+
 
     /**
      * Return an implementation of a {@link MethodInspector} which can look at
@@ -68,6 +72,11 @@ public abstract class BaseHttpJsonInvokerFactoryProxyBean implements
      */
     protected UrlMapping getRequestMapping(Method method, Object[] args) {
 	return methodInspector.inspect(method, args);
+    }
+
+    @Override
+    public void setEmbeddedValueResolver(StringValueResolver resolver) {
+	this.expressionResolver = resolver;
     }
 
     public MethodInspector getMethodInspector() {

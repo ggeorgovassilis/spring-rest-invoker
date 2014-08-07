@@ -1,5 +1,6 @@
 package com.github.ggeorgovassilis.springjsonmapper.spring;
 
+import org.springframework.util.StringValueResolver;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -58,11 +59,14 @@ import com.github.ggeorgovassilis.springjsonmapper.MethodInspector;
  * 
  */
 public class SpringAnnotationsHttpJsonInvokerFactoryProxyBean extends
-	BaseHttpJsonInvokerFactoryProxyBean {
+	BaseHttpJsonInvokerFactoryProxyBean{
+    
 
     @Override
     protected MethodInspector constructDefaultMethodInspector() {
-	return new SpringAnnotationMethodInspector();
+	SpringAnnotationMethodInspector inspector = new SpringAnnotationMethodInspector();
+	inspector.setEmbeddedValueResolver(expressionResolver);
+	return inspector;
     }
 
 }

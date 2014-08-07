@@ -12,6 +12,7 @@ import com.github.ggeorgovassilis.springjsonmapper.services.VolumeInfo;
 import com.github.ggeorgovassilis.springjsonmapper.spring.SpringAnnotationsHttpJsonInvokerFactoryProxyBean;
 
 import static org.junit.Assert.*;
+
 /**
  * Integration test with the google books API using the
  * {@link SpringAnnotationsHttpJsonInvokerFactoryProxyBean}
@@ -25,7 +26,7 @@ public abstract class AbstractGoogleBooksApiTest {
     protected BookService bookService;
 
     @Test
-    public void testFindBooksByTitle() throws Exception{
+    public void testFindBooksByTitle() throws Exception {
 
 	QueryResult result = bookService
 		.findBooksByTitle("\"Philosophiae naturalis principia mathematica\"");
@@ -33,9 +34,13 @@ public abstract class AbstractGoogleBooksApiTest {
 	boolean found = false;
 	for (Item item : result.getItems()) {
 	    VolumeInfo info = item.getVolumeInfo();
-	    found |= ("Philosophiae naturalis principia mathematica"
-		    .equals(info.getTitle()) && "Isaac Newton".equals(info
-		    .getAuthors().get(0)));
+
+	    found |= info != null
+		    && info.getAuthors() != null
+		    && !info.getAuthors().isEmpty()
+		    && ("Philosophiae naturalis principia mathematica"
+			    .equals(info.getTitle()) && "Isaac Newton"
+			    .equals(info.getAuthors().get(0)));
 	}
 	assertTrue(found);
     }
@@ -48,6 +53,5 @@ public abstract class AbstractGoogleBooksApiTest {
 		info.getTitle());
 	assertEquals("Isaac Newton", info.getAuthors().get(0));
     }
-    
 
 }

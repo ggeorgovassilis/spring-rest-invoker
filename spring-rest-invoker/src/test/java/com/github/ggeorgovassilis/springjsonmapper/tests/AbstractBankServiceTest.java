@@ -50,7 +50,7 @@ public abstract class AbstractBankServiceTest {
     }
 
     @Test
-    public void testBankService_transfer() throws Exception {
+    public void testRequestBody() throws Exception {
 	// setup test
 	Customer customer1 = new Customer();
 	customer1.setName("Customer 1");
@@ -88,7 +88,7 @@ public abstract class AbstractBankServiceTest {
     }
 
     @Test
-    public void testBankService_checkAccount() throws Exception {
+    public void testPost() throws Exception {
 	// setup test
 	Customer customer1 = new Customer();
 	customer1.setName("Customer 1");
@@ -117,7 +117,7 @@ public abstract class AbstractBankServiceTest {
      * Tests http headers
      */
     @Test
-    public void testBankService_photo() throws Exception {
+    public void testHeaders() throws Exception {
 	// setup test
 	byte[] photo = { 1, 2, 3, 4, 5 };
 	MockResponse response = requestFactory.createResponse();
@@ -137,7 +137,7 @@ public abstract class AbstractBankServiceTest {
      * Tests @RequestPart implementation
      */
     @Test
-    public void testBankService_joinAccounts() throws Exception {
+    public void testRequestParts() throws Exception {
 	// setup test
 	Customer customer1 = new Customer();
 	customer1.setName("Customer 1");
@@ -217,7 +217,7 @@ public abstract class AbstractBankServiceTest {
      * Test a simple http GET
      */
     @Test
-    public void testGetAccount() throws Exception{
+    public void testPathVariables() throws Exception{
 	// setup test
 	MockResponse response = requestFactory.createResponse();
 	response.setBody(get("recordedmessages/getaccount_response.txt"));
@@ -239,7 +239,7 @@ public abstract class AbstractBankServiceTest {
      * @throws Exception
      */
     @Test
-    public void testIsSessionAlive() throws Exception{
+    public void testArgumentToHeaders() throws Exception{
 	// setup test
 	MockResponse response = requestFactory.createResponse();
 	response.setBody(get("recordedmessages/issessionalive_response.txt"));
@@ -251,6 +251,27 @@ public abstract class AbstractBankServiceTest {
 	// validate request
 	MockRequest request = requestFactory.getLastRequest();
 	assertEquals(sget("recordedmessages/issessionalive_request.txt"),
+		request.serializeToString());
+	
+    }
+
+    /**
+     * Checks whether SPEL is resolved properly
+     * @throws Exception
+     */
+    @Test
+    public void testSPEL() throws Exception{
+	// setup test
+	MockResponse response = requestFactory.createResponse();
+	response.setBody(get("recordedmessages/doescustomerexist_response.txt"));
+
+	// execute test
+	boolean value = bankService.doesCustomerExist("56789");
+	assertEquals(true, value);
+
+	// validate request
+	MockRequest request = requestFactory.getLastRequest();
+	assertEquals(sget("recordedmessages/doescustomerexist_request.txt"),
 		request.serializeToString());
 	
     }

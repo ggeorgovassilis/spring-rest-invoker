@@ -1,0 +1,4 @@
+GET http://localhost/bankservice/http:/localhost/test/customer/56789
+Accept=application/json, application/*+json
+Content-Length=0
+

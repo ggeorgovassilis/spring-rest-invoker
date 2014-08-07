@@ -25,4 +25,6 @@ public interface BankService {
 	Account getAccount(int id);
 
 	boolean isSessionAlive(String sid);
+
+	boolean doesCustomerExist(String name);
 }

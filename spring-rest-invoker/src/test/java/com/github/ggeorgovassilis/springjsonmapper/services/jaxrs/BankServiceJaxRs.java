@@ -57,6 +57,9 @@ public interface BankServiceJaxRs extends BankService{
 	
 	@Override
 	@Path("/session/check")
-	public boolean isSessionAlive(@HeaderParam("X-SessionId") String sid);
+	boolean isSessionAlive(@HeaderParam("X-SessionId") String sid);
 
+	@Override
+	@Path("/${baseUrl}/customer/{name}")
+	boolean doesCustomerExist(@PathParam("name") String name);
 }
