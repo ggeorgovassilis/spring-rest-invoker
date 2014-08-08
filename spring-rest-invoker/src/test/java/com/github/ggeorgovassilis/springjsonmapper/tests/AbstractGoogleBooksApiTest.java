@@ -46,7 +46,7 @@ public abstract class AbstractGoogleBooksApiTest {
     }
 
     @Test
-    public void testFindBooksByid() {
+    public void testFindBooksById() {
 	Item item = bookService.findBookById("3h9_GY8v-hgC");
 	VolumeInfo info = item.getVolumeInfo();
 	assertEquals("Philosophiae naturalis principia mathematica",
