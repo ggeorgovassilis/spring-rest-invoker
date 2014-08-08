@@ -1,6 +1,5 @@
 package com.github.ggeorgovassilis.springjsonmapper.spring;
 
-import org.springframework.util.StringValueResolver;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 

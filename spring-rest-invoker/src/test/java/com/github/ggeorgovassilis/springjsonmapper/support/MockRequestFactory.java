@@ -146,28 +146,28 @@ public class MockRequestFactory implements ClientHttpRequestFactory {
 
     }
 
-    private MockRequest lastRequest;
-    private MockResponse response;
+    private ThreadLocal<MockRequest> lastRequest = new ThreadLocal<MockRequestFactory.MockRequest>();
+    private ThreadLocal<MockResponse> response = new ThreadLocal<MockRequestFactory.MockResponse>();
 
     @Override
     public ClientHttpRequest createRequest(URI uri, HttpMethod httpMethod)
 	    throws IOException {
-	lastRequest = new MockRequest(uri, httpMethod);
-	lastRequest.setRespose(response);
-	return lastRequest;
+	lastRequest.set(new MockRequest(uri, httpMethod));
+	lastRequest.get().setRespose(response.get());
+	return lastRequest.get();
     }
 
     public void setResponse(MockResponse response) {
-	this.response = response;
+	this.response.set(response);
     }
 
     public MockRequest getLastRequest() {
-	return lastRequest;
+	return lastRequest.get();
     }
 
     public MockResponse createResponse() {
-	response = new MockResponse();
-	return response;
+	response.set(new MockResponse());
+	return response.get();
     }
 
 }
