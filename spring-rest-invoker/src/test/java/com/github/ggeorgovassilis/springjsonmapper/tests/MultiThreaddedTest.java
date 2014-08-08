@@ -26,11 +26,16 @@ import com.github.ggeorgovassilis.springjsonmapper.services.Customer;
 import com.github.ggeorgovassilis.springjsonmapper.support.MockRequestFactory;
 import com.github.ggeorgovassilis.springjsonmapper.support.MockRequestFactory.MockResponse;
 
+/**
+ * Runs the entire chain through concurrent invocations and asserts that nothing breaks
+ * @author george georgovassilis
+ *
+ */
 @ContextConfiguration("classpath:test-context-bank-spring.xml")
 @RunWith(value = SpringJUnit4ClassRunner.class)
 public class MultiThreaddedTest {
     
-    final long TEST_DURATION_MS = 2000;
+    final long TEST_DURATION_MS = 3000;
     final int THREADS = 4;
 
     @Autowired
