@@ -16,6 +16,11 @@ public class Utils {
 	return arr!=null && arr.length>0;
     }
 
+    /**
+     * Returns true when s is neither null nor an empty string
+     * @param s
+     * @return
+     */
     public static boolean hasValue(String s) {
 	return s!=null && !s.isEmpty();
     }

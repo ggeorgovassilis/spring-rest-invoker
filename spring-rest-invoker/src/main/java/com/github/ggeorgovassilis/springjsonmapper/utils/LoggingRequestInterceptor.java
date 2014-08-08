@@ -39,12 +39,12 @@ public class LoggingRequestInterceptor implements ClientHttpRequestInterceptor {
 	    ClientHttpResponse response) throws IOException {
 	if (requestLog.isDebugEnabled()) {
 	    String s = new String(body);
-	    requestLog.debug(s);
+	    requestLog.debug(request.getURI().toString()+" - "+s);
 	}
 	if (responseLog.isDebugEnabled()) {
 	    byte[] b = FileCopyUtils.copyToByteArray(response.getBody());
 	    String s = new String(b);
-	    responseLog.debug(s);
+	    responseLog.debug(request.getURI().toString()+" - "+s);
 	}
     }
 }
