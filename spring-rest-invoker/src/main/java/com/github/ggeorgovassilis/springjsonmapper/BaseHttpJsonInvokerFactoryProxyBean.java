@@ -26,6 +26,7 @@ import com.github.ggeorgovassilis.springjsonmapper.model.MappingDeclarationExcep
 import com.github.ggeorgovassilis.springjsonmapper.model.MethodParameterDescriptor;
 import com.github.ggeorgovassilis.springjsonmapper.model.MethodParameterDescriptor.Type;
 import com.github.ggeorgovassilis.springjsonmapper.model.UrlMapping;
+import com.github.ggeorgovassilis.springjsonmapper.spring.SpringAnnotationsHttpJsonInvokerFactoryProxyBean;
 import com.github.ggeorgovassilis.springjsonmapper.utils.CglibProxyFactory;
 import com.github.ggeorgovassilis.springjsonmapper.utils.DynamicJavaProxyFactory;
 import com.github.ggeorgovassilis.springjsonmapper.utils.ProxyFactory;
@@ -33,9 +34,12 @@ import com.github.ggeorgovassilis.springjsonmapper.utils.ProxyFactory;
 /**
  * Base component for proxy factories that bind java interfaces to a remote REST
  * service. For more information look up
- * {@link JaxRsAnnotationsHttpJsonInvokerFactoryProxyBean}
+ * {@link SpringAnnotationsHttpJsonInvokerFactoryProxyBean} and {@link JaxRsAnnotationsHttpJsonInvokerFactoryProxyBean}
  * 
+ * Will generate by default dynamic java proxies. Use {@link #setProxyTargetClass(ClassLoader, Class)} or {@link #setProxyTargetClass(Class)}
+ * in order to generate proxies extending a concrete class.
  * @see JaxRsAnnotationsHttpJsonInvokerFactoryProxyBean
+ * @see SpringAnnotationsHttpJsonInvokerFactoryProxyBean
  * @author george georgovassilis
  * @author Maxime Guennec
  * 
