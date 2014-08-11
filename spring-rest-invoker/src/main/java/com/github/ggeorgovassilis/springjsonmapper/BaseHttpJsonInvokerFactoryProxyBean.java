@@ -3,7 +3,6 @@ package com.github.ggeorgovassilis.springjsonmapper;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.lang.reflect.Proxy;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -27,6 +26,9 @@ import com.github.ggeorgovassilis.springjsonmapper.model.MappingDeclarationExcep
 import com.github.ggeorgovassilis.springjsonmapper.model.MethodParameterDescriptor;
 import com.github.ggeorgovassilis.springjsonmapper.model.MethodParameterDescriptor.Type;
 import com.github.ggeorgovassilis.springjsonmapper.model.UrlMapping;
+import com.github.ggeorgovassilis.springjsonmapper.utils.CglibProxyFactory;
+import com.github.ggeorgovassilis.springjsonmapper.utils.DynamicJavaProxyFactory;
+import com.github.ggeorgovassilis.springjsonmapper.utils.ProxyFactory;
 
 /**
  * Base component for proxy factories that bind java interfaces to a remote REST
@@ -39,7 +41,7 @@ import com.github.ggeorgovassilis.springjsonmapper.model.UrlMapping;
  * 
  */
 public abstract class BaseHttpJsonInvokerFactoryProxyBean implements
-	FactoryBean<Object>, InvocationHandler,EmbeddedValueResolverAware {
+	FactoryBean<Object>, InvocationHandler, EmbeddedValueResolverAware {
 
     protected Class<?> remoteServiceInterfaceClass;
     protected String remoteServiceInterfaceClassName;
@@ -48,7 +50,7 @@ public abstract class BaseHttpJsonInvokerFactoryProxyBean implements
     protected RestOperations restTemplate;
     protected MethodInspector methodInspector;
     protected StringValueResolver expressionResolver;
-
+    protected ProxyFactory proxyFactory = new DynamicJavaProxyFactory();
 
     /**
      * Return an implementation of a {@link MethodInspector} which can look at
@@ -72,6 +74,29 @@ public abstract class BaseHttpJsonInvokerFactoryProxyBean implements
      */
     protected UrlMapping getRequestMapping(Method method, Object[] args) {
 	return methodInspector.inspect(method, args);
+    }
+
+    /**
+     * Specify the class to extend
+     * 
+     * @param classLoader
+     *            Classloader to use
+     * @param c
+     *            Proxies will extend this base class
+     */
+
+    public void setProxyTargetClass(ClassLoader classLoader, Class<?> c) {
+	proxyFactory = new CglibProxyFactory(classLoader, c);
+    }
+
+    /**
+     * Specify class to derive proxies from
+     * 
+     * @param c
+     *            Base class. Will use this class' classloader
+     */
+    public void setProxyTargetClass(Class<?> c) {
+	setProxyTargetClass(c.getClassLoader(), c);
     }
 
     @Override
@@ -149,20 +174,6 @@ public abstract class BaseHttpJsonInvokerFactoryProxyBean implements
 
     protected RestTemplate constructDefaultRestTemplate() {
 	RestTemplate restTemplate = new RestTemplate();
-
-//	ClientHttpRequestInterceptor ri = new LoggingRequestInterceptor();
-//	List<ClientHttpRequestInterceptor> ris = new ArrayList<ClientHttpRequestInterceptor>();
-//	ris.add(ri);
-//	restTemplate.setInterceptors(ris);
-//	restTemplate
-//		.setRequestFactory(new InterceptingClientHttpRequestFactory(
-//			new BufferingClientHttpRequestFactory(
-//				new SimpleClientHttpRequestFactory()), ris));
-//
-//	List<HttpMessageConverter<?>> messageConverters = new ArrayList<HttpMessageConverter<?>>();
-//	MappingJacksonHttpMessageConverter jsonConverter = new MappingJacksonHttpMessageConverter();
-//	messageConverters.add(jsonConverter);
-//	restTemplate.setMessageConverters(messageConverters);
 	return restTemplate;
     }
 
@@ -192,9 +203,11 @@ public abstract class BaseHttpJsonInvokerFactoryProxyBean implements
 
     @Override
     public synchronized Object getObject() throws Exception {
-	if (remoteProxy == null)
-	    remoteProxy = Proxy.newProxyInstance(getClass().getClassLoader(),
+	if (remoteProxy == null) {
+	    remoteProxy = proxyFactory.createProxy(getClass().getClassLoader(),
 		    new Class[] { getRemoteServiceInterfaceClass() }, this);
+	    proxyFactory = null;
+	}
 	return remoteProxy;
     }
 
