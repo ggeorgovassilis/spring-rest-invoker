@@ -124,4 +124,5 @@
 
 	<!-- Steps for performing a release: mvn -DperformRelease=true clean deploy 
 		./update-index.sh -->
+	<url>https://github.com/ggeorgovassilis/spring-rest-invoker</url>
 </project>
