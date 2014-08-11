@@ -13,6 +13,7 @@ Features:
 
 ## News
 
+2014-08-11: version 0.0.9-SNAPSHOT adds support for bean expressions in RequestMapping and Path annotations
 2014-07-25: version 0.0.7-SNAPSHOT adds support for logging HTTP traffic
 
 2014-07-12: version 0.0.6-SNAPSHOT is out with support for jax-rs annotations, arguments as HTTP headers, arguments as cookies
@@ -201,7 +202,7 @@ which will post a JSON object similar to this:
 ### Spring
 
 ```java
-@RequestMapping	// Specify the URL to bind to. Variable parts are written as {varname} and are replaced with the values of @PathParam
+@RequestMapping	// Specify the URL to bind to. Variable parts are written as {varname} and are replaced with the values of @PathParam. Property placeholders like ${property_name} can also be used which will be looked up in the application context.
 @PathVariable	// Replace parts of the @Path with the (string) value of this argument
 @RequestParam	// Pass argument value as URL parameter (or JSON field, see below)
 @Header		// Pass argument (string) value as HTTP header 
@@ -214,7 +215,7 @@ which will post a JSON object similar to this:
 ### JAX-RS
 
 ```java
-@Path		// Specify the URL to bind to. Variable parts are written as {varname} and are replaced with the values of @PathParam
+@Path		// Specify the URL to bind to. Variable parts are written as {varname} and are replaced with the values of @PathParam. Property placeholders like ${property_name} can also be used which will be looked up in the application context.
 @GET, @POST etc	// Specify the HTTP request method to use
 @Produces	// Value of the Accept HTTP header
 @Consumes	// Value of the Content-Type HTTP header
@@ -444,9 +445,21 @@ You need to provide your own RestTemplate, have a look at this http://stackoverf
 
 Also enable logging in your log4j configuration:
 
+```properties
 log4j.logger.com.github.ggeorgovassilis.springjsonmapper.Request=DEBUG
 log4j.logger.com.github.ggeorgovassilis.springjsonmapper.Response=DEBUG
+```
 
+#### I need to parametrize the mapping URL depending on the execution environment
+
+Just use property placeholders in the URL, i.e.:
+
+```java
+@RequestMapping(value = "${serverIp}/join-accounts", method = RequestMethod.POST)
+Account joinAccounts(@RequestPart @RequestParam("account1") Account account1, @RequestPart @RequestParam("account2") Account account2);
+```
+
+Whenever the ```joinAccounts``` method is invoked, the ```serverIp``` property will be looked up in the application context and replaced by its current value. Note that this mechanism works only for values of the ```@RequestMapping``` and ```@Path``` annotations.
 #### Where can I find more examples?
 
 Have a look at mapping declarations for the unit test: https://github.com/ggeorgovassilis/spring-rest-invoker/tree/master/spring-rest-invoker/src/test/java/com/github/ggeorgovassilis/springjsonmapper/services
