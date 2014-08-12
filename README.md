@@ -13,6 +13,7 @@ Features:
 
 ## News
 
+2014-08-12: version 1.0.RC-SNAPSHOT adds support for opaque (cglib) proxies
 2014-08-11: version 0.0.9-SNAPSHOT adds support for bean expressions in RequestMapping and Path annotations
 2014-07-25: version 0.0.7-SNAPSHOT adds support for logging HTTP traffic
 
@@ -415,7 +416,9 @@ or the jax-rs way:
 
 #### Dependencies?
 
-The maven pom will pull in dependencies required for the spring mapper to work. If you need jax-rs support, then some more dependencies are required:
+The maven pom will pull in dependencies required for the spring mapper's basic features to work. The pom.xml declares more dependencies for advanced features as 'optional', so if you need them then you need to pull those dependencies in your own project's pom.xml.
+
+JAX-RS support:
 
 ```xml
 <dependency>
@@ -425,7 +428,7 @@ The maven pom will pull in dependencies required for the spring mapper to work. 
 </dependency>
 ```
 
-If you use the loggin interceptor then you'll also need some logging implementation for commons logging, i.e. log4j:
+If you use the logging interceptor then you'll also need some logging implementation for commons logging, i.e. log4j:
 
 ```xml
 <dependency>
@@ -435,6 +438,16 @@ If you use the loggin interceptor then you'll also need some logging implementat
 </dependency>
 ```
 
+Opaque proxies require CGLIB:
+
+```xml
+<dependency>
+	<groupId>cglib</groupId>
+	<artifactId>cglib</artifactId>
+	<version>3.1</version>
+	<optional>true</optional>
+</dependency>
+```
 #### Is the spring-rest-invoker a JAX-RS implementation?
 
 Yes, since 0.0.6-SNAPSHOT. See the introduction.
@@ -463,6 +476,14 @@ Whenever the ```joinAccounts``` method is invoked, the ```serverIp``` property w
 #### Where can I find more examples?
 
 Have a look at mapping declarations for the unit test: https://github.com/ggeorgovassilis/spring-rest-invoker/tree/master/spring-rest-invoker/src/test/java/com/github/ggeorgovassilis/springjsonmapper/services
+
+#### I need proxies to extend a specific class
+
+Since 1.0.RC it's possible to generate opaque proxies with cglib instead of the default dynamic proxies. Opaque proxies extend a concrete class and implement the REST mapping interface. In order to do so, specify the name of the class proxies should extend with the ```proxyTargetClass``` property of the factory proxy bean (i.e. the ```SpringAnnotationsHttpJsonInvokerFactoryProxyBean```). If you just need opaque proxies, use ``` java.lang.Object```.
+
+#### I specified some (other) annotations on the mapping interface but they are missing on the service proxy
+
+Symptoms: you specified more annotations on the mapping interface like ```@Transactional``` or ```@Valid``` but they don't seem to work on the remote service proxies. The code that is looking for annotations doesn't know how to deal with dynamic proxies properly. Either fix that or use opaque proxies; see "I need proxies to extend a specific class".
 
 #### Are there any alternatives?
 
