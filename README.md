@@ -14,7 +14,9 @@ Features:
 ## News
 
 2014-08-12: version 1.0.RC-SNAPSHOT adds support for opaque (cglib) proxies
+
 2014-08-11: version 0.0.9-SNAPSHOT adds support for bean expressions in RequestMapping and Path annotations
+
 2014-07-25: version 0.0.7-SNAPSHOT adds support for logging HTTP traffic
 
 2014-07-12: version 0.0.6-SNAPSHOT is out with support for jax-rs annotations, arguments as HTTP headers, arguments as cookies
