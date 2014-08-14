@@ -254,7 +254,7 @@ When there is also a @RequestBody, then the handling is different - look further
 
 #### What does @RequestBody do?
 
-You might want to send JSON to a REST service via an HTTP POST request. Method arguments annotated with @ReqeustBody are serialized into JSON and sent to the remote service. If there is only a single method argument annotated with @RequestBody, then that argument is serialized and sent over. If multiple arguments are annotated, then each @RequestBody needs to be accompanied by a @RequestParam which specifies the field name of the object. 
+You might want to send JSON to a REST service via an HTTP POST request. Method arguments annotated with @RequestBody are serialized into JSON and sent to the remote service. If there is only a single method argument annotated with @RequestBody, then that argument is serialized and sent over. If multiple arguments are annotated, then each @RequestBody needs to be accompanied by a @RequestParam which specifies the field name of the object. 
 
 In an ideal world we wouldn't need @RequestParam because the invoker would, supposedly, be able to read method argument names and pick URL parameter names accordingly; in Java that's suprisingly hard to do since the reflection API does not expose method argument names.
 
