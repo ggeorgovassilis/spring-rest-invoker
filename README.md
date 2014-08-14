@@ -447,7 +447,6 @@ Opaque proxies require CGLIB:
 	<groupId>cglib</groupId>
 	<artifactId>cglib</artifactId>
 	<version>3.1</version>
-	<optional>true</optional>
 </dependency>
 ```
 #### Is the spring-rest-invoker a JAX-RS implementation?
