@@ -324,7 +324,7 @@ Some REST services incorporate parameters in the URL path rather than URL parame
 
 @PathVariable is specified together with a @RequestParam and indicates the the method argument is not to be sent as a URL parameter. Note that you need to specify a matching placeholder with @RequestMapping:
 
-```
+```java
 public interface BookService {
 
     @RequestMapping("/volumes/{id}")
@@ -334,7 +334,7 @@ public interface BookService {
 
 or jax-rs:
 
-```
+```java
 public interface BookService {
 
     @Path("/volumes/{id}")
