@@ -1,7 +1,9 @@
 spring-rest-invoker
 ===================
 
-Spring proxy that binds remote JSON REST services to java interfaces. Invoking methods on those interfaces will make a corresponding HTTP request to the remote service and (de)serializa any objects to/from JSON. The concrete mapping between an interface and a remote service can be done programmatically or by annotating interfaces with Spring or JAX-RS annotations.
+Spring proxy that binds remote JSON REST services to java interfaces. Invoking methods on those interfaces will make a corresponding HTTP request to the remote service and (de)serialize any objects to/from JSON. The concrete mapping between an interface and a remote service can be done programmatically or by annotating interfaces with Spring or JAX-RS annotations.
+
+![Schematic of the spring-invoker proxy's function](http://ggeorgovassilis.github.io/spring-rest-invoker/spring-invoker.svg?1 "Mapping of a java interface to a REST http service")
 
 Features:
 
@@ -14,7 +16,9 @@ Features:
 ## News
 
 2014-08-12: version 1.0.RC-SNAPSHOT adds support for opaque (cglib) proxies
+
 2014-08-11: version 0.0.9-SNAPSHOT adds support for bean expressions in RequestMapping and Path annotations
+
 2014-07-25: version 0.0.7-SNAPSHOT adds support for logging HTTP traffic
 
 2014-07-12: version 0.0.6-SNAPSHOT is out with support for jax-rs annotations, arguments as HTTP headers, arguments as cookies
@@ -252,7 +256,7 @@ When there is also a @RequestBody, then the handling is different - look further
 
 #### What does @RequestBody do?
 
-You might want to send JSON to a REST service via an HTTP POST request. Method arguments annotated with @ReqeustBody are serialized into JSON and sent to the remote service. If there is only a single method argument annotated with @RequestBody, then that argument is serialized and sent over. If multiple arguments are annotated, then each @RequestBody needs to be accompanied by a @RequestParam which specifies the field name of the object. 
+You might want to send JSON to a REST service via an HTTP POST request. Method arguments annotated with @RequestBody are serialized into JSON and sent to the remote service. If there is only a single method argument annotated with @RequestBody, then that argument is serialized and sent over. If multiple arguments are annotated, then each @RequestBody needs to be accompanied by a @RequestParam which specifies the field name of the object. 
 
 In an ideal world we wouldn't need @RequestParam because the invoker would, supposedly, be able to read method argument names and pick URL parameter names accordingly; in Java that's suprisingly hard to do since the reflection API does not expose method argument names.
 
@@ -322,7 +326,7 @@ Some REST services incorporate parameters in the URL path rather than URL parame
 
 @PathVariable is specified together with a @RequestParam and indicates the the method argument is not to be sent as a URL parameter. Note that you need to specify a matching placeholder with @RequestMapping:
 
-```
+```java
 public interface BookService {
 
     @RequestMapping("/volumes/{id}")
@@ -332,7 +336,7 @@ public interface BookService {
 
 or jax-rs:
 
-```
+```java
 public interface BookService {
 
     @Path("/volumes/{id}")
@@ -445,7 +449,6 @@ Opaque proxies require CGLIB:
 	<groupId>cglib</groupId>
 	<artifactId>cglib</artifactId>
 	<version>3.1</version>
-	<optional>true</optional>
 </dependency>
 ```
 #### Is the spring-rest-invoker a JAX-RS implementation?
