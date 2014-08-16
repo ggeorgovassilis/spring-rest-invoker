@@ -25,7 +25,7 @@ import com.github.ggeorgovassilis.springjsonmapper.services.BankService;
 import com.github.ggeorgovassilis.springjsonmapper.services.Customer;
 import com.github.ggeorgovassilis.springjsonmapper.support.MockRequestFactory;
 import com.github.ggeorgovassilis.springjsonmapper.support.MockRequestFactory.MockResponse;
-
+import static com.github.ggeorgovassilis.springjsonmapper.tests.Factory.*;
 /**
  * Runs the entire chain through concurrent invocations and asserts that nothing breaks
  * @author george georgovassilis
@@ -57,13 +57,8 @@ public class MultiThreaddedTest {
     void executeTest() throws Exception {
 	
 	// setup test
-	Customer customer1 = new Customer();
-	customer1.setName("Customer 1");
-
-	Account account1 = new Account();
-	account1.setAccountNumber("account 1");
-	account1.setBalance(1000);
-	account1.setOwner(customer1);
+	Customer customer1 = customer("Customer 1");
+	Account account1 = account("account 1", 1000, customer1);
 
 	MockResponse response = requestFactory.createResponse();
 	response.setBody("true".getBytes());

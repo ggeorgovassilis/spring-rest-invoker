@@ -39,7 +39,7 @@ public abstract class AbstractGoogleBooksApiTest {
 		    && info.getAuthors() != null
 		    && !info.getAuthors().isEmpty()
 		    && ("Philosophiae naturalis principia mathematica"
-			    .equals(info.getTitle()) && "Isaac Newton"
+			    .equals(info.getTitle()) && "Sir Isaac Newton"
 			    .equals(info.getAuthors().get(0)));
 	}
 	assertTrue(found);

@@ -23,6 +23,7 @@ import com.github.ggeorgovassilis.springjsonmapper.support.MockRequestFactory.Mo
 
 import static org.junit.Assert.*;
 import static com.github.ggeorgovassilis.springjsonmapper.support.Utils.*;
+import static com.github.ggeorgovassilis.springjsonmapper.tests.Factory.*;
 /**
  * Tests a more complex scenario with recorded HTTP requests and responses using
  * the {@link SpringAnnotationsHttpJsonInvokerFactoryProxyBean}
@@ -41,6 +42,12 @@ public abstract class AbstractBankServiceTest {
 
     protected MockRequestFactory requestFactory;
 
+    protected MockResponse response(String classPathResource) throws Exception{
+	MockResponse response = requestFactory.createResponse();
+	response.setBody(get(classPathResource));
+	return response;
+    }
+    
     @Before
     public void setup() {
 	requestFactory = new MockRequestFactory();
@@ -52,24 +59,12 @@ public abstract class AbstractBankServiceTest {
     @Test
     public void testRequestBody() throws Exception {
 	// setup test
-	Customer customer1 = new Customer();
-	customer1.setName("Customer 1");
+	Customer customer1 = customer("Customer 1");
+	Customer customer2 = customer("Customer 2");
+	Account account1 = account("account 1", 1000, customer1);
+	Account account2 = account("account 2", 0, customer2);
 
-	Customer customer2 = new Customer();
-	customer2.setName("Customer 2");
-
-	Account account1 = new Account();
-	account1.setAccountNumber("account 1");
-	account1.setBalance(1000);
-	account1.setOwner(customer1);
-
-	Account account2 = new Account();
-	account2.setAccountNumber("account 2");
-	account2.setBalance(0);
-	account2.setOwner(customer2);
-
-	MockResponse response = requestFactory.createResponse();
-	response.setBody(get("recordedmessages/transfer_response.txt"));
+	response("recordedmessages/transfer_response.txt");
 
 	// execute test
 	Account result = bankService.transfer(account1, customer1, account2, 1,
@@ -90,13 +85,8 @@ public abstract class AbstractBankServiceTest {
     @Test
     public void testPost() throws Exception {
 	// setup test
-	Customer customer1 = new Customer();
-	customer1.setName("Customer 1");
-
-	Account account1 = new Account();
-	account1.setAccountNumber("account 1");
-	account1.setBalance(1000);
-	account1.setOwner(customer1);
+	Customer customer1 = customer("Customer 1");
+	Account account1 = account("account 1", 1000, customer1);
 
 	MockResponse response = requestFactory.createResponse();
 	response.setBody("true".getBytes());
@@ -139,22 +129,12 @@ public abstract class AbstractBankServiceTest {
     @Test
     public void testRequestParts() throws Exception {
 	// setup test
-	Customer customer1 = new Customer();
-	customer1.setName("Customer 1");
-	Account account1 = new Account();
-	account1.setAccountNumber("account 1");
-	account1.setBalance(1000);
-	account1.setOwner(customer1);
+	Customer customer1 = customer("Customer 1");
+	Customer customer2 = customer("Customer 2");
+	Account account1 = account("account 1", 1000, customer1);
+	Account account2 = account("account 2", 100, customer2);
 
-	Customer customer2 = new Customer();
-	customer2.setName("Customer 2");
-	Account account2 = new Account();
-	account2.setAccountNumber("account 2");
-	account2.setBalance(100);
-	account2.setOwner(customer2);
-
-	MockResponse response = requestFactory.createResponse();
-	response.setBody(get("recordedmessages/joinaccounts_response.txt"));
+	response("recordedmessages/joinaccounts_response.txt");
 
 	// execute test
 	Account joinedAccount = bankService.joinAccounts(account1, account2);
@@ -201,8 +181,7 @@ public abstract class AbstractBankServiceTest {
     @Test
     public void testCookieParams() throws Exception {
 	// setup test
-	MockResponse response = requestFactory.createResponse();
-	response.setBody(get("recordedmessages/authenticate_response.txt"));
+	response("recordedmessages/authenticate_response.txt");
 
 	// execute test
 	Customer customer = bankService.authenticate("Customer 1", "password",
@@ -219,8 +198,7 @@ public abstract class AbstractBankServiceTest {
     @Test
     public void testPathVariables() throws Exception{
 	// setup test
-	MockResponse response = requestFactory.createResponse();
-	response.setBody(get("recordedmessages/getaccount_response.txt"));
+	response("recordedmessages/getaccount_response.txt");
 
 	// execute test
 	Account account = bankService.getAccount(1234);
@@ -241,8 +219,7 @@ public abstract class AbstractBankServiceTest {
     @Test
     public void testArgumentToHeaders() throws Exception{
 	// setup test
-	MockResponse response = requestFactory.createResponse();
-	response.setBody(get("recordedmessages/issessionalive_response.txt"));
+	response("recordedmessages/issessionalive_response.txt");
 
 	// execute test
 	boolean value = bankService.isSessionAlive("56789");
@@ -262,8 +239,7 @@ public abstract class AbstractBankServiceTest {
     @Test
     public void testSPEL() throws Exception{
 	// setup test
-	MockResponse response = requestFactory.createResponse();
-	response.setBody(get("recordedmessages/doescustomerexist_response.txt"));
+	response("recordedmessages/doescustomerexist_response.txt");
 
 	// execute test
 	boolean value = bankService.doesCustomerExist("56789");
