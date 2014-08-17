@@ -56,11 +56,11 @@ Then include the dependency:
 If you require jax-rs support you must provide a dependency with the annotations, i.e.:
 
 ```xml
-	<dependency>
-		<groupId>org.jboss.resteasy</groupId>
-		<artifactId>jaxrs-api</artifactId>
-		<version>3.0.8.Final</version>
-	</dependency>
+<dependency>
+	<groupId>org.jboss.resteasy</groupId>
+	<artifactId>jaxrs-api</artifactId>
+	<version>3.0.8.Final</version>
+</dependency>
 ```
 
 ### 1. Make an interface, i.e:
@@ -98,21 +98,21 @@ public interface BookServiceJaxRs extends BookService{
 ### 2. Then map it to the remote REST URL you want to consume:
 
 ```xml
-	<bean id="BookService"
-		class="com.github.ggeorgovassilis.springjsonmapper.spring.SpringRestInvokerProxyFactoryBean">
-		<property name="baseUrl" value="https://www.googleapis.com/books/v1" />
-		<property name="remoteServiceInterfaceClass" value="com.github.ggeorgovassilis.springjsonmapper.services.spring.BookServiceSpring"/>
-	</bean>
+<bean id="BookService"
+	class="com.github.ggeorgovassilis.springjsonmapper.spring.SpringRestInvokerProxyFactoryBean">
+	<property name="baseUrl" value="https://www.googleapis.com/books/v1" />
+	<property name="remoteServiceInterfaceClass" value="com.github.ggeorgovassilis.springjsonmapper.services.spring.BookServiceSpring"/>
+</bean>
 ```
 
 or if you're using jax-rs
 
 ```xml
-	<bean id="BookService"
-		class="com.github.ggeorgovassilis.springjsonmapper.jaxrs.JaxRsInvokerProxyFactoryBean">
-		<property name="baseUrl" value="https://www.googleapis.com/books/v1" />
-		<property name="remoteServiceInterfaceClass" value="com.github.ggeorgovassilis.springjsonmapper.services.jaxrs.BookServiceJaxRs"/>
-	</bean>
+<bean id="BookService"
+	class="com.github.ggeorgovassilis.springjsonmapper.jaxrs.JaxRsInvokerProxyFactoryBean">
+	<property name="baseUrl" value="https://www.googleapis.com/books/v1" />
+	<property name="remoteServiceInterfaceClass" value="com.github.ggeorgovassilis.springjsonmapper.services.jaxrs.BookServiceJaxRs"/>
+</bean>
 ```
 
 ### 3. Use it in your code
