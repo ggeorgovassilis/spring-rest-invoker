@@ -15,6 +15,8 @@ Features:
 
 ## News
 
+2014-08-17: edited 1.0.RC-SNAPSHOT to fix broken unit tests and rename proxy factories
+
 2014-08-12: version 1.0.RC-SNAPSHOT adds support for opaque (cglib) proxies
 
 2014-08-11: version 0.0.9-SNAPSHOT adds support for bean expressions in RequestMapping and Path annotations
@@ -96,7 +98,7 @@ public interface BookServiceJaxRs extends BookService{
 
 ```xml
 	<bean id="BookService"
-		class="com.github.ggeorgovassilis.springjsonmapper.spring.SpringAnnotationsHttpJsonInvokerFactoryProxyBean">
+		class="com.github.ggeorgovassilis.springjsonmapper.spring.SpringRestInvokerProxyFactoryBean">
 		<property name="baseUrl" value="https://www.googleapis.com/books/v1" />
 		<property name="remoteServiceInterfaceClass" value="com.github.ggeorgovassilis.springjsonmapper.services.spring.BookServiceSpring"/>
 	</bean>
@@ -106,7 +108,7 @@ or if you're using jax-rs
 
 ```xml
 	<bean id="BookService"
-		class="com.github.ggeorgovassilis.springjsonmapper.jaxrs.JaxRsAnnotationsHttpJsonInvokerFactoryProxyBean">
+		class="com.github.ggeorgovassilis.springjsonmapper.jaxrs.JaxRsInvokerProxyFactoryBean">
 		<property name="baseUrl" value="https://www.googleapis.com/books/v1" />
 		<property name="remoteServiceInterfaceClass" value="com.github.ggeorgovassilis.springjsonmapper.services.jaxrs.BookServiceJaxRs"/>
 	</bean>
@@ -482,7 +484,7 @@ Have a look at mapping declarations for the unit test: https://github.com/ggeorg
 
 #### I need proxies to extend a specific class
 
-Since 1.0.RC it's possible to generate opaque proxies with cglib instead of the default dynamic proxies. Opaque proxies extend a concrete class and implement the REST mapping interface. In order to do so, specify the name of the class proxies should extend with the ```proxyTargetClass``` property of the factory proxy bean (i.e. the ```SpringAnnotationsHttpJsonInvokerFactoryProxyBean```). If you just need opaque proxies, use ``` java.lang.Object```.
+Since 1.0.RC it's possible to generate opaque proxies with cglib instead of the default dynamic proxies. Opaque proxies extend a concrete class and implement the REST mapping interface. In order to do so, specify the name of the class proxies should extend with the ```proxyTargetClass``` property of the factory proxy bean (i.e. the ```SpringRestInvokerProxyFactoryBean```). If you just need opaque proxies, use ``` java.lang.Object```.
 
 #### I specified some (other) annotations on the mapping interface but they are missing on the service proxy
 
