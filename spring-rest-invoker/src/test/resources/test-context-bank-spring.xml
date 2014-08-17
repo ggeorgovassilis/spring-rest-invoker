@@ -12,7 +12,7 @@
 	<context:property-placeholder location="classpath:config.properties" />
 
 	<bean id="RemoteBankService"
-		class="com.github.ggeorgovassilis.springjsonmapper.spring.SpringAnnotationsHttpJsonInvokerFactoryProxyBean">
+		class="com.github.ggeorgovassilis.springjsonmapper.spring.SpringRestInvokerProxyFactoryBean">
 		<property name="baseUrl" value="http://localhost/bankservice" />
 		<property name="remoteServiceInterfaceClass" value="com.github.ggeorgovassilis.springjsonmapper.services.spring.BankServiceSpring"/>
 	</bean>

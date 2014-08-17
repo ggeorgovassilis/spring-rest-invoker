@@ -10,7 +10,7 @@
         http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd">
 
 	<bean
-		class="com.github.ggeorgovassilis.springjsonmapper.spring.SpringAnnotationsHttpJsonInvokerFactoryProxyBean">
+		class="com.github.ggeorgovassilis.springjsonmapper.spring.SpringRestInvokerProxyFactoryBean">
 		<property name="baseUrl" value="http://localhost/errorservice" />
 		<property name="remoteServiceInterfaceClass" value="com.github.ggeorgovassilis.springjsonmapper.services.spring.InterfaceWithErrorsSpring"/>
 	</bean>

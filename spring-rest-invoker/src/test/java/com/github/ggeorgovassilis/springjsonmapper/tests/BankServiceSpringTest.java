@@ -3,10 +3,10 @@ package com.github.ggeorgovassilis.springjsonmapper.tests;
 import org.springframework.test.context.ContextConfiguration;
 
 import com.github.ggeorgovassilis.springjsonmapper.services.spring.BankServiceSpring;
-import com.github.ggeorgovassilis.springjsonmapper.spring.SpringAnnotationsHttpJsonInvokerFactoryProxyBean;
+import com.github.ggeorgovassilis.springjsonmapper.spring.SpringRestInvokerProxyFactoryBean;
 
 /**
- * Tests a more complex scenario with recorded HTTP requests and responses using the {@link SpringAnnotationsHttpJsonInvokerFactoryProxyBean}
+ * Tests a more complex scenario with recorded HTTP requests and responses using the {@link SpringRestInvokerProxyFactoryBean}
  * 
  * @author george georgovassilis
  * 

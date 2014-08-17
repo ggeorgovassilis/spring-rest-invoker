@@ -5,7 +5,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import com.github.ggeorgovassilis.springjsonmapper.BaseHttpJsonInvokerFactoryProxyBean;
+import com.github.ggeorgovassilis.springjsonmapper.BaseRestInvokerProxyFactoryBean;
 import com.github.ggeorgovassilis.springjsonmapper.model.MappingDeclarationException;
 import com.github.ggeorgovassilis.springjsonmapper.services.InterfaceWithErrors;
 
@@ -18,7 +18,7 @@ import com.github.ggeorgovassilis.springjsonmapper.services.InterfaceWithErrors;
 public abstract class AbstractErrorChecksTest {
 
     @Autowired
-    BaseHttpJsonInvokerFactoryProxyBean httpProxyFactory;
+    BaseRestInvokerProxyFactoryBean httpProxyFactory;
 
     @Autowired
     InterfaceWithErrors iwe;

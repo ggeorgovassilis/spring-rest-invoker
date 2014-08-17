@@ -42,7 +42,7 @@
 	</bean>
 
 	<bean id="BookService"
-		class="com.github.ggeorgovassilis.springjsonmapper.spring.SpringAnnotationsHttpJsonInvokerFactoryProxyBean">
+		class="com.github.ggeorgovassilis.springjsonmapper.spring.SpringRestInvokerProxyFactoryBean">
 		<property name="baseUrl" value="https://www.googleapis.com/books/v1" />
 		<property name="remoteServiceInterfaceClass" value="com.github.ggeorgovassilis.springjsonmapper.services.spring.BookServiceSpring"/>
 		<property name="restTemplate" ref="restTemplate"/>

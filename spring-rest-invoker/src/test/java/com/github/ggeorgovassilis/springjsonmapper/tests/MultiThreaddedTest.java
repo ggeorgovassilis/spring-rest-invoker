@@ -19,7 +19,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.web.client.RestTemplate;
 
-import com.github.ggeorgovassilis.springjsonmapper.BaseHttpJsonInvokerFactoryProxyBean;
+import com.github.ggeorgovassilis.springjsonmapper.BaseRestInvokerProxyFactoryBean;
 import com.github.ggeorgovassilis.springjsonmapper.services.Account;
 import com.github.ggeorgovassilis.springjsonmapper.services.BankService;
 import com.github.ggeorgovassilis.springjsonmapper.services.Customer;
@@ -42,7 +42,7 @@ public class MultiThreaddedTest {
     protected BankService bankService;
 
     @Resource(name = "&RemoteBankService")
-    protected BaseHttpJsonInvokerFactoryProxyBean httpProxyFactory;
+    protected BaseRestInvokerProxyFactoryBean httpProxyFactory;
 
     protected MockRequestFactory requestFactory;
 

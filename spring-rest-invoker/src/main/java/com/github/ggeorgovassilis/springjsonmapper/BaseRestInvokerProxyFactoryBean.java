@@ -21,12 +21,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.client.RestOperations;
 import org.springframework.web.client.RestTemplate;
 
-import com.github.ggeorgovassilis.springjsonmapper.jaxrs.JaxRsAnnotationsHttpJsonInvokerFactoryProxyBean;
+import com.github.ggeorgovassilis.springjsonmapper.jaxrs.JaxRsInvokerProxyFactoryBean;
 import com.github.ggeorgovassilis.springjsonmapper.model.MappingDeclarationException;
 import com.github.ggeorgovassilis.springjsonmapper.model.MethodParameterDescriptor;
 import com.github.ggeorgovassilis.springjsonmapper.model.MethodParameterDescriptor.Type;
 import com.github.ggeorgovassilis.springjsonmapper.model.UrlMapping;
-import com.github.ggeorgovassilis.springjsonmapper.spring.SpringAnnotationsHttpJsonInvokerFactoryProxyBean;
+import com.github.ggeorgovassilis.springjsonmapper.spring.SpringRestInvokerProxyFactoryBean;
 import com.github.ggeorgovassilis.springjsonmapper.utils.CglibProxyFactory;
 import com.github.ggeorgovassilis.springjsonmapper.utils.DynamicJavaProxyFactory;
 import com.github.ggeorgovassilis.springjsonmapper.utils.ProxyFactory;
@@ -34,17 +34,17 @@ import com.github.ggeorgovassilis.springjsonmapper.utils.ProxyFactory;
 /**
  * Base component for proxy factories that bind java interfaces to a remote REST
  * service. For more information look up
- * {@link SpringAnnotationsHttpJsonInvokerFactoryProxyBean} and {@link JaxRsAnnotationsHttpJsonInvokerFactoryProxyBean}
+ * {@link SpringRestInvokerProxyFactoryBean} and {@link JaxRsInvokerProxyFactoryBean}
  * 
  * Will generate by default dynamic java proxies. Use {@link #setProxyTargetClass(ClassLoader, Class)} or {@link #setProxyTargetClass(Class)}
  * in order to generate proxies extending a concrete class.
- * @see JaxRsAnnotationsHttpJsonInvokerFactoryProxyBean
- * @see SpringAnnotationsHttpJsonInvokerFactoryProxyBean
+ * @see JaxRsInvokerProxyFactoryBean
+ * @see SpringRestInvokerProxyFactoryBean
  * @author george georgovassilis
  * @author Maxime Guennec
  * 
  */
-public abstract class BaseHttpJsonInvokerFactoryProxyBean implements
+public abstract class BaseRestInvokerProxyFactoryBean implements
 	FactoryBean<Object>, InvocationHandler, EmbeddedValueResolverAware {
 
     protected Class<?> remoteServiceInterfaceClass;

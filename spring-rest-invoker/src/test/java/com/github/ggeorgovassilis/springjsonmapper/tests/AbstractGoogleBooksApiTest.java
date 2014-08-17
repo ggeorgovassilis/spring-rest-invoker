@@ -9,13 +9,13 @@ import com.github.ggeorgovassilis.springjsonmapper.services.BookService;
 import com.github.ggeorgovassilis.springjsonmapper.services.Item;
 import com.github.ggeorgovassilis.springjsonmapper.services.QueryResult;
 import com.github.ggeorgovassilis.springjsonmapper.services.VolumeInfo;
-import com.github.ggeorgovassilis.springjsonmapper.spring.SpringAnnotationsHttpJsonInvokerFactoryProxyBean;
+import com.github.ggeorgovassilis.springjsonmapper.spring.SpringRestInvokerProxyFactoryBean;
 
 import static org.junit.Assert.*;
 
 /**
  * Integration test with the google books API using the
- * {@link SpringAnnotationsHttpJsonInvokerFactoryProxyBean}
+ * {@link SpringRestInvokerProxyFactoryBean}
  * 
  * @author george georgovassilis
  */

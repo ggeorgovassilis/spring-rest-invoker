@@ -3,7 +3,7 @@ package com.github.ggeorgovassilis.springjsonmapper.spring;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.github.ggeorgovassilis.springjsonmapper.BaseHttpJsonInvokerFactoryProxyBean;
+import com.github.ggeorgovassilis.springjsonmapper.BaseRestInvokerProxyFactoryBean;
 import com.github.ggeorgovassilis.springjsonmapper.MethodInspector;
 
 /**
@@ -57,8 +57,8 @@ import com.github.ggeorgovassilis.springjsonmapper.MethodInspector;
  * @author Maxime Guennec
  * 
  */
-public class SpringAnnotationsHttpJsonInvokerFactoryProxyBean extends
-	BaseHttpJsonInvokerFactoryProxyBean{
+public class SpringRestInvokerProxyFactoryBean extends
+	BaseRestInvokerProxyFactoryBean{
     
 
     @Override

@@ -12,11 +12,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.web.client.RestTemplate;
 
-import com.github.ggeorgovassilis.springjsonmapper.BaseHttpJsonInvokerFactoryProxyBean;
+import com.github.ggeorgovassilis.springjsonmapper.BaseRestInvokerProxyFactoryBean;
 import com.github.ggeorgovassilis.springjsonmapper.services.Account;
 import com.github.ggeorgovassilis.springjsonmapper.services.BankService;
 import com.github.ggeorgovassilis.springjsonmapper.services.Customer;
-import com.github.ggeorgovassilis.springjsonmapper.spring.SpringAnnotationsHttpJsonInvokerFactoryProxyBean;
+import com.github.ggeorgovassilis.springjsonmapper.spring.SpringRestInvokerProxyFactoryBean;
 import com.github.ggeorgovassilis.springjsonmapper.support.MockRequestFactory;
 import com.github.ggeorgovassilis.springjsonmapper.support.MockRequestFactory.MockRequest;
 import com.github.ggeorgovassilis.springjsonmapper.support.MockRequestFactory.MockResponse;
@@ -26,7 +26,7 @@ import static com.github.ggeorgovassilis.springjsonmapper.support.Utils.*;
 import static com.github.ggeorgovassilis.springjsonmapper.tests.Factory.*;
 /**
  * Tests a more complex scenario with recorded HTTP requests and responses using
- * the {@link SpringAnnotationsHttpJsonInvokerFactoryProxyBean}
+ * the {@link SpringRestInvokerProxyFactoryBean}
  * 
  * @author george georgovassilis
  * 
@@ -38,7 +38,7 @@ public abstract class AbstractBankServiceTest {
     protected BankService bankService;
 
     @Resource(name = "&RemoteBankService")
-    protected BaseHttpJsonInvokerFactoryProxyBean httpProxyFactory;
+    protected BaseRestInvokerProxyFactoryBean httpProxyFactory;
 
     protected MockRequestFactory requestFactory;
 
