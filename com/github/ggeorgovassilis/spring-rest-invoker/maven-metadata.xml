@@ -4,8 +4,8 @@
   <artifactId>spring-rest-invoker</artifactId>
   <versioning>
     <versions>
-      <version>1.0.RC-SNAPSHOT</version>
+      <version>1.1.RC-SNAPSHOT</version>
     </versions>
-    <lastUpdated>20140827163644</lastUpdated>
+    <lastUpdated>20140827163912</lastUpdated>
   </versioning>
 </metadata>
