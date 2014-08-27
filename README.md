@@ -1,12 +1,13 @@
 spring-rest-invoker
 ===================
 
-Spring proxy that binds remote JSON REST services to java interfaces. Invoking methods on those interfaces will make a corresponding HTTP request to the remote service and (de)serialize any objects to/from JSON. The concrete mapping between an interface and a remote service can be done programmatically or by annotating interfaces with Spring or JAX-RS annotations.
+Spring invoker that binds remote JSON REST services to java interfaces similarily to how [HttpInvokerProxyFactoryBean](http://docs.spring.io/spring/docs/3.2.8.RELEASE/javadoc-api//org/springframework/remoting/httpinvoker/HttpInvokerProxyFactoryBean.html "HttpInvokerProxyFactoryBean") works. Invoking methods on those interfaces will make an HTTP request to the remote service and (de)serialize any objects to/from JSON. The concrete mapping between an interface and a remote service can be done programmatically or by annotating interfaces with Spring or JAX-RS annotations.
 
 ![Schematic of the spring-invoker proxy's function](http://ggeorgovassilis.github.io/spring-rest-invoker/spring-invoker.svg?1 "Mapping of a java interface to a REST http service")
 
 Features:
 
+- Consume REST JSON services
 - Declare a service interface and bind it to remote URLs with annotations (spring or jax-rs)
 - Convert JSON to Java POJOs and vice versa
 - Convert method arguments to GET parameters
@@ -14,6 +15,8 @@ Features:
 
 
 ## News
+
+2014-08-17: edited 1.0.RC-SNAPSHOT to fix broken unit tests and rename proxy factories
 
 2014-08-12: version 1.0.RC-SNAPSHOT adds support for opaque (cglib) proxies
 
@@ -46,18 +49,18 @@ Then include the dependency:
 <dependency>
 	<groupId>com.github.ggeorgovassilis</groupId>
 	<artifactId>spring-rest-invoker</artifactId>
-	<version>0.0.9-SNAPSHOT</version>
+	<version>1.0.RC-SNAPSHOT</version>
 </dependency>
 ```
 
 If you require jax-rs support you must provide a dependency with the annotations, i.e.:
 
 ```xml
-	<dependency>
-		<groupId>org.jboss.resteasy</groupId>
-		<artifactId>jaxrs-api</artifactId>
-		<version>3.0.8.Final</version>
-	</dependency>
+<dependency>
+	<groupId>org.jboss.resteasy</groupId>
+	<artifactId>jaxrs-api</artifactId>
+	<version>3.0.8.Final</version>
+</dependency>
 ```
 
 ### 1. Make an interface, i.e:
@@ -95,21 +98,21 @@ public interface BookServiceJaxRs extends BookService{
 ### 2. Then map it to the remote REST URL you want to consume:
 
 ```xml
-	<bean id="BookService"
-		class="com.github.ggeorgovassilis.springjsonmapper.spring.SpringAnnotationsHttpJsonInvokerFactoryProxyBean">
-		<property name="baseUrl" value="https://www.googleapis.com/books/v1" />
-		<property name="remoteServiceInterfaceClass" value="com.github.ggeorgovassilis.springjsonmapper.services.spring.BookServiceSpring"/>
-	</bean>
+<bean id="BookService"
+	class="com.github.ggeorgovassilis.springjsonmapper.spring.SpringRestInvokerProxyFactoryBean">
+	<property name="baseUrl" value="https://www.googleapis.com/books/v1" />
+	<property name="remoteServiceInterfaceClass" value="com.github.ggeorgovassilis.springjsonmapper.services.spring.BookServiceSpring"/>
+</bean>
 ```
 
 or if you're using jax-rs
 
 ```xml
-	<bean id="BookService"
-		class="com.github.ggeorgovassilis.springjsonmapper.jaxrs.JaxRsAnnotationsHttpJsonInvokerFactoryProxyBean">
-		<property name="baseUrl" value="https://www.googleapis.com/books/v1" />
-		<property name="remoteServiceInterfaceClass" value="com.github.ggeorgovassilis.springjsonmapper.services.jaxrs.BookServiceJaxRs"/>
-	</bean>
+<bean id="BookService"
+	class="com.github.ggeorgovassilis.springjsonmapper.jaxrs.JaxRsInvokerProxyFactoryBean">
+	<property name="baseUrl" value="https://www.googleapis.com/books/v1" />
+	<property name="remoteServiceInterfaceClass" value="com.github.ggeorgovassilis.springjsonmapper.services.jaxrs.BookServiceJaxRs"/>
+</bean>
 ```
 
 ### 3. Use it in your code
@@ -482,7 +485,7 @@ Have a look at mapping declarations for the unit test: https://github.com/ggeorg
 
 #### I need proxies to extend a specific class
 
-Since 1.0.RC it's possible to generate opaque proxies with cglib instead of the default dynamic proxies. Opaque proxies extend a concrete class and implement the REST mapping interface. In order to do so, specify the name of the class proxies should extend with the ```proxyTargetClass``` property of the factory proxy bean (i.e. the ```SpringAnnotationsHttpJsonInvokerFactoryProxyBean```). If you just need opaque proxies, use ``` java.lang.Object```.
+Since 1.0.RC it's possible to generate opaque proxies with cglib instead of the default dynamic proxies. Opaque proxies extend a concrete class and implement the REST mapping interface. In order to do so, specify the name of the class proxies should extend with the ```proxyTargetClass``` property of the factory proxy bean (i.e. the ```SpringRestInvokerProxyFactoryBean```). If you just need opaque proxies, use ``` java.lang.Object```.
 
 #### I specified some (other) annotations on the mapping interface but they are missing on the service proxy
 
