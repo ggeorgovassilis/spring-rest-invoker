@@ -3,7 +3,7 @@ spring-rest-invoker
 
 Spring invoker that binds remote JSON REST services to java interfaces similarily to how [HttpInvokerProxyFactoryBean](http://docs.spring.io/spring/docs/3.2.8.RELEASE/javadoc-api//org/springframework/remoting/httpinvoker/HttpInvokerProxyFactoryBean.html "HttpInvokerProxyFactoryBean") works. Invoking methods on those interfaces will make an HTTP request to the remote service and (de)serialize any objects to/from JSON. The concrete mapping between an interface and a remote service can be done programmatically or by annotating interfaces with Spring or JAX-RS annotations.
 
-![Schematic of the spring-invoker proxy's function](http://ggeorgovassilis.github.io/spring-rest-invoker/spring-invoker.svg?1 "Mapping of a java interface to a REST http service")
+![Schematic of the spring-invoker proxy's function](https://raw.githubusercontent.com/ggeorgovassilis/spring-rest-invoker/HEAD/spring-invoker.svg "Mapping of a java interface to a REST http service")
 
 Features:
 
