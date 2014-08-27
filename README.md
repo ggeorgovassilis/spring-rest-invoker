@@ -37,10 +37,17 @@ Features:
 
 Either build it yourself or add the repository to your pom:
 ```xml
-<repository>
-  <id>spring-rest-invoker</id>
-  <url>http://ggeorgovassilis.github.com/spring-rest-invoker/repository/</url>
-</repository>
+<repositories>
+	<repository>
+		<id>spring-rest-invoker-mvn-repo</id>
+		<url>https://raw.github.com/ggeorgovassilis/spring-rest-invoker/gh-pages/</url>
+		<snapshots>
+			<enabled>true</enabled>
+			<updatePolicy>always</updatePolicy>
+		</snapshots>
+	</repository>
+...
+</repositories>
 ```
 
 Then include the dependency:
