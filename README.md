@@ -476,6 +476,10 @@ log4j.logger.com.github.ggeorgovassilis.springjsonmapper.Request=DEBUG
 log4j.logger.com.github.ggeorgovassilis.springjsonmapper.Response=DEBUG
 ```
 
+#### I need to modify the outgoing HTTP request / I need to supply a client certificate / I need to validate a server certificate
+
+Again the solution is to provide your own RestTemplate, see the previous section.
+
 #### I need to parametrize the mapping URL depending on the execution environment
 
 Just use property placeholders in the URL, i.e.:
