@@ -3,10 +3,10 @@
   <groupId>com.github.ggeorgovassilis</groupId>
   <artifactId>spring-rest-invoker</artifactId>
   <versioning>
-    <release>1.0</release>
+    <release>1.2</release>
     <versions>
-      <version>1.0</version>
+      <version>1.2</version>
     </versions>
-    <lastUpdated>20170107073212</lastUpdated>
+    <lastUpdated>20170107075335</lastUpdated>
   </versioning>
 </metadata>
