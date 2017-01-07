@@ -4,7 +4,10 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 import javax.annotation.PostConstruct;
 
@@ -232,10 +235,10 @@ public abstract class BaseRestInvokerProxyFactoryBean implements
     protected Object handleRemoteInvocation(Object proxy, Method method,
 	    Object[] args, UrlMapping requestMapping) {
 	Object result = null;
-	Map<String, Object> parameters = new HashMap<>();
-	Map<String, Object> dataObjects = new HashMap<>();
+	Map<String, Object> parameters = new LinkedHashMap<>();
+	Map<String, Object> dataObjects = new LinkedHashMap<>();
 	MultiValueMap<String, String> headers = getHeaders(requestMapping);
-	Map<String, String> cookies = new HashMap<>();
+	Map<String, String> cookies = new LinkedHashMap<>();
 	MultiValueMap<String, Object> formObjects = new LinkedMultiValueMap<>();
 	RestOperations rest = getRestTemplate();
 
@@ -312,6 +315,7 @@ public abstract class BaseRestInvokerProxyFactoryBean implements
 		headers);
 	augmentHeadersWithCookies(finalHeaders, cookies);
 	boolean hasBody = !HttpMethod.GET.equals(httpMethod);
+	
 	if (hasBody)
 	    requestEntity = new HttpEntity<Object>(dataObject, finalHeaders);
 	else

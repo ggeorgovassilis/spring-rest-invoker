@@ -16,6 +16,8 @@ Features:
 
 ## News
 
+2016-01-07: Fixed order of parameters and attributes in JSON
+
 2014-08-17: edited 1.0.RC-SNAPSHOT to fix broken unit tests and rename proxy factories
 
 2014-08-12: version 1.0.RC-SNAPSHOT adds support for opaque (cglib) proxies

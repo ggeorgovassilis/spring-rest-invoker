@@ -4,7 +4,7 @@
 	<groupId>com.github.ggeorgovassilis</groupId>
 	<artifactId>spring-rest-invoker</artifactId>
 	<name>spring-rest-invoker</name>
-	<version>1.0.RC-SNAPSHOT</version>
+	<version>1.0</version>
 	<description>Spring factory that allows consumption of a remote REST JSON service by binding it to a local Java interface and exposing it as a proxy.</description>
 	<inceptionYear>2014</inceptionYear>
 
@@ -132,7 +132,7 @@
 			<plugin>
 				<groupId>com.github.github</groupId>
 				<artifactId>site-maven-plugin</artifactId>
-				<version>0.9</version>
+				<version>0.12</version>
 				<configuration>
 					<!-- git commit message -->
 					<message>Maven artifacts for ${project.version}</message>
