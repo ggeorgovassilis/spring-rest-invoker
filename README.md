@@ -1,3 +1,6 @@
+<img src="https://travis-ci.org/ggeorgovassilis/spring-rest-invoker.svg"/>
+
+
 spring-rest-invoker
 ===================
 
