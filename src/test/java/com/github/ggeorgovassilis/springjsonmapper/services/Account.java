@@ -2,7 +2,7 @@ package com.github.ggeorgovassilis.springjsonmapper.services;
 
 import java.io.Serializable;
 
-import org.codehaus.jackson.annotate.JsonPropertyOrder;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 /**
  * Models a bank account

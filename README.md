@@ -16,7 +16,7 @@ Features:
 
 ## News
 
-2016-01-07: Fixed order of parameters and attributes in JSON
+2016-01-07: Released 1.2. Fixed order of parameters and attributes in JSON, updated Spring, Jackson
 
 2014-08-17: edited 1.0.RC-SNAPSHOT to fix broken unit tests and rename proxy factories
 
@@ -58,7 +58,7 @@ Then include the dependency:
 <dependency>
 	<groupId>com.github.ggeorgovassilis</groupId>
 	<artifactId>spring-rest-invoker</artifactId>
-	<version>1.0.RC-SNAPSHOT</version>
+	<version>1.2</version>
 </dependency>
 ```
 
