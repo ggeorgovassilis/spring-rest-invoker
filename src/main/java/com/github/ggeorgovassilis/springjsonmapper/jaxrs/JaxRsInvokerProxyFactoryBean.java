@@ -44,11 +44,11 @@ import com.github.ggeorgovassilis.springjsonmapper.spring.SpringRestInvokerProxy
  * <code><pre> 
  * interface BankServiceJaxRs {
  *
- *	&#064POST
- *	&#064Path("/transfer")
- *	Account transfer(&#064BeanParam &#064QueryParam("fromAccount") Account fromAccount, &#064BeanParam &#064QueryParam("actor") Customer actor,
- *			&#064BeanParam &#064QueryParam("toAccount") Account toAccount, &#064BeanParam &#064QueryParam("amount") int amount,
- *			&#064QueryParam("sendConfirmationSms") boolean sendConfirmationSms);
+ *	&#064;POST
+ *	&#064;Path("/transfer")
+ *	Account transfer(&#064;BeanParam &#064;QueryParam("fromAccount") Account fromAccount, &#064;BeanParam &#064;QueryParam("actor") Customer actor,
+ *			&#064;BeanParam &#064;QueryParam("toAccount") Account toAccount, &#064;BeanParam &#064;QueryParam("amount") int amount,
+ *			&#064;QueryParam("sendConfirmationSms") boolean sendConfirmationSms);
  *
  * }
  *                               
