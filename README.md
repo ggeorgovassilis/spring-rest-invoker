@@ -19,6 +19,8 @@ Features:
 
 ## News
 
+2016-06-04: Released 1.3. Updated dependencies
+
 2016-01-07: Released 1.2. Fixed order of parameters and attributes in JSON, updated Spring, Jackson
 
 2014-08-17: edited 1.0.RC-SNAPSHOT to fix broken unit tests and rename proxy factories
@@ -61,9 +63,15 @@ Then include the dependency:
 <dependency>
 	<groupId>com.github.ggeorgovassilis</groupId>
 	<artifactId>spring-rest-invoker</artifactId>
-	<version>1.2</version>
+	<version>1.3</version>
 </dependency>
 ```
+
+### Building
+
+```git clone https://github.com/ggeorgovassilis/spring-rest-invoker```
+
+```mvn clean install pmd:pmd pmd:cpd surefire-report:report site```
 
 If you require jax-rs support you must provide a dependency with the annotations, i.e.:
 
@@ -510,3 +518,19 @@ Symptoms: you specified more annotations on the mapping interface like ```@Trans
 #### Are there any alternatives?
 
 Have a look at RESTEasy http://resteasy.jboss.org/
+
+### How do I build from source code?
+
+```git clone https://github.com/ggeorgovassilis/spring-rest-invoker```
+
+```mvn clean install pmd:pmd pmd:cpd surefire-report:report site```
+
+or without the fancies:
+
+```mvn clean install -DskipTests=true```
+
+#### How do I perform a release
+
+```mvn clean deploy -DperformRelease=true```
+
+and specify a "github" server in ```settings.xml```
