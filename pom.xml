@@ -123,7 +123,6 @@
 					<configuration>
 						<additionalparam>-Xdoclint:none</additionalparam>
 					</configuration>
-
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
@@ -187,6 +186,25 @@
 				<version>2.9</version>
 			</plugin>
 			<plugin>
+				<groupId>org.jacoco</groupId>
+				<artifactId>jacoco-maven-plugin</artifactId>
+				<version>0.7.9</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>prepare-agent</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>report</id>
+						<phase>prepare-package</phase>
+						<goals>
+							<goal>report</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.6.1</version>
@@ -200,6 +218,7 @@
 
 	<reports>
 		<report>maven-pmd-plugin</report>
+		<report>jacoco-maven-plugin</report>
 	</reports>
 
 	<!-- Steps for performing a release: mvn -DperformRelease=true clean deploy 
