@@ -3,6 +3,8 @@ package com.github.ggeorgovassilis.springjsonmapper.services;
 import com.github.ggeorgovassilis.springjsonmapper.services.Account;
 import com.github.ggeorgovassilis.springjsonmapper.services.Customer;
 
+import java.util.List;
+
 /**
  * Functional interface for a bank service. Tests will extend this interface and redefine methods with their respective framework annotations.
  * This functional interface is kept clean of annotations so that the test code can be reused for various implementations such as spring annotations
@@ -27,4 +29,6 @@ public interface BankService {
 	boolean isSessionAlive(String sid);
 
 	boolean doesCustomerExist(String name);
+
+	List<Account> getAllAccounts();
 }

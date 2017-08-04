@@ -13,6 +13,8 @@ import com.github.ggeorgovassilis.springjsonmapper.services.Account;
 import com.github.ggeorgovassilis.springjsonmapper.services.BankService;
 import com.github.ggeorgovassilis.springjsonmapper.services.Customer;
 
+import java.util.List;
+
 /**
  * Mapping to a hypothetical bank service REST API using Spring annotations
  * @author george georgovassilis
@@ -53,4 +55,9 @@ public interface BankServiceSpring extends BankService{
     	@Override
 	@RequestMapping(value = "/${domain}/customer/{name}")
     	boolean doesCustomerExist(@PathVariable("name") String name);
+
+    	@Override
+	@RequestMapping(value = "/accounts")
+		List<Account> getAllAccounts();
+
 }

@@ -1,5 +1,6 @@
 package com.github.ggeorgovassilis.springjsonmapper.tests;
 
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -251,4 +252,26 @@ public abstract class AbstractBankServiceTest {
 		request.serializeToString());
 	
     }
+
+	/**
+	 * Checks Parameterized response type are handled properly
+	 * @throws Exception
+	 */
+	@Test
+	public void testParameterizedResponseType() throws Exception{
+		// setup test
+		response("recordedmessages/getallaccounts_response.txt");
+
+		// execute test
+		List<Account> results = bankService.getAllAccounts();
+		assertEquals(2,results.size());
+		assertTrue("Item is expected to be an instance of Account", results.get(0) instanceof Account);
+		assertEquals("41",results.get(0).getAccountNumber());
+
+		// validate request
+		MockRequest request = requestFactory.getLastRequest();
+		assertEquals(sget("recordedmessages/getallaccounts_request.txt"),
+				request.serializeToString());
+
+	}
 }

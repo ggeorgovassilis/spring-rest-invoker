@@ -1,0 +1,4 @@
+GET http://localhost/bankservice/accounts
+Accept=application/json, application/*+json
+Content-Length=0
+
