@@ -10,6 +10,7 @@ import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.context.EmbeddedValueResolverAware;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
@@ -240,7 +241,7 @@ public abstract class BaseRestInvokerProxyFactoryBean
 		MultiValueMap<String, Object> formObjects = new LinkedMultiValueMap<>();
 		RestOperations rest = getRestTemplate();
 
-		Class<?> returnType = method.getReturnType();
+		ParameterizedTypeReference<?> returnType = getResponseType(method);
 		String url = baseUrl;
 		url += requestMapping.getUrl();
 
@@ -288,7 +289,7 @@ public abstract class BaseRestInvokerProxyFactoryBean
 	}
 
 	protected Object executeRequest(Map<String, Object> dataObjects, Method method, RestOperations rest, String url,
-			HttpMethod httpMethod, Class<?> returnType, Map<String, Object> parameters,
+			HttpMethod httpMethod, ParameterizedTypeReference<?> returnType, Map<String, Object> parameters,
 			MultiValueMap<String, Object> formObjects, Map<String, String> cookies,
 			MultiValueMap<String, String> headers) {
 		HttpEntity<?> requestEntity = null;
@@ -397,5 +398,13 @@ public abstract class BaseRestInvokerProxyFactoryBean
 		} else {
 			return method.invoke(this, args);
 		}
+	}
+	private ParameterizedTypeReference<Object> getResponseType(Method method) {
+		return new ParameterizedTypeReference<Object>() {
+			@Override
+			public java.lang.reflect.Type getType() {
+				return method.getGenericReturnType();
+			}
+		};
 	}
 }

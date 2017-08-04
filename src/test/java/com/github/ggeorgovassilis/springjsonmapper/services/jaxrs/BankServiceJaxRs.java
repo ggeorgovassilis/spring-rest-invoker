@@ -15,6 +15,8 @@ import com.github.ggeorgovassilis.springjsonmapper.services.Account;
 import com.github.ggeorgovassilis.springjsonmapper.services.BankService;
 import com.github.ggeorgovassilis.springjsonmapper.services.Customer;
 
+import java.util.List;
+
 /**
  * Mapping to a hypothetical bank service REST API using JAX-RS annotations
  * @author george georgovassilis
@@ -62,4 +64,8 @@ public interface BankServiceJaxRs extends BankService{
 	@Override
 	@Path("/${domain}/customer/{name}")
 	boolean doesCustomerExist(@PathParam("name") String name);
+
+	@Override
+	@Path(value = "/accounts")
+	List<Account> getAllAccounts();
 }
