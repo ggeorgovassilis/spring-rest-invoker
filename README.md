@@ -19,7 +19,9 @@ Features:
 
 ## News
 
-2016-06-04: Released 1.3. Updated dependencies
+2017-08-04: Released 1.4. Handling parametrised return types (credits to [Valentin Ozanne](https://github.com/ValentinOzanne))
+
+2017-06-04: Released 1.3. Updated dependencies
 
 2016-01-07: Released 1.2. Fixed order of parameters and attributes in JSON, updated Spring, Jackson
 
@@ -63,7 +65,7 @@ Then include the dependency:
 <dependency>
 	<groupId>com.github.ggeorgovassilis</groupId>
 	<artifactId>spring-rest-invoker</artifactId>
-	<version>1.3</version>
+	<version>1.4</version>
 </dependency>
 ```
 
