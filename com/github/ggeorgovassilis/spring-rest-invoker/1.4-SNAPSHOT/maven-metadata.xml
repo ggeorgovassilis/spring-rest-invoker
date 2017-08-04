@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata modelVersion="1.1.0">
+  <groupId>com.github.ggeorgovassilis</groupId>
+  <artifactId>spring-rest-invoker</artifactId>
+  <version>1.4-SNAPSHOT</version>
+  <versioning>
+    <snapshot>
+      <timestamp>20170804.183936</timestamp>
+      <buildNumber>1</buildNumber>
+    </snapshot>
+    <lastUpdated>20170804183936</lastUpdated>
+    <snapshotVersions>
+      <snapshotVersion>
+        <extension>jar</extension>
+        <value>1.4-20170804.183936-1</value>
+        <updated>20170804183936</updated>
+      </snapshotVersion>
+      <snapshotVersion>
+        <extension>pom</extension>
+        <value>1.4-20170804.183936-1</value>
+        <updated>20170804183936</updated>
+      </snapshotVersion>
+      <snapshotVersion>
+        <classifier>sources</classifier>
+        <extension>jar</extension>
+        <value>1.4-20170804.183936-1</value>
+        <updated>20170804183936</updated>
+      </snapshotVersion>
+      <snapshotVersion>
+        <classifier>javadoc</classifier>
+        <extension>jar</extension>
+        <value>1.4-20170804.183936-1</value>
+        <updated>20170804183936</updated>
+      </snapshotVersion>
+    </snapshotVersions>
+  </versioning>
+</metadata>
