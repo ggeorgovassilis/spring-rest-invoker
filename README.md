@@ -75,7 +75,7 @@ Then include the dependency:
 
 ```mvn clean install pmd:pmd pmd:cpd surefire-report:report site```
 
-If you require jax-rs support you must provide a dependency with the annotations, i.e.:
+If you require jax-rs support you must provide a dependency with the annotations, ie:
 
 ```xml
 <dependency>
@@ -85,7 +85,7 @@ If you require jax-rs support you must provide a dependency with the annotations
 </dependency>
 ```
 
-### 1. Make an interface, i.e:
+### 1. Declare an interface, eg:
 
 ```java
 public interface BookService {
