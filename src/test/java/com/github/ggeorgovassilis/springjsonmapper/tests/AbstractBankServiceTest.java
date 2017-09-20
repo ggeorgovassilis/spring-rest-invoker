@@ -226,6 +226,26 @@ public abstract class AbstractBankServiceTest {
 	}
 
 	/**
+	 * Tests method headers
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void testMethodHeaders() throws Exception {
+		// setup test
+		response("recordedmessages/doescustomerexist2_response.txt");
+
+		// execute test
+		boolean value = bankService.doesCustomerExist2("Mr Doe");
+		assertEquals(true, value);
+
+		// validate request
+		MockRequest request = requestFactory.getLastRequest();
+		assertEquals(sget("recordedmessages/doescustomerexist2_request.txt"), request.serializeToString());
+
+	}
+
+	/**
 	 * Checks whether SPEL is resolved properly
 	 * 
 	 * @throws Exception

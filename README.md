@@ -19,7 +19,7 @@ Features:
 
 ## News
 
-2017-09-20: Released 1.5. #20 Backported to Java 6, #21 Separate integration tests
+2017-09-20: Released 1.5. #20 Backported to Java 6, #21 Separate integration tests, #22 HTTP method headers for JaxRs
 
 2017-08-04: Released 1.4. Handling parametrised return types (credits to [Valentin Ozanne](https://github.com/ValentinOzanne))
 

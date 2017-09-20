@@ -11,6 +11,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 
+import com.github.ggeorgovassilis.springjsonmapper.jaxrs.Headers;
 import com.github.ggeorgovassilis.springjsonmapper.services.Account;
 import com.github.ggeorgovassilis.springjsonmapper.services.BankService;
 import com.github.ggeorgovassilis.springjsonmapper.services.Customer;
@@ -68,6 +69,11 @@ public interface BankServiceJaxRs extends BankService {
 	@Override
 	@Path("/${domain}/customer/{name}")
 	boolean doesCustomerExist(@PathParam("name") String name);
+
+	@Override
+	@Path("/${domain}/customer/{name}")
+	@Headers({"X-header-1=value1","X-header-2=value2"})
+	boolean doesCustomerExist2(@PathParam("name") String name);
 
 	@Override
 	@Path(value = "/accounts")

@@ -70,6 +70,9 @@ public class JaxRsAnnotationMethodInspector extends BaseAnnotationMethodInspecto
 		Consumes consumes = AnnotationUtils.findAnnotation(method, Consumes.class);
 		if (consumes != null)
 			urlMapping.setConsumes(consumes.value());
+		Headers headers = AnnotationUtils.findAnnotation(method, Headers.class);
+		if (headers!=null)
+			urlMapping.setHeaders(headers.value());
 
 		Annotation[][] parameterAnnotations = method.getParameterAnnotations();
 		if (parameterAnnotations.length != method.getParameterTypes().length)

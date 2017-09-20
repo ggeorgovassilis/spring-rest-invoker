@@ -1,0 +1,6 @@
+GET http://localhost/bankservice/test/customer/Mr%20Doe
+Accept=application/json, application/*+json
+Content-Length=0
+X-header-1=value1
+X-header-2=value2
+

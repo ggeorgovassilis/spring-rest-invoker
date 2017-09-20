@@ -62,6 +62,10 @@ public interface BankServiceSpring extends BankService {
 	boolean doesCustomerExist(@PathVariable("name") String name);
 
 	@Override
+	@RequestMapping(value = "/${domain}/customer/{name}", headers={"X-header-1=value1","X-header-2=value2"})
+	boolean doesCustomerExist2(@PathVariable("name") String name);
+
+	@Override
 	@RequestMapping(value = "/accounts")
 	List<Account> getAllAccounts();
 

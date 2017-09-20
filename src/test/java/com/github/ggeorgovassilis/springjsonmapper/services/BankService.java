@@ -32,5 +32,8 @@ public interface BankService {
 
 	boolean doesCustomerExist(String name);
 
+	boolean doesCustomerExist2(String name);
+
 	List<Account> getAllAccounts();
+
 }
