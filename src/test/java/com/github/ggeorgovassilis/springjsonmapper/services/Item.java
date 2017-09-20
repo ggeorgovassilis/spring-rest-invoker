@@ -13,7 +13,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Item implements Serializable {
 
-    String id;
+	private static final long serialVersionUID = -6854695261165137027L;
+	String id;
     String selfLink;
     VolumeInfo volumeInfo;
 

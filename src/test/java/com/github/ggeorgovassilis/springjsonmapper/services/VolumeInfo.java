@@ -5,7 +5,6 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-
 /**
  * 
  * @author george georgovassilis
@@ -13,58 +12,59 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class VolumeInfo implements Serializable {
-    String title;
-    List<String> authors;
-    String publisher;
-    String publishedDate;
-    String description;
-    List<String> categories;
+	private static final long serialVersionUID = 3162880556852067979L;
+	String title;
+	List<String> authors;
+	String publisher;
+	String publishedDate;
+	String description;
+	List<String> categories;
 
-    public String getTitle() {
-	return title;
-    }
+	public String getTitle() {
+		return title;
+	}
 
-    public void setTitle(String title) {
-	this.title = title;
-    }
+	public void setTitle(String title) {
+		this.title = title;
+	}
 
-    public List<String> getAuthors() {
-	return authors;
-    }
+	public List<String> getAuthors() {
+		return authors;
+	}
 
-    public void setAuthors(List<String> authors) {
-	this.authors = authors;
-    }
+	public void setAuthors(List<String> authors) {
+		this.authors = authors;
+	}
 
-    public String getPublisher() {
-	return publisher;
-    }
+	public String getPublisher() {
+		return publisher;
+	}
 
-    public void setPublisher(String publisher) {
-	this.publisher = publisher;
-    }
+	public void setPublisher(String publisher) {
+		this.publisher = publisher;
+	}
 
-    public String getPublishedDate() {
-	return publishedDate;
-    }
+	public String getPublishedDate() {
+		return publishedDate;
+	}
 
-    public void setPublishedDate(String publishedDate) {
-	this.publishedDate = publishedDate;
-    }
+	public void setPublishedDate(String publishedDate) {
+		this.publishedDate = publishedDate;
+	}
 
-    public String getDescription() {
-	return description;
-    }
+	public String getDescription() {
+		return description;
+	}
 
-    public void setDescription(String description) {
-	this.description = description;
-    }
+	public void setDescription(String description) {
+		this.description = description;
+	}
 
-    public List<String> getCategories() {
-	return categories;
-    }
+	public List<String> getCategories() {
+		return categories;
+	}
 
-    public void setCategories(List<String> categories) {
-	this.categories = categories;
-    }
+	public void setCategories(List<String> categories) {
+		this.categories = categories;
+	}
 }
