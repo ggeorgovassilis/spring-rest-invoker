@@ -178,7 +178,7 @@
 							<includes>
 								<include>**/tests/*Test.java</include>
 							</includes>
-							<argLine>${jacoco.agent.itArgLine}</argLine>
+							<argLine>${jacoco.agent.argLine}</argLine>
 						</configuration>
 					</execution>
 					<execution> <!-- re-enable tests in the integration-test phase -->
@@ -192,7 +192,7 @@
 							<includes>
 								<include>**/integrationtests/*Test.java</include>
 							</includes>
-							<argLine>${jacoco.agent.itArgLine}</argLine>
+							<argLine>${jacoco.agent.argLine}</argLine>
 						</configuration>
 					</execution>
 				</executions>
@@ -247,23 +247,28 @@
 				<version>0.7.9</version>
 				<executions>
 					<execution>
-						<id>prepare-it-test-agent</id>
-						<phase>test</phase>
+						<id>prepare-test-agent</id>
 						<goals>
 							<goal>prepare-agent</goal>
 						</goals>
 						<configuration>
 							<append>true</append>
-							<inclNoLocationClasses>true</inclNoLocationClasses>
-							<propertyName>jacoco.agent.itArgLine</propertyName>
+							<inclNoLocationClasses>false</inclNoLocationClasses>
+							<propertyName>jacoco.agent.argLine</propertyName>
+							<include>com/github/ggeorgovassilis/springjsonmapper/**</include>
 						</configuration>
 					</execution>
 					<execution>
 						<id>jacoco-report</id>
 						<phase>post-integration-test</phase>
 						<goals>
-							<goal>report-aggregate</goal>
+							<goal>report</goal>
 						</goals>
+						<configuration>
+							<includes>
+								<include>com/github/ggeorgovassilis/springjsonmapper/**</include>
+							</includes>
+						</configuration>
 					</execution>
 				</executions>
 			</plugin>
