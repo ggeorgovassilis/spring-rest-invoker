@@ -1,11 +1,8 @@
 package com.github.ggeorgovassilis.springjsonmapper.spring;
 
-import static org.junit.Assert.*;
-
 import java.lang.reflect.Method;
 
 import org.junit.Test;
-import org.springframework.context.support.EmbeddedValueResolutionSupport;
 import org.springframework.util.StringValueResolver;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
