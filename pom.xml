@@ -4,7 +4,7 @@
 	<groupId>com.github.ggeorgovassilis</groupId>
 	<artifactId>spring-rest-invoker</artifactId>
 	<name>spring-rest-invoker</name>
-	<version>1.4-SNAPSHOT</version>
+	<version>1.5-SNAPSHOT</version>
 	<description>Spring factory that allows consumption of a remote REST JSON service by binding it to a local Java interface and exposing it as a proxy.</description>
 	<inceptionYear>2014</inceptionYear>
 
@@ -144,9 +144,59 @@
 					<artifactId>maven-source-plugin</artifactId>
 					<version>3.0.1</version>
 				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-project-info-reports-plugin</artifactId>
+					<version>2.9</version>
+					<configuration>
+						<dependencyLocationsEnabled>false</dependencyLocationsEnabled>
+					</configuration>
+				</plugin>
 			</plugins>
 		</pluginManagement>
 		<plugins>
+			<plugin>
+				<!-- Will do integration tests with surefire. We don't need failsafe 
+					here. -->
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>2.20</version>
+				<configuration>
+					<trimStackTrace>false</trimStackTrace>
+					<skip>true</skip><!-- skip disables the plugin by default, otherwise 
+						it will run integration tests during the unit test phase. -->
+				</configuration>
+				<executions>
+					<execution> <!-- re-enable tests in the test phase -->
+						<id>unit-tests</id>
+						<phase>test</phase>
+						<goals>
+							<goal>test</goal>
+						</goals>
+						<configuration>
+							<skip>false</skip>
+							<includes>
+								<include>**/tests/*Test.java</include>
+							</includes>
+							<argLine>${jacoco.agent.itArgLine}</argLine>
+						</configuration>
+					</execution>
+					<execution> <!-- re-enable tests in the integration-test phase -->
+						<id>integration-tests</id>
+						<phase>integration-test</phase>
+						<goals>
+							<goal>test</goal>
+						</goals>
+						<configuration>
+							<skip>false</skip>
+							<includes>
+								<include>**/integrationtests/*Test.java</include>
+							</includes>
+							<argLine>${jacoco.agent.itArgLine}</argLine>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
 			<plugin>
 				<groupId>com.github.github</groupId>
 				<artifactId>site-maven-plugin</artifactId>
@@ -190,7 +240,6 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-project-info-reports-plugin</artifactId>
-				<version>2.9</version>
 			</plugin>
 			<plugin>
 				<groupId>org.jacoco</groupId>
@@ -198,15 +247,22 @@
 				<version>0.7.9</version>
 				<executions>
 					<execution>
+						<id>prepare-it-test-agent</id>
+						<phase>test</phase>
 						<goals>
 							<goal>prepare-agent</goal>
 						</goals>
+						<configuration>
+							<append>true</append>
+							<inclNoLocationClasses>true</inclNoLocationClasses>
+							<propertyName>jacoco.agent.itArgLine</propertyName>
+						</configuration>
 					</execution>
 					<execution>
-						<id>report</id>
-						<phase>prepare-package</phase>
+						<id>jacoco-report</id>
+						<phase>post-integration-test</phase>
 						<goals>
-							<goal>report</goal>
+							<goal>report-aggregate</goal>
 						</goals>
 					</execution>
 				</executions>
@@ -216,8 +272,8 @@
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.6.1</version>
 				<configuration>
-					<source>1.8</source>
-					<target>1.8</target>
+					<source>1.6</source>
+					<target>1.6</target>
 				</configuration>
 			</plugin>
 		</plugins>
@@ -227,6 +283,19 @@
 		<report>maven-pmd-plugin</report>
 		<report>jacoco-maven-plugin</report>
 	</reports>
+
+	<reporting>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-project-info-reports-plugin</artifactId>
+				<configuration> <!-- don't write links to external dependencies; dependency lookup takes 
+						long -->
+					<dependencyLocationsEnabled>false</dependencyLocationsEnabled>
+				</configuration>
+			</plugin>
+		</plugins>
+	</reporting>
 
 	<!-- Steps for performing a release: mvn -DperformRelease=true clean deploy 
 		./update-index.sh -->

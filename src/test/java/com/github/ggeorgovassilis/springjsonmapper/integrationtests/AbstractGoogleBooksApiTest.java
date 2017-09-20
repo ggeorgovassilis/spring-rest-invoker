@@ -1,4 +1,4 @@
-package com.github.ggeorgovassilis.springjsonmapper.tests;
+package com.github.ggeorgovassilis.springjsonmapper.integrationtests;
 
 import org.junit.runner.RunWith;
 import org.junit.Test;

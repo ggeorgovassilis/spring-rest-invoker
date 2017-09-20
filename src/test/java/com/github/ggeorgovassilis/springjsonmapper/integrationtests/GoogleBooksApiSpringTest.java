@@ -1,4 +1,4 @@
-package com.github.ggeorgovassilis.springjsonmapper.tests;
+package com.github.ggeorgovassilis.springjsonmapper.integrationtests;
 
 import org.springframework.test.context.ContextConfiguration;
 
