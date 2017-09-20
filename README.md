@@ -51,7 +51,7 @@ Either build it yourself or add the repository to your pom:
 <repositories>
 	<repository>
 		<id>spring-rest-invoker-mvn-repo</id>
-		<url>https://raw.github.com/ggeorgovassilis/spring-rest-invoker/gh-pages/</url>
+		<url>https://raw.github.com/ggeorgovassilis/spring-rest-invoker/mvn-pages/</url>
 		<snapshots>
 			<enabled>true</enabled>
 			<updatePolicy>always</updatePolicy>
