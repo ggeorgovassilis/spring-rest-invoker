@@ -67,7 +67,7 @@ Then include the dependency:
 <dependency>
 	<groupId>com.github.ggeorgovassilis</groupId>
 	<artifactId>spring-rest-invoker</artifactId>
-	<version>1.4</version>
+	<version>1.5</version>
 </dependency>
 ```
 
