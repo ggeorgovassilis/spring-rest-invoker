@@ -19,16 +19,18 @@ import java.util.List;
 
 /**
  * Mapping to a hypothetical bank service REST API using JAX-RS annotations
+ * 
  * @author george georgovassilis
  *
  */
-public interface BankServiceJaxRs extends BankService{
+public interface BankServiceJaxRs extends BankService {
 
 	@Override
 	@POST
 	@Path("/transfer")
-	Account transfer(@BeanParam @QueryParam("fromAccount") Account fromAccount, @BeanParam @QueryParam("actor") Customer actor,
-			@BeanParam @QueryParam("toAccount") Account toAccount, @BeanParam @QueryParam("amount") int amount,
+	Account transfer(@BeanParam @QueryParam("fromAccount") Account fromAccount,
+			@BeanParam @QueryParam("actor") Customer actor, @BeanParam @QueryParam("toAccount") Account toAccount,
+			@BeanParam @QueryParam("amount") int amount,
 			@QueryParam("sendConfirmationSms") boolean sendConfirmationSms);
 
 	@Override
@@ -39,24 +41,26 @@ public interface BankServiceJaxRs extends BankService{
 	@Override
 	@POST
 	@Path("/photo")
-	@Consumes({"image/gif","image/jpeg","image/png"})
-	@Produces({"image/jpeg"})
+	@Consumes({ "image/gif", "image/jpeg", "image/png" })
+	@Produces({ "image/jpeg" })
 	byte[] updatePhoto(@QueryParam("name") String name, @BeanParam byte[] photo);
 
 	@Override
 	@POST
 	@Path("/join-accounts")
-	Account joinAccounts(@FormParam("") @QueryParam("account1") Account account1, @FormParam("") @QueryParam("account2") Account account2);
-	
+	Account joinAccounts(@FormParam("") @QueryParam("account1") Account account1,
+			@FormParam("") @QueryParam("account2") Account account2);
+
 	@Override
 	@POST
 	@Path("/authenticate")
-	Customer authenticate(@FormParam("") @QueryParam("name") String name, @FormParam("") @QueryParam("password") String password, @CookieParam("sid") String sessionId);
+	Customer authenticate(@FormParam("") @QueryParam("name") String name,
+			@FormParam("") @QueryParam("password") String password, @CookieParam("sid") String sessionId);
 
 	@Override
 	@Path("/accounts/{id}")
 	Account getAccount(@PathParam("id") int id);
-	
+
 	@Override
 	@Path("/session/check")
 	boolean isSessionAlive(@HeaderParam("X-SessionId") String sid);

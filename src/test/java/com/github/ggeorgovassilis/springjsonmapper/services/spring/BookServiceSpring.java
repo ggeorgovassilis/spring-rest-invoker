@@ -15,14 +15,14 @@ import com.github.ggeorgovassilis.springjsonmapper.services.QueryResult;
  * @author george georgovassilis
  *
  */
-public interface BookServiceSpring extends BookService{
+public interface BookServiceSpring extends BookService {
 
-    @Override
-    @RequestMapping("/volumes")
-    QueryResult findBooksByTitle(@RequestParam("q") String q);
-    
-    @Override
-    @RequestMapping("/volumes/{id}")
-    Item findBookById(@PathVariable("id") String id);
+	@Override
+	@RequestMapping("/volumes")
+	QueryResult findBooksByTitle(@RequestParam("q") String q);
+
+	@Override
+	@RequestMapping("/volumes/{id}")
+	Item findBookById(@PathVariable("id") String id);
 
 }

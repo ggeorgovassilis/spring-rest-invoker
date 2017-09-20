@@ -7,7 +7,9 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Since spring 3.2.8 is missing an annotation for mapping HTTP headers to parameters, we're inventing our own.
+ * Since spring 3.2.8 is missing an annotation for mapping HTTP headers to
+ * parameters, we're inventing our own.
+ * 
  * @author George Georgovassilis
  *
  */
@@ -16,9 +18,9 @@ import java.lang.annotation.Target;
 @Documented
 public @interface Header {
 
-    /**
-     * The name of the HTTP header to bind the method parameter to.
-     */
-    String value() default "";
+	/**
+	 * The name of the HTTP header to bind the method parameter to.
+	 */
+	String value() default "";
 
 }

@@ -11,7 +11,8 @@ public class Utils {
 	/**
 	 * Returns true if arr!=null and arr.length &gt; 0
 	 * 
-	 * @param arr Array to check
+	 * @param arr
+	 *            Array to check
 	 * @return result of check
 	 */
 	public static boolean hasValue(Object[] arr) {

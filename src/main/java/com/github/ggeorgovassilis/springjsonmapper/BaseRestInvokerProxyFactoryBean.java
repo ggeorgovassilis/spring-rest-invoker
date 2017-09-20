@@ -63,8 +63,8 @@ public abstract class BaseRestInvokerProxyFactoryBean
 
 	/**
 	 * Return an implementation of a {@link MethodInspector} which can look at
-	 * methods and return a {@link RequestMapping} describing how that method is
-	 * to be mapped to a URL of a remote REST service.
+	 * methods and return a {@link RequestMapping} describing how that method is to
+	 * be mapped to a URL of a remote REST service.
 	 * 
 	 * @return {@link MethodInspector}
 	 */
@@ -74,7 +74,8 @@ public abstract class BaseRestInvokerProxyFactoryBean
 	 * Implementations inspect a method and return the corresponding
 	 * {@link RequestMapping}.
 	 * 
-	 * @param method Method to inspect
+	 * @param method
+	 *            Method to inspect
 	 * @param args
 	 *            method arguments
 	 * @return Must always return a {@link RequestMapping}. If there's a problem
@@ -132,8 +133,8 @@ public abstract class BaseRestInvokerProxyFactoryBean
 	}
 
 	/**
-	 * Optionally provide a {@link RestTemplate} if you need to handle http
-	 * yourself (proxies? BASIC auth?)
+	 * Optionally provide a {@link RestTemplate} if you need to handle http yourself
+	 * (proxies? BASIC auth?)
 	 * 
 	 * @param restTemplate
 	 */
@@ -147,8 +148,7 @@ public abstract class BaseRestInvokerProxyFactoryBean
 
 	/**
 	 * Set the base URL of the remote REST service for HTTP requests. Further
-	 * mappings specified on service interfaces are resolved relatively to this
-	 * URL.
+	 * mappings specified on service interfaces are resolved relatively to this URL.
 	 * 
 	 * @param baseUrl
 	 */
@@ -188,8 +188,8 @@ public abstract class BaseRestInvokerProxyFactoryBean
 
 	/**
 	 * If instantiating this object programmatically then, after setting any
-	 * dependencies, call this method to finish object initialization. Spring
-	 * will normally do that in an application context.
+	 * dependencies, call this method to finish object initialization. Spring will
+	 * normally do that in an application context.
 	 */
 	@PostConstruct
 	public void initialize() {
@@ -374,9 +374,9 @@ public abstract class BaseRestInvokerProxyFactoryBean
 	}
 
 	/**
-	 * Handles reflective method invocation, either invoking a method on the
-	 * proxy (equals or hashcode) or directly on the target. Implementation
-	 * copied from spring framework ServiceLocationInvocationHandler
+	 * Handles reflective method invocation, either invoking a method on the proxy
+	 * (equals or hashcode) or directly on the target. Implementation copied from
+	 * spring framework ServiceLocationInvocationHandler
 	 * 
 	 * @param proxy
 	 * @param method
@@ -399,6 +399,7 @@ public abstract class BaseRestInvokerProxyFactoryBean
 			return method.invoke(this, args);
 		}
 	}
+
 	private ParameterizedTypeReference<Object> getResponseType(final Method method) {
 		return new ParameterizedTypeReference<Object>() {
 			@Override

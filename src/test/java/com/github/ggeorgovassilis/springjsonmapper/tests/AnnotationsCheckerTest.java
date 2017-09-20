@@ -15,8 +15,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.github.ggeorgovassilis.springjsonmapper.services.BookService;
 
 import static org.junit.Assert.*;
+
 /**
  * Verifies that annotations are correctly preserved on proxies
+ * 
  * @author george georgovassilis
  *
  */
@@ -24,47 +26,53 @@ import static org.junit.Assert.*;
 @ContextConfiguration("classpath:test-context-annotations.xml")
 public class AnnotationsCheckerTest {
 
-    @Resource(name="BookService_DynamicProxy")
-    protected BookService dynamicProxy;
+	@Resource(name = "BookService_DynamicProxy")
+	protected BookService dynamicProxy;
 
-    @Resource(name="BookService_OpaqueProxy")
-    protected BookService opaqueProxy;
+	@Resource(name = "BookService_OpaqueProxy")
+	protected BookService opaqueProxy;
 
-    protected Method findMethodOnDynamicProxy(String name, Class<?> c, Class<?>[] args){
-	Method method = ReflectionUtils.findMethod(c, name, args);
-	if (method==null){
-	    Class<?>[] classes = c.getInterfaces();
-	    if (classes!=null)
-		for (Class<?> c1:classes){
-		    method = findMethodOnDynamicProxy(name, c1, args);
-		    if (method!=null)
-			break;
+	protected Method findMethodOnDynamicProxy(String name, Class<?> c, Class<?>[] args) {
+		Method method = ReflectionUtils.findMethod(c, name, args);
+		if (method == null) {
+			Class<?>[] classes = c.getInterfaces();
+			if (classes != null)
+				for (Class<?> c1 : classes) {
+					method = findMethodOnDynamicProxy(name, c1, args);
+					if (method != null)
+						break;
+				}
 		}
+		return method;
 	}
-	return method;
-    }
 
-    /**
-     * Determines whether on a given method of a dynamic proxy whether there is somewhere (= class hierarchy, interfaces) annotations preserved. 
-     * @throws Exception
-     */
-    @Test
-    public void testAnnotationsOnDynamicProxy() throws Exception {
-	Method method = findMethodOnDynamicProxy("findBooksByTitle", dynamicProxy.getClass(), new Class[]{String.class});
-	assertNotNull(method);
-	RequestMapping annotation = AnnotationUtils.findAnnotation(method, RequestMapping.class);
-	assertNotNull(annotation);
-    }
+	/**
+	 * Determines whether on a given method of a dynamic proxy whether there is
+	 * somewhere (= class hierarchy, interfaces) annotations preserved.
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void testAnnotationsOnDynamicProxy() throws Exception {
+		Method method = findMethodOnDynamicProxy("findBooksByTitle", dynamicProxy.getClass(),
+				new Class[] { String.class });
+		assertNotNull(method);
+		RequestMapping annotation = AnnotationUtils.findAnnotation(method, RequestMapping.class);
+		assertNotNull(annotation);
+	}
 
-    /**
-     * Determines whether a given method of an opaque proxy declares directly an annotation
-     * @throws Exception
-     */
-    @Test
-    public void testAnnotationsOnOpaqueProxy() throws Exception {
-	Method method = ReflectionUtils.findMethod(opaqueProxy.getClass(), "findBooksByTitle", new Class[]{String.class});
-	assertNotNull(method);
-	RequestMapping annotation = AnnotationUtils.findAnnotation(method, RequestMapping.class);
-	assertNotNull(annotation);
-    }
+	/**
+	 * Determines whether a given method of an opaque proxy declares directly an
+	 * annotation
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void testAnnotationsOnOpaqueProxy() throws Exception {
+		Method method = ReflectionUtils.findMethod(opaqueProxy.getClass(), "findBooksByTitle",
+				new Class[] { String.class });
+		assertNotNull(method);
+		RequestMapping annotation = AnnotationUtils.findAnnotation(method, RequestMapping.class);
+		assertNotNull(annotation);
+	}
 }

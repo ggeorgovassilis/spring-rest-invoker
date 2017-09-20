@@ -5,15 +5,15 @@ import java.lang.reflect.Proxy;
 
 /**
  * Generates standard dynamic java proxies
+ * 
  * @author george georgovassilis
  *
  */
-public class DynamicJavaProxyFactory implements ProxyFactory{
+public class DynamicJavaProxyFactory implements ProxyFactory {
 
-    @Override
-    public Object createProxy(ClassLoader classLoader, Class<?>[] interfaces,
-	    InvocationHandler callback) {
-	return Proxy.newProxyInstance(classLoader, interfaces, callback);
-    }
+	@Override
+	public Object createProxy(ClassLoader classLoader, Class<?>[] interfaces, InvocationHandler callback) {
+		return Proxy.newProxyInstance(classLoader, interfaces, callback);
+	}
 
 }

@@ -17,47 +17,52 @@ import java.util.List;
 
 /**
  * Mapping to a hypothetical bank service REST API using Spring annotations
+ * 
  * @author george georgovassilis
  *
  */
-public interface BankServiceSpring extends BankService{
+public interface BankServiceSpring extends BankService {
 
-    	@Override
+	@Override
 	@RequestMapping(value = "/transfer", method = RequestMethod.POST)
-	Account transfer(@RequestBody @RequestParam("fromAccount") Account fromAccount, @RequestBody @RequestParam("actor") Customer actor,
+	Account transfer(@RequestBody @RequestParam("fromAccount") Account fromAccount,
+			@RequestBody @RequestParam("actor") Customer actor,
 			@RequestBody @RequestParam("toAccount") Account toAccount, @RequestBody @RequestParam("amount") int amount,
 			@RequestParam("sendConfirmationSms") boolean sendConfirmationSms);
 
-    	@Override
+	@Override
 	@RequestMapping(value = "/verify", method = RequestMethod.POST)
 	Boolean checkAccount(@RequestBody Account account);
 
-    	@Override
-	@RequestMapping(value = "/photo", method = RequestMethod.POST, consumes = { "image/gif","image/jpeg","image/png" }, produces = { "image/jpeg"})
+	@Override
+	@RequestMapping(value = "/photo", method = RequestMethod.POST, consumes = { "image/gif", "image/jpeg",
+			"image/png" }, produces = { "image/jpeg" })
 	byte[] updatePhoto(@RequestParam("name") String name, @RequestBody byte[] photo);
 
-    	@Override
+	@Override
 	@RequestMapping(value = "/join-accounts", method = RequestMethod.POST)
-	Account joinAccounts(@RequestPart @RequestParam("account1") Account account1, @RequestPart @RequestParam("account2") Account account2);
-	
-    	@Override
+	Account joinAccounts(@RequestPart @RequestParam("account1") Account account1,
+			@RequestPart @RequestParam("account2") Account account2);
+
+	@Override
 	@RequestMapping(value = "/authenticate", method = RequestMethod.POST)
-	Customer authenticate(@RequestPart @RequestParam("name") String name, @RequestPart @RequestParam("password") String password, @CookieValue("sid") String sessionId);
+	Customer authenticate(@RequestPart @RequestParam("name") String name,
+			@RequestPart @RequestParam("password") String password, @CookieValue("sid") String sessionId);
 
-    	@Override
+	@Override
 	@RequestMapping(value = "/accounts/{id}")
-    	Account getAccount(@PathVariable("id") int id);
-    	
-    	@Override
-	@RequestMapping(value = "/session/check")
-    	boolean isSessionAlive(@Header(	"X-SessionId") String sid);
-    	
-    	@Override
-	@RequestMapping(value = "/${domain}/customer/{name}")
-    	boolean doesCustomerExist(@PathVariable("name") String name);
+	Account getAccount(@PathVariable("id") int id);
 
-    	@Override
+	@Override
+	@RequestMapping(value = "/session/check")
+	boolean isSessionAlive(@Header("X-SessionId") String sid);
+
+	@Override
+	@RequestMapping(value = "/${domain}/customer/{name}")
+	boolean doesCustomerExist(@PathVariable("name") String name);
+
+	@Override
 	@RequestMapping(value = "/accounts")
-		List<Account> getAllAccounts();
+	List<Account> getAllAccounts();
 
 }
