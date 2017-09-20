@@ -75,7 +75,7 @@ Then include the dependency:
 
 ```git clone https://github.com/ggeorgovassilis/spring-rest-invoker```
 
-```mvn clean install pmd:pmd pmd:cpd surefire-report:report site```
+```mvn clean install jxr:jxr pmd:pmd pmd:cpd surefire-report:report site```
 
 If you require jax-rs support you must provide a dependency with the annotations, ie:
 
@@ -528,7 +528,7 @@ Have a look at RESTEasy http://resteasy.jboss.org/
 
 ```git clone https://github.com/ggeorgovassilis/spring-rest-invoker```
 
-```mvn clean install pmd:pmd pmd:cpd surefire-report:report site```
+```mvn clean install jxr:jxr pmd:pmd pmd:cpd surefire-report:report site```
 
 or without the fancies:
 
