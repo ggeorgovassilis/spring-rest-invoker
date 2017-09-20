@@ -256,6 +256,7 @@ which will post a JSON object similar to this:
 @HeaderParam	// Pass argument (string) value as HTTP header 
 @BeanParam	// Pass argument as JSON in the request body. If a @QueryParam has been specified, then encode it with that JSON field name
 @FormParam	// Pass argument as multipart form request. Mandatory argument can be blank
+@Headers	// Non-standard annotation which adds HTTP headers to request
 ```
 
 ## F.A.Q.
