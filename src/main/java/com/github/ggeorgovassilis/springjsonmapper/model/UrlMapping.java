@@ -16,7 +16,7 @@ import static com.github.ggeorgovassilis.springjsonmapper.model.MethodParameterD
 public class UrlMapping {
 
     protected HttpMethod httpMethod = HttpMethod.GET;
-    protected List<MethodParameterDescriptor> parameters = new ArrayList<>();
+    protected List<MethodParameterDescriptor> parameters = new ArrayList<MethodParameterDescriptor>();
     protected String[] headers = new String[0];
     protected String[] consumes = new String[0];
     protected String[] produces = new String[0];

@@ -50,7 +50,7 @@ public class JaxRsAnnotationMethodInspector extends BaseAnnotationMethodInspecto
 	if (urlMapping.getUrl() == null)
 	    throw new MappingDeclarationException(
 		    "Missing @Path on method " + method, method, path, -1);
-	Set<HttpMethod> httpMethods = new HashSet<>();
+	Set<HttpMethod> httpMethods = new HashSet<HttpMethod>();
 	if (AnnotationUtils.findAnnotation(method, POST.class) != null)
 	    httpMethods.add(HttpMethod.POST);
 	if (AnnotationUtils.findAnnotation(method, PUT.class) != null)

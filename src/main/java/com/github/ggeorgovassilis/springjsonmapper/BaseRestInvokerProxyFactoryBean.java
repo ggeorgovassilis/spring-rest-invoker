@@ -234,11 +234,11 @@ public abstract class BaseRestInvokerProxyFactoryBean
 
 	protected Object handleRemoteInvocation(Object proxy, Method method, Object[] args, UrlMapping requestMapping) {
 		Object result = null;
-		Map<String, Object> parameters = new LinkedHashMap<>();
-		Map<String, Object> dataObjects = new LinkedHashMap<>();
+		Map<String, Object> parameters = new LinkedHashMap<String, Object>();
+		Map<String, Object> dataObjects = new LinkedHashMap<String, Object>();
 		MultiValueMap<String, String> headers = getHeaders(requestMapping);
-		Map<String, String> cookies = new LinkedHashMap<>();
-		MultiValueMap<String, Object> formObjects = new LinkedMultiValueMap<>();
+		Map<String, String> cookies = new LinkedHashMap<String, String>();
+		MultiValueMap<String, Object> formObjects = new LinkedMultiValueMap<String, Object>();
 		RestOperations rest = getRestTemplate();
 
 		ParameterizedTypeReference<?> returnType = getResponseType(method);
@@ -399,7 +399,7 @@ public abstract class BaseRestInvokerProxyFactoryBean
 			return method.invoke(this, args);
 		}
 	}
-	private ParameterizedTypeReference<Object> getResponseType(Method method) {
+	private ParameterizedTypeReference<Object> getResponseType(final Method method) {
 		return new ParameterizedTypeReference<Object>() {
 			@Override
 			public java.lang.reflect.Type getType() {

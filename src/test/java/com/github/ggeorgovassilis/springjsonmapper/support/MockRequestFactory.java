@@ -124,7 +124,7 @@ public class MockRequestFactory implements ClientHttpRequestFactory {
 	public String serializeToString() {
 	    StringBuffer sb = new StringBuffer();
 	    sb.append(method.name() + " " + uri.toASCIIString() + "\n");
-	    List<String> headerNames = new ArrayList<>(headers.keySet());
+	    List<String> headerNames = new ArrayList<String>(headers.keySet());
 	    Collections.sort(headerNames);
 	    for (String header : headerNames) {
 		sb.append(header + "=");
