@@ -13,6 +13,7 @@ import org.springframework.util.ReflectionUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.github.ggeorgovassilis.springjsonmapper.services.BookService;
+import com.github.ggeorgovassilis.springjsonmapper.support.BaseProxyClass;
 
 import static org.junit.Assert.*;
 
@@ -69,6 +70,7 @@ public class AnnotationsCheckerTest {
 	 */
 	@Test
 	public void testAnnotationsOnOpaqueProxy() throws Exception {
+		assertTrue(opaqueProxy instanceof BaseProxyClass);
 		Method method = ReflectionUtils.findMethod(opaqueProxy.getClass(), "findBooksByTitle",
 				new Class[] { String.class });
 		assertNotNull(method);

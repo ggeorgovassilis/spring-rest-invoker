@@ -25,5 +25,17 @@ public interface ProxyFactory {
 	 * @return Proxy
 	 */
 	Object createProxy(ClassLoader classLoader, Class<?>[] interfaces, InvocationHandler callback);
-
+	
+	/**
+	 * Generated proxies will extend the class "c". Not all implementations support proxying
+	 * classes (e.g. DynamicJavaProxyFactory)
+	 * @param classLoader
+	 */
+	void setProxyTargetClass(Class<?> c);
+	
+	/**
+	 * Proxies will use this classloader for the proxied class
+	 * @param classLoader
+	 */
+	void setProxyTargetClassLoader(ClassLoader classLoader);
 }

@@ -16,16 +16,13 @@ public class CglibProxyFactory implements ProxyFactory {
 	protected Class<?> baseClass;
 	protected ClassLoader classLoader;
 
-	public CglibProxyFactory(ClassLoader classLoader, Class<?> baseClass) {
-		this.baseClass = baseClass;
-		this.classLoader = classLoader;
-	}
-
 	@Override
-	public Object createProxy(final ClassLoader classLoader, final Class<?>[] interfaces,
+	public Object createProxy(ClassLoader classLoader, final Class<?>[] interfaces,
 			final InvocationHandler callback) {
 		Enhancer enhancer = new Enhancer();
 		enhancer.setSuperclass(Object.class);
+		if (classLoader == null)
+			classLoader = Thread.currentThread().getContextClassLoader();
 		enhancer.setClassLoader(classLoader);
 		enhancer.setCallback(new net.sf.cglib.proxy.InvocationHandler() {
 
@@ -35,7 +32,19 @@ public class CglibProxyFactory implements ProxyFactory {
 			}
 		});
 		enhancer.setInterfaces(interfaces);
+		if (baseClass!=null)
+			enhancer.setSuperclass(baseClass);
 		return enhancer.create();
+	}
+
+	@Override
+	public void setProxyTargetClass(Class<?> c) {
+		this.baseClass = c;
+	}
+
+	@Override
+	public void setProxyTargetClassLoader(ClassLoader classLoader) {
+		this.classLoader = classLoader;
 	}
 
 }

@@ -19,6 +19,8 @@ Features:
 
 ## News
 
+XXXX-XX-XX: Released 1.6. #26 CglibProxyFactory now really creating opaque proxies; refactored ProxyFactory API.
+
 2017-09-20: Released 1.5. #20 Backported to Java 6, #21 Separate integration tests, #22 HTTP method headers for JaxRs
 
 2017-08-04: Released 1.4. Handling parametrised return types (credits to [Valentin Ozanne](https://github.com/ValentinOzanne))
@@ -508,13 +510,30 @@ Account joinAccounts(@RequestPart @RequestParam("account1") Account account1, @R
 ```
 
 Whenever the ```joinAccounts``` method is invoked, the ```serverIp``` property will be looked up in the application context and replaced by its current value. Note that this mechanism works only for values of the ```@RequestMapping``` and ```@Path``` annotations.
+
 #### Where can I find more examples?
 
 Have a look at mapping declarations for the unit test: https://github.com/ggeorgovassilis/spring-rest-invoker/tree/master/spring-rest-invoker/src/test/java/com/github/ggeorgovassilis/springjsonmapper/services
 
 #### I need proxies to extend a specific class
 
-Since 1.0.RC it's possible to generate opaque proxies with cglib instead of the default dynamic proxies. Opaque proxies extend a concrete class and implement the REST mapping interface. In order to do so, specify the name of the class proxies should extend with the ```proxyTargetClass``` property of the factory proxy bean (i.e. the ```SpringRestInvokerProxyFactoryBean```). If you just need opaque proxies, use ``` java.lang.Object```.
+Since 1.0.RC it's possible to generate opaque proxies with cglib instead of the default dynamic proxies. Opaque proxies extend a concrete class and implement the REST mapping interface. In order to do so, specify a ```ProxyFactory``` instance, e.g.:
+
+```xml
+<bean id="BookService_OpaqueProxy" class="com.github.ggeorgovassilis.springjsonmapper.spring.SpringRestInvokerProxyFactoryBean">
+		<property name="baseUrl" value="https://www.googleapis.com/books/v1" />
+		<property name="remoteServiceInterfaceClass"
+			value="com.github.ggeorgovassilis.springjsonmapper.services.spring.BookServiceSpring" />
+		<property name="proxyFactory">
+			<bean
+				class="com.github.ggeorgovassilis.springjsonmapper.utils.CglibProxyFactory">
+				<property name="proxyTargetClass"
+					value="com.github.ggeorgovassilis.springjsonmapper.support.BaseProxyClass" />
+			</bean>
+		</property>
+</bean>
+```
+
 
 #### I specified some (other) annotations on the mapping interface but they are missing on the service proxy
 

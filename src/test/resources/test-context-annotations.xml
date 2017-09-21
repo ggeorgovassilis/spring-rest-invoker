@@ -15,14 +15,22 @@
 	<bean id="BookService_DynamicProxy"
 		class="com.github.ggeorgovassilis.springjsonmapper.spring.SpringRestInvokerProxyFactoryBean">
 		<property name="baseUrl" value="https://www.googleapis.com/books/v1" />
-		<property name="remoteServiceInterfaceClass" value="com.github.ggeorgovassilis.springjsonmapper.services.spring.BookServiceSpring"/>
+		<property name="remoteServiceInterfaceClass"
+			value="com.github.ggeorgovassilis.springjsonmapper.services.spring.BookServiceSpring" />
 	</bean>
 
 	<bean id="BookService_OpaqueProxy"
 		class="com.github.ggeorgovassilis.springjsonmapper.spring.SpringRestInvokerProxyFactoryBean">
 		<property name="baseUrl" value="https://www.googleapis.com/books/v1" />
-		<property name="remoteServiceInterfaceClass" value="com.github.ggeorgovassilis.springjsonmapper.services.spring.BookServiceSpring"/>
-		<property name="proxyTargetClass" value="java.lang.Object"/>
+		<property name="remoteServiceInterfaceClass"
+			value="com.github.ggeorgovassilis.springjsonmapper.services.spring.BookServiceSpring" />
+		<property name="proxyFactory">
+			<bean
+				class="com.github.ggeorgovassilis.springjsonmapper.utils.CglibProxyFactory">
+				<property name="proxyTargetClass"
+					value="com.github.ggeorgovassilis.springjsonmapper.support.BaseProxyClass" />
+			</bean>
+		</property>
 	</bean>
 
 </beans>

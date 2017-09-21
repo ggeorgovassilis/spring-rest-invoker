@@ -38,10 +38,8 @@ import com.github.ggeorgovassilis.springjsonmapper.utils.ProxyFactory;
  * {@link SpringRestInvokerProxyFactoryBean} and
  * {@link JaxRsInvokerProxyFactoryBean}
  * 
- * Will generate by default dynamic java proxies. Use
- * {@link #setProxyTargetClass(ClassLoader, Class)} or
- * {@link #setProxyTargetClass(Class)} in order to generate proxies extending a
- * concrete class.
+ * Will generate by default dynamic java proxies. Use {@link #setProxyFactory(ProxyFactory)}
+ * for other implementation, e.g. for having proxies extend a concrete class.
  * 
  * @see JaxRsInvokerProxyFactoryBean
  * @see SpringRestInvokerProxyFactoryBean
@@ -87,26 +85,11 @@ public abstract class BaseRestInvokerProxyFactoryBean
 	}
 
 	/**
-	 * Specify the class to extend
-	 * 
-	 * @param classLoader
-	 *            Classloader to use
-	 * @param c
-	 *            Proxies will extend this base class
+	 * Optionally set the proxy factory to use. Defaults to {@link DynamicJavaProxyFactory}
+	 * @param proxyFactory
 	 */
-
-	public void setProxyTargetClass(ClassLoader classLoader, Class<?> c) {
-		proxyFactory = new CglibProxyFactory(classLoader, c);
-	}
-
-	/**
-	 * Specify class to derive proxies from
-	 * 
-	 * @param c
-	 *            Base class. Will use this class' classloader
-	 */
-	public void setProxyTargetClass(Class<?> c) {
-		setProxyTargetClass(c.getClassLoader(), c);
+	public void setProxyFactory(ProxyFactory proxyFactory) {
+		this.proxyFactory = proxyFactory;
 	}
 
 	@Override

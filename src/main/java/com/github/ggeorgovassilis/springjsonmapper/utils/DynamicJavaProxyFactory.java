@@ -16,4 +16,15 @@ public class DynamicJavaProxyFactory implements ProxyFactory {
 		return Proxy.newProxyInstance(classLoader, interfaces, callback);
 	}
 
+	@Override
+	public void setProxyTargetClass(Class<?> c) {
+		throw new RuntimeException("Not implemented. Use an opque ProxyFactory implementation");
+	}
+
+	@Override
+	public void setProxyTargetClassLoader(ClassLoader classLoader) {
+		throw new RuntimeException("Not implemented. Use an opque ProxyFactory implementation");
+	}
+
+
 }
