@@ -8,13 +8,25 @@
 		http://www.springframework.org/schema/context/spring-context-3.2.xsd
         http://www.springframework.org/schema/mvc
         http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd">
-        
+
 	<context:property-placeholder location="classpath:config.properties" />
 
-	<bean id="RemoteBankService"
+	<bean id="BankService"
 		class="com.github.ggeorgovassilis.springjsonmapper.spring.SpringRestInvokerProxyFactoryBean">
 		<property name="baseUrl" value="http://localhost/bankservice" />
-		<property name="remoteServiceInterfaceClass" value="com.github.ggeorgovassilis.springjsonmapper.services.spring.BankServiceSpring"/>
+		<property name="remoteServiceInterfaceClass"
+			value="com.github.ggeorgovassilis.springjsonmapper.services.spring.BankServiceSpring" />
+	</bean>
+
+	<bean id="BankServiceOpaque"
+		class="com.github.ggeorgovassilis.springjsonmapper.spring.SpringRestInvokerProxyFactoryBean">
+		<property name="baseUrl" value="http://localhost/bankservice" />
+		<property name="remoteServiceInterfaceClass"
+			value="com.github.ggeorgovassilis.springjsonmapper.services.spring.BankServiceSpring" />
+		<property name="proxyFactory">
+			<bean
+				class="com.github.ggeorgovassilis.springjsonmapper.utils.CglibProxyFactory"></bean>
+		</property>
 	</bean>
 
 </beans>

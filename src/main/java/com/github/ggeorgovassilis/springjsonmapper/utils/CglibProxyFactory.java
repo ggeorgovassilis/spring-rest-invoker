@@ -13,14 +13,14 @@ import net.sf.cglib.proxy.Enhancer;
  */
 public class CglibProxyFactory implements ProxyFactory {
 
-	protected Class<?> baseClass;
+	protected Class<?> baseClass = Object.class;
 	protected ClassLoader classLoader;
 
 	@Override
 	public Object createProxy(ClassLoader classLoader, final Class<?>[] interfaces,
 			final InvocationHandler callback) {
 		Enhancer enhancer = new Enhancer();
-		enhancer.setSuperclass(Object.class);
+		enhancer.setSuperclass(baseClass);
 		if (classLoader == null)
 			classLoader = Thread.currentThread().getContextClassLoader();
 		enhancer.setClassLoader(classLoader);
@@ -32,8 +32,6 @@ public class CglibProxyFactory implements ProxyFactory {
 			}
 		});
 		enhancer.setInterfaces(interfaces);
-		if (baseClass!=null)
-			enhancer.setSuperclass(baseClass);
 		return enhancer.create();
 	}
 

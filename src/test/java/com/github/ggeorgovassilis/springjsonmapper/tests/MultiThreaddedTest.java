@@ -41,10 +41,13 @@ public class MultiThreaddedTest {
 	final long TEST_DURATION_MS = 3000;
 	final int THREADS = 4;
 
-	@Autowired
+	@Resource(name="BankService")
 	protected BankService bankService;
 
-	@Resource(name = "&RemoteBankService")
+	@Resource(name="BankServiceOpaque")
+	protected BankService bankServiceOpaque;
+
+	@Resource(name = "&BankService")
 	protected BaseRestInvokerProxyFactoryBean httpProxyFactory;
 
 	protected MockRequestFactory requestFactory;
@@ -57,7 +60,7 @@ public class MultiThreaddedTest {
 		requestFactory.createResponse();
 	}
 
-	void executeTest() throws Exception {
+	void executeTest(BankService bankService) throws Exception {
 
 		// setup test
 		Customer customer1 = customer("Customer 1");
@@ -72,9 +75,8 @@ public class MultiThreaddedTest {
 		// verify results
 		assertTrue(result);
 	}
-
-	@Test
-	public void testMultithreaddedInvocation() throws Exception {
+	
+	void runMultiThreaddedTest(BankService service) throws Exception{
 		ExecutorService executorService = Executors.newFixedThreadPool(THREADS);
 		List<Future<Void>> results = new ArrayList<Future<Void>>();
 		long start = System.currentTimeMillis();
@@ -83,7 +85,7 @@ public class MultiThreaddedTest {
 
 				@Override
 				public Void call() throws Exception {
-					executeTest();
+					executeTest(bankService);
 					return null;
 				}
 			});
@@ -96,6 +98,16 @@ public class MultiThreaddedTest {
 			}
 		}
 		executorService.shutdown();
+	}
+
+	@Test
+	public void testMultithreaddedInvocation() throws Exception {
+		runMultiThreaddedTest(bankService);
+	}
+
+	@Test
+	public void testMultithreaddedInvocationOnOpaqueService() throws Exception {
+		runMultiThreaddedTest(bankServiceOpaque);
 	}
 
 }

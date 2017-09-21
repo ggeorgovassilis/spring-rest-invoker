@@ -36,10 +36,10 @@ import static com.github.ggeorgovassilis.springjsonmapper.tests.Factory.*;
 @RunWith(value = SpringJUnit4ClassRunner.class)
 public abstract class AbstractBankServiceTest {
 
-	@Autowired
+	@Resource(name="BankService")
 	protected BankService bankService;
 
-	@Resource(name = "&RemoteBankService")
+	@Resource(name = "&BankService")
 	protected BaseRestInvokerProxyFactoryBean httpProxyFactory;
 
 	protected MockRequestFactory requestFactory;
