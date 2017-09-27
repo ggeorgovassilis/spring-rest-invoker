@@ -6,7 +6,7 @@ import java.lang.reflect.Method;
 import net.sf.cglib.proxy.Enhancer;
 
 /**
- * Implements proxies with cglib
+ * Implements opaque proxies with cglib
  * 
  * @author george georgovassilis
  *
