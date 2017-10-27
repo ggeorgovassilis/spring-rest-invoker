@@ -19,7 +19,7 @@ Features:
 
 ## News
 
-XXXX-XX-XX: Released 1.6. #26 CglibProxyFactory now really creating opaque proxies; refactored ProxyFactory API.
+2017-09-27: Released 1.6. #26 CglibProxyFactory now really creating opaque proxies; refactored ProxyFactory API.
 
 2017-09-20: Released 1.5. #20 Backported to Java 6, #21 Separate integration tests, #22 HTTP method headers for JaxRs
 
