@@ -18,6 +18,7 @@ Features:
 
 
 ## News
+2018-06-22: Released 1.7 to maven central
 
 2017-09-27: Released 1.6. #26 CglibProxyFactory now really creating opaque proxies; refactored ProxyFactory API.
 
@@ -48,28 +49,13 @@ Features:
 
 ### 0. Getting
 
-Either build it yourself or add the repository to your pom:
-```xml
-<repositories>
-	<repository>
-		<id>spring-rest-invoker-mvn-repo</id>
-		<url>https://raw.github.com/ggeorgovassilis/spring-rest-invoker/mvn-pages/</url>
-		<snapshots>
-			<enabled>true</enabled>
-			<updatePolicy>always</updatePolicy>
-		</snapshots>
-	</repository>
-...
-</repositories>
-```
-
-Then include the dependency:
+Include this dependency:
 
 ```xml
 <dependency>
-	<groupId>com.github.ggeorgovassilis</groupId>
-	<artifactId>spring-rest-invoker</artifactId>
-	<version>1.5</version>
+  <groupId>com.github.ggeorgovassilis</groupId>
+  <artifactId>spring-rest-invoker</artifactId>
+  <version>1.7.0</version>
 </dependency>
 ```
 

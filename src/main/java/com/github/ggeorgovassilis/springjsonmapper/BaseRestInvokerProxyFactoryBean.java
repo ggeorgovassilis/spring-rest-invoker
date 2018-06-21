@@ -105,7 +105,7 @@ public abstract class BaseRestInvokerProxyFactoryBean
 	 * Override the default method inspector provided by the extending
 	 * implementation.
 	 * 
-	 * @param methodInspector
+	 * @param methodInspector Use this inspector when visiting methods
 	 */
 	public void setMethodInspector(MethodInspector methodInspector) {
 		this.methodInspector = methodInspector;
@@ -119,7 +119,7 @@ public abstract class BaseRestInvokerProxyFactoryBean
 	 * Optionally provide a {@link RestTemplate} if you need to handle http yourself
 	 * (proxies? BASIC auth?)
 	 * 
-	 * @param restTemplate
+	 * @param restTemplate RestTemplate to use
 	 */
 	public void setRestTemplate(RestOperations restTemplate) {
 		this.restTemplate = restTemplate;
@@ -133,7 +133,7 @@ public abstract class BaseRestInvokerProxyFactoryBean
 	 * Set the base URL of the remote REST service for HTTP requests. Further
 	 * mappings specified on service interfaces are resolved relatively to this URL.
 	 * 
-	 * @param baseUrl
+	 * @param baseUrl baseUrl
 	 */
 	public void setBaseUrl(String baseUrl) {
 		this.baseUrl = baseUrl;
@@ -361,12 +361,12 @@ public abstract class BaseRestInvokerProxyFactoryBean
 	 * (equals or hashcode) or directly on the target. Implementation copied from
 	 * spring framework ServiceLocationInvocationHandler
 	 * 
-	 * @param proxy
-	 * @param method
-	 * @param args
-	 * @return
-	 * @throws InvocationTargetException
-	 * @throws IllegalAccessException
+	 * @param proxy Object to proxy
+	 * @param method Method in object to proxy
+	 * @param args Method arguments
+	 * @return Return value of method invocation, if any
+	 * @throws InvocationTargetException just passing on
+	 * @throws IllegalAccessException just passing on
 	 */
 	protected Object handleSelfMethodInvocation(Object proxy, Method method, Object[] args)
 			throws InvocationTargetException, IllegalAccessException {

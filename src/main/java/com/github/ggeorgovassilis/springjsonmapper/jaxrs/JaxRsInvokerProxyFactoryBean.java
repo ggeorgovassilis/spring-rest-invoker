@@ -35,19 +35,16 @@ import com.github.ggeorgovassilis.springjsonmapper.spring.SpringRestInvokerProxy
  * {@link SpringRestInvokerProxyFactoryBean}
  * <li>{@link Consumes} and {@link Produces}
  * </ul>
- * <p>
- * <code><pre>
+ * <p></p>
+ * <pre><code>
 	&lt;bean id=&quot;RemoteBankServiceJaxRs&quot;
 		class=&quot;com.github.ggeorgovassilis.springjsonmapper.jaxrs.JaxRsInvokerProxyFactoryBean&quot;&gt;
 		&lt;property name=&quot;baseUrl&quot; value=&quot;http://localhost/bankservice&quot; /&gt;
 		&lt;property name=&quot;remoteServiceInterfaceClass&quot; value=&quot;com.github.ggeorgovassilis.springjsonmapper.jaxrs.BankServiceJaxRs&quot;/&gt;
 	&lt;/bean&gt;
- * </pre></code>
- * </p>
- * <p>
- * An example of the annotated service interface:
- * </p>
- * <code><pre> 
+ * </code></pre>
+ * <p> An example of the annotated service interface:
+ * <pre> <code>
  * interface BankServiceJaxRs {
  *
  *	&#064;POST
@@ -58,9 +55,9 @@ import com.github.ggeorgovassilis.springjsonmapper.spring.SpringRestInvokerProxy
  *
  * }
  *                               
- * </pre></code>
+ * </code></pre>
  * 
- * This will result in a HTTP request similar to: <code><pre>
+ * This will result in a HTTP request similar to: <pre><code>
  * 
  * POST http://localhost/bankservice/transfer?sendConfirmationSms=true
  * Accept=application/json, application/*+json
@@ -68,9 +65,9 @@ import com.github.ggeorgovassilis.springjsonmapper.spring.SpringRestInvokerProxy
  *
  * {"amount":1,"toAccount":{"accountNumber":"account 2","balance":0,"owner":{"name":"Customer 2"}},"fromAccount":{"accountNumber":"account 1","balance":1000,"owner":{"name":"Customer 1"}},"actor":{"name":"Customer 1"}}
  *
- * </pre>
  * </code>
- *
+ * </pre>
+ * 
  * @author george georgovassilis
  * 
  */

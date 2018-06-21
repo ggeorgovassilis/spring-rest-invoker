@@ -20,6 +20,7 @@ public @interface Header {
 
 	/**
 	 * The name of the HTTP header to bind the method parameter to.
+	 * @return empty string by default
 	 */
 	String value() default "";
 

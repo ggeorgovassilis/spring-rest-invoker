@@ -29,13 +29,13 @@ public interface ProxyFactory {
 	/**
 	 * Generated proxies will extend the class "c". Not all implementations support proxying
 	 * classes (e.g. DynamicJavaProxyFactory)
-	 * @param classLoader
+	 * @param c Class to proxy
 	 */
 	void setProxyTargetClass(Class<?> c);
 	
 	/**
 	 * Proxies will use this classloader for the proxied class
-	 * @param classLoader
+	 * @param classLoader use this class loader to resolve classes
 	 */
 	void setProxyTargetClassLoader(ClassLoader classLoader);
 }

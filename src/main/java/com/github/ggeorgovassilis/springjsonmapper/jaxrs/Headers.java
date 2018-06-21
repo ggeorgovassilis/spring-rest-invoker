@@ -21,6 +21,7 @@ public @interface Headers {
 	/**
 	 * The name and values of the HTTP header to bind the method to.
 	 * List as {"header1=value1","header2=value2",...}
+	 * @return supplied values
 	 */
 	String[] value();
 

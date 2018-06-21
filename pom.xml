@@ -1,21 +1,14 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.github.ggeorgovassilis</groupId>
 	<artifactId>spring-rest-invoker</artifactId>
-	<name>spring-rest-invoker</name>
-	<version>1.6-SNAPSHOT</version>
+	<version>1.7.0</version>
+	<url>https://github.com/ggeorgovassilis/spring-rest-invoker</url>
+	<name>${project.groupId}:${project.artifactId}</name>
 	<description>Spring factory that allows consumption of a remote REST JSON service by binding it to a local Java interface and exposing it as a proxy.</description>
-	<inceptionYear>2014</inceptionYear>
-
-	<properties>
-		<!-- github server in ~/.m2/settings.xml -->
-		<github.global.server>github</github.global.server>
-		<spring.version>4.3.3.RELEASE</spring.version>
-		<jackson.version>2.8.8.1</jackson.version>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-	</properties>
-
 	<licenses>
 		<license>
 			<name>Apache License, Version 2.0</name>
@@ -28,24 +21,180 @@
 			<id>ggeorgovassilis</id>
 			<name>George Georgovassilis</name>
 			<email>g.georgovassilis_gmail.com</email>
-			<url>http://georgovassilis.blogspot.com/</url>
+			<url>https://blog.georgovassilis.com/</url>
 			<roles>
 				<role>Developer</role>
 			</roles>
 		</developer>
 	</developers>
 	<scm>
-		<connection>scm:git:git@github.com:ggeorgovassilis/spring-rest-invoker.git</connection>
-		<developerConnection>scm:git:git@github.com:ggeorgovassilis/spring-rest-invoker.git</developerConnection>
-		<url>git@github.com:ggeorgovassilis/spring-rest-invoker.git</url>
+		<connection>scm:git:https://ggeorgovassilis@github.com/ggeorgovassilis/spring-rest-invoker.git</connection>
+		<developerConnection>scm:git:https://ggeorgovassilis@github.com/ggeorgovassilis/spring-rest-invoker.git</developerConnection>
+		<url>http://github.com/ggeorgovassilis/spring-rest-invoker/tree/master</url>
+		<tag>fauxjsp-1.6.0</tag>
 	</scm>
-
 	<distributionManagement>
+		<snapshotRepository>
+			<id>ossrh</id>
+			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
+		</snapshotRepository>
 		<repository>
-			<id>internal.repo</id>
-			<url>file://${project.build.directory}/mvn-repo</url>
+			<id>ossrh</id>
+			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
 		</repository>
 	</distributionManagement>
+
+	<properties>
+		<!-- github server in ~/.m2/settings.xml -->
+		<github.global.server>github</github.global.server>
+		<spring.version>4.3.3.RELEASE</spring.version>
+		<jackson.version>2.8.8.1</jackson.version>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+	</properties>
+
+	<profiles>
+		<profile>
+			<id>reports</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-pmd-plugin</artifactId>
+						<version>3.8</version>
+						<configuration>
+							<skipEmptyReport>false</skipEmptyReport>
+						</configuration>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-project-info-reports-plugin</artifactId>
+						<version>2.9</version>
+					</plugin>
+					<plugin>
+						<groupId>org.pitest</groupId>
+						<artifactId>pitest-maven</artifactId>
+						<version>1.2.0</version>
+						<configuration>
+							<targetClasses>
+								<param>fauxjsp*</param>
+							</targetClasses>
+							<targetTests>
+								<param>fauxjsp*</param>
+							</targetTests>
+							<excludedClasses>
+								<excludedClasse>fauxjsp.test.integrationtests*</excludedClasse>
+							</excludedClasses>
+							<threads>4</threads>
+						</configuration>
+					</plugin>
+					<plugin>
+						<groupId>org.jacoco</groupId>
+						<artifactId>jacoco-maven-plugin</artifactId>
+						<version>0.7.9</version>
+						<executions>
+							<execution>
+								<goals>
+									<goal>prepare-agent</goal>
+								</goals>
+							</execution>
+							<execution>
+								<id>report</id>
+								<phase>prepare-package</phase>
+								<goals>
+									<goal>report</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+			<reporting>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-project-info-reports-plugin</artifactId>
+						<configuration> <!-- don't write links to external dependencies; dependency lookup takes 
+								long -->
+							<dependencyLocationsEnabled>false</dependencyLocationsEnabled>
+						</configuration>
+					</plugin>
+					<plugin> <!-- fix warning during report generation -->
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-jxr-plugin</artifactId>
+						<version>2.5</version>
+					</plugin>
+				</plugins>
+			</reporting>
+			<reports>
+				<report>maven-pmd-plugin</report>
+				<report>jacoco-maven-plugin</report>
+				<report>pitest-maven</report>
+			</reports>
+		</profile>
+		<profile>
+			<id>release</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-source-plugin</artifactId>
+						<version>3.0.1</version>
+						<executions>
+							<execution>
+								<id>attach-sources</id>
+								<goals>
+									<goal>jar</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-javadoc-plugin</artifactId>
+						<version>2.9.1</version>
+						<executions>
+							<execution>
+								<id>attach-javadocs</id>
+								<goals>
+									<goal>jar</goal>
+								</goals>
+							</execution>
+						</executions>
+						<configuration>
+							<failOnError>true</failOnError>
+						</configuration>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-gpg-plugin</artifactId>
+						<version>1.5</version>
+						<executions>
+							<execution>
+								<id>sign-artifacts</id>
+								<phase>verify</phase>
+								<goals>
+									<goal>sign</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-release-plugin</artifactId>
+						<version>2.5.3</version>
+						<configuration>
+							<autoVersionSubmodules>true</autoVersionSubmodules>
+							<useReleaseProfile>false</useReleaseProfile>
+							<releaseProfiles>release</releaseProfiles>
+							<goals>deploy</goals>
+						</configuration>
+					</plugin>
+
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 
 	<dependencies>
 		<dependency>
@@ -121,47 +270,6 @@
 	</dependencies>
 
 	<build>
-		<pluginManagement>
-			<plugins>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-pmd-plugin</artifactId>
-					<version>3.8</version>
-					<configuration>
-						<linkXRef>false</linkXRef>
-					</configuration>
-				</plugin>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-javadoc-plugin</artifactId>
-					<version>2.10.4</version>
-					<configuration>
-						<additionalparam>-Xdoclint:none</additionalparam>
-					</configuration>
-				</plugin>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-deploy-plugin</artifactId>
-					<version>2.8.2</version>
-					<configuration>
-						<altDeploymentRepository>internal.repo::default::file://${project.build.directory}/mvn-repo</altDeploymentRepository>
-					</configuration>
-				</plugin>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-source-plugin</artifactId>
-					<version>3.0.1</version>
-				</plugin>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-project-info-reports-plugin</artifactId>
-					<version>2.9</version>
-					<configuration>
-						<dependencyLocationsEnabled>false</dependencyLocationsEnabled>
-					</configuration>
-				</plugin>
-			</plugins>
-		</pluginManagement>
 		<plugins>
 			<plugin>
 				<!-- Will do integration tests with surefire. We don't need failsafe 
@@ -202,39 +310,6 @@
 							</includes>
 							<argLine>${jacoco.agent.argLine}</argLine>
 						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<groupId>com.github.github</groupId>
-				<artifactId>site-maven-plugin</artifactId>
-				<version>0.12</version>
-				<configuration>
-					<message>Maven artifacts for ${project.version}</message>
-					<!-- disable webpage processing -->
-					<noJekyll>true</noJekyll>
-					<!-- matches distribution management repository url above -->
-					<outputDirectory>${project.build.directory}/mvn-repo</outputDirectory>
-					<!-- remote branch name -->
-					<branch>refs/heads/mvn-pages</branch>
-					<!-- If you remove this then the old artifact will be removed and new 
-						one will replace. But with the merge tag you can just release by changing 
-						the version -->
-					<merge>true</merge>
-					<includes>
-						<include>**/*</include>
-					</includes>
-					<!-- github repo name -->
-					<repositoryName>spring-rest-invoker</repositoryName>
-					<!-- github username -->
-					<repositoryOwner>ggeorgovassilis</repositoryOwner>
-				</configuration>
-				<executions>
-					<execution>
-						<goals>
-							<goal>site</goal>
-						</goals>
-						<phase>deploy</phase>
 					</execution>
 				</executions>
 			</plugin>
@@ -292,30 +367,4 @@
 		</plugins>
 	</build>
 
-	<reports>
-		<report>maven-pmd-plugin</report>
-		<report>jacoco-maven-plugin</report>
-	</reports>
-
-	<reporting>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-project-info-reports-plugin</artifactId>
-				<configuration> <!-- don't write links to external dependencies; dependency lookup takes 
-						long -->
-					<dependencyLocationsEnabled>false</dependencyLocationsEnabled>
-				</configuration>
-			</plugin>
-			<plugin> <!-- fix warning during report generation -->
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-jxr-plugin</artifactId>
-				<version>2.5</version>
-			</plugin>
-		</plugins>
-	</reporting>
-
-	<!-- Steps for performing a release: mvn -DperformRelease=true clean deploy 
-		./update-index.sh -->
-	<url>https://github.com/ggeorgovassilis/spring-rest-invoker</url>
 </project>

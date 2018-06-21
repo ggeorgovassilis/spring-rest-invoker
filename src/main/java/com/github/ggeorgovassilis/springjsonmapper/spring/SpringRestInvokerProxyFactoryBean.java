@@ -1,7 +1,10 @@
 package com.github.ggeorgovassilis.springjsonmapper.spring;
 
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 
 import com.github.ggeorgovassilis.springjsonmapper.BaseRestInvokerProxyFactoryBean;
 import com.github.ggeorgovassilis.springjsonmapper.MethodInspector;

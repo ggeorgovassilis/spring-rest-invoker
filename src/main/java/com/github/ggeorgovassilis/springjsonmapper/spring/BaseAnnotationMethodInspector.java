@@ -25,8 +25,8 @@ public abstract class BaseAnnotationMethodInspector implements MethodInspector, 
 	 * ${serverUrl}/customer with http://example.com/js/customer if serverUrl is a
 	 * property that the application context resolves to http://example.com.js
 	 * 
-	 * @param expression
-	 * @return
+	 * @param expression Text to substitute within
+	 * @return Substituted text
 	 */
 	protected String resolveExpression(String expression) {
 		return valueResolver.resolveStringValue(expression);
