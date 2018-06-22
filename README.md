@@ -538,9 +538,3 @@ Have a look at RESTEasy http://resteasy.jboss.org/
 or without the fancies:
 
 ```mvn clean install -DskipTests=true```
-
-#### How do I perform a release
-
-```mvn clean deploy -DperformRelease=true```
-
-and specify a "github" server in ```settings.xml```
