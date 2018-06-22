@@ -251,7 +251,7 @@ which will POST a JSON object similar to:
 
 #### What does @RequestParam do?
 
-Method arguments annotated with @RequestParam are, unless otherwise specified, taken as strings and passed as HTTP parameters, e.g.
+Method arguments annotated with `@RequestParam` are, unless otherwise specified, taken as strings and passed as HTTP parameters, e.g.
 
 ```java
 public interface BookService {
@@ -272,9 +272,9 @@ When there is also a ```@RequestBody```, then the handling is different - look f
 
 #### What does @RequestBody do?
 
-Used when sending JSON to a REST service via an HTTP POST request. Method arguments annotated with ```@RequestBody``` are serialized into JSON and sent to the remote service. If there is only a single method argument annotated with `@RequestBody`, then that argument is serialized and sent over. If multiple arguments are annotated, then each @RequestBody needs to be accompanied by a @RequestParam which specifies the field name of the object. 
+Used when sending JSON to a REST service via an HTTP POST request. Method arguments annotated with ```@RequestBody``` are serialized into JSON and sent to the remote service. If there is only a single method argument annotated with `@RequestBody`, then that argument is serialized and sent over. If multiple arguments are annotated, then each @RequestBody needs to be accompanied by a `@RequestParam` which specifies the field name of the object. 
 
-In an ideal world we wouldn't need @RequestParam because the invoker would, supposedly, be able to read method argument names and pick URL parameter names accordingly; in Java that's suprisingly hard to do since the reflection API does not expose method argument names.
+In an ideal world we wouldn't need `@RequestParam` because the invoker would, supposedly, be able to read method argument names and pick URL parameter names accordingly; in Java that's suprisingly hard to do since the reflection API does not expose method argument names.
 
 For example:
 
@@ -340,7 +340,7 @@ will result in this JSON being posted to ```/books```:
 
 Some REST services incorporate parameters in the URL path rather than URL parameters, i.e.: ```example.com/service/findBooks/isbn/1234``` as opposed to ```example.com/service/findBooks?isbn=1234````
 
-@PathVariable is specified together with a @RequestParam and indicates the the method argument is not to be sent as a URL parameter. Note that you need to specify a matching placeholder with @RequestMapping:
+`@PathVariable` is specified together with a `@RequestParam` and indicates the the method argument is not to be sent as a URL parameter. Note that you need to specify a matching placeholder with `@RequestMapping`:
 
 ```java
 public interface BookService {
@@ -360,7 +360,7 @@ public interface BookService {
 }
 ```
 
-Note the ```{id}``` notation in @RequestMapping; it needs to match the one specificed in @PathVariable
+The ```{id}``` notation in `@RequestMapping` must match the one specified in `@PathVariable`
 
 
 #### How do I post a JSON object to a remote service?
@@ -388,7 +388,7 @@ public interface BookService {
 }
 ```
 
-If you need to post multiple objects, then just add multiple parmeters to the method but also include a ```@RequestParam``` mapping so that the invoker knows under which field names to place the generated JSON objects:
+Multiple objects can be posted through multiple method arguments, also including a ```@RequestParam``` mapping so that the invoker knows under which field names to place the generated JSON objects:
 
 ```java
 public interface BankService {
@@ -436,7 +436,7 @@ or the jax-rs way:
 
 #### Dependencies?
 
-The maven pom will pull in dependencies required for the spring mapper's basic features to work. The pom.xml declares more dependencies for advanced features as 'optional', so if you need them then you need to pull those dependencies in your own project's pom.xml.
+The maven pom will pull in dependencies required for the spring mapper's basic features to work. `pom.xml` declares more dependencies for advanced features as `optional` which can be pulled into the project by re-declaring them in the project's `pom.xml`.
 
 JAX-RS support:
 
@@ -448,7 +448,7 @@ JAX-RS support:
 </dependency>
 ```
 
-If you use the logging interceptor then you'll also need some logging implementation for commons logging, i.e. log4j:
+If you use the logging interceptor then you'll also need some logging implementation for commons logging, ie. log4j:
 
 ```xml
 <dependency>
@@ -458,7 +458,7 @@ If you use the logging interceptor then you'll also need some logging implementa
 </dependency>
 ```
 
-Opaque proxies require CGLIB:
+Opaque proxies require cglib:
 
 ```xml
 <dependency>
@@ -469,7 +469,7 @@ Opaque proxies require CGLIB:
 ```
 #### Is the spring-rest-invoker a JAX-RS implementation?
 
-Yes, since 0.0.6-SNAPSHOT. See the introduction.
+Yes, since `0.0.6-SNAPSHOT`. See the introduction.
 
 #### How do I log the entire HTTP communication with the remote service?
 
@@ -486,9 +486,9 @@ log4j.logger.com.github.ggeorgovassilis.springjsonmapper.Response=DEBUG
 
 Again the solution is to provide your own RestTemplate, see the previous section.
 
-#### I need to parametrize the mapping URL depending on the execution environment
+#### I need to parametrise the mapping URL depending on the execution environment
 
-Just use property placeholders in the URL, i.e.:
+Just use property place holders in the URL, i.e.:
 
 ```java
 @RequestMapping(value = "${serverIp}/join-accounts", method = RequestMethod.POST)
