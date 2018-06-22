@@ -18,6 +18,8 @@ Features:
 
 
 ## News
+TBD       : Not released yet: corrections in documentation
+
 2018-06-22: Released 1.7 to maven central
 
 2017-09-27: Released 1.6. #26 CglibProxyFactory now really creating opaque proxies; refactored ProxyFactory API.
@@ -49,8 +51,6 @@ Features:
 
 ### 0. Getting
 
-Include this dependency:
-
 ```xml
 <dependency>
   <groupId>com.github.ggeorgovassilis</groupId>
@@ -65,7 +65,7 @@ Include this dependency:
 
 ```mvn clean install jxr:jxr pmd:pmd pmd:cpd surefire-report:report site```
 
-If you require jax-rs support you must provide a dependency with the annotations, ie:
+jax-rs support requires a further dependency with the annotations, ie.:
 
 ```xml
 <dependency>
@@ -90,7 +90,7 @@ public interface BookService {
 
 Note that the annotations are from spring's web package.
 
-Or, if you prefer jax-rs annotations:
+Or, with jax-rs annotations:
 
 ```java
 public interface BookServiceJaxRs extends BookService{
@@ -117,7 +117,7 @@ public interface BookServiceJaxRs extends BookService{
 </bean>
 ```
 
-or if you're using jax-rs
+with jax-rs
 
 ```xml
 <bean id="BookService"
@@ -127,7 +127,7 @@ or if you're using jax-rs
 </bean>
 ```
 
-### 3. Use it in your code
+### 3. Use it
 
 ```java
 ...
@@ -141,7 +141,7 @@ QueryResult results = bookService.findBooksByTitle("Alice in Wonderland");
 
 ### 4. Examples
 
-You can POST an object:
+POSTing an object:
 
 ```java
 public interface BankService {
@@ -165,7 +165,7 @@ public interface BankService {
 ```
 
 
-Or post multiple objects (in which case you also need to provide names for them with a @RequestParam):
+POSTing multiple objects (object names are passed through parameters `@RequestParam`):
 
 ```java
 public interface BankService {
@@ -192,7 +192,7 @@ public interface BankService {
 }
 ```
 
-which will post a JSON object similar to this:
+which will POST a JSON object similar to:
 
 ```javascript
 {
@@ -268,11 +268,11 @@ bookService.findBook("123");
 
 an invocation of ```findBook``` will result in an HTTP GET request to this url: ```/books?isbn=123```
 
-When there is also a @RequestBody, then the handling is different - look further down the F.A.Q.
+When there is also a ```@RequestBody```, then the handling is different - look further down the F.A.Q.
 
 #### What does @RequestBody do?
 
-You might want to send JSON to a REST service via an HTTP POST request. Method arguments annotated with @RequestBody are serialized into JSON and sent to the remote service. If there is only a single method argument annotated with @RequestBody, then that argument is serialized and sent over. If multiple arguments are annotated, then each @RequestBody needs to be accompanied by a @RequestParam which specifies the field name of the object. 
+Used when sending JSON to a REST service via an HTTP POST request. Method arguments annotated with ```@RequestBody``` are serialized into JSON and sent to the remote service. If there is only a single method argument annotated with `@RequestBody`, then that argument is serialized and sent over. If multiple arguments are annotated, then each @RequestBody needs to be accompanied by a @RequestParam which specifies the field name of the object. 
 
 In an ideal world we wouldn't need @RequestParam because the invoker would, supposedly, be able to read method argument names and pick URL parameter names accordingly; in Java that's suprisingly hard to do since the reflection API does not expose method argument names.
 
