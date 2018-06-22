@@ -499,7 +499,7 @@ Whenever the ```joinAccounts``` method is invoked, the ```serverIp``` property w
 
 #### Where can I find more examples?
 
-Have a look at mapping declarations for the unit test: https://github.com/ggeorgovassilis/spring-rest-invoker/tree/master/spring-rest-invoker/src/test/java/com/github/ggeorgovassilis/springjsonmapper/services
+Have a look at mapping declarations for the unit test: [https://github.com/ggeorgovassilis/spring-rest-invoker/tree/master/src/test/java/com/github/ggeorgovassilis/springjsonmapper/services](https://github.com/ggeorgovassilis/spring-rest-invoker/tree/master/src/test/java/com/github/ggeorgovassilis/springjsonmapper/services)
 
 #### I need proxies to extend a specific class
 
