@@ -18,7 +18,7 @@ Features:
 
 
 ## News
-TBD       : Not released yet: corrections in documentation
+TBD       : Not released yet: corrections in documentation, example for annotation-based configuration
 
 2018-06-22: Released 1.7 to maven central
 
@@ -217,6 +217,20 @@ which will POST a JSON object similar to:
 }
 ```
 
+Alternatively, if you prefer annotation-based configuration over XML:
+
+```java
+@Configuration
+public class MyConfiguration{
+
+	@Bean
+	SpringRestInvokerProxyFactoryBean BankService() {
+		SpringRestInvokerProxyFactoryBean proxyFactory = new SpringRestInvokerProxyFactoryBean();
+		proxyFactory.setBaseUrl("http://localhost/bankservice");
+		proxyFactory.setRemoteServiceInterfaceClass(BankServiceSpring.class);
+		return proxyFactory;
+	}
+```
 ## Supported Annotations
 
 ### Spring
