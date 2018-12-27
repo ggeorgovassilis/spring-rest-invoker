@@ -243,6 +243,11 @@ public class MyConfiguration{
 @RequestBody	// Pass argument as JSON in the request body. If a @QueryParam has been specified, then encode it with that JSON field name
 @RequestPart	// Pass argument as multipart form request
 @CookieValue	// Pass argument as cookie
+@GetMapping   // same as @RequestMapping(method = GET)
+@PutMapping   // same as @RequestMapping(method = PUT)
+@PostMapping  // same as @RequestMapping(method = POST)
+@DeleteMapping // same as @RequestMapping(method = DELETE)
+@PatchMapping // same as @RequestMapping(method = PATCH)
 ```
 
 
