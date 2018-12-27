@@ -50,6 +50,9 @@ public class MultiThreaddedTest {
 	@Resource(name = "&BankService")
 	protected BaseRestInvokerProxyFactoryBean httpProxyFactory;
 
+	@Resource(name = "&BankServiceOpaque")
+	protected BaseRestInvokerProxyFactoryBean opaqueHttpProxyFactory;
+
 	protected MockRequestFactory requestFactory;
 
 	@Before
@@ -57,6 +60,7 @@ public class MultiThreaddedTest {
 		requestFactory = new MockRequestFactory();
 		RestTemplate restTemplate = new RestTemplate(requestFactory);
 		httpProxyFactory.setRestTemplate(restTemplate);
+		opaqueHttpProxyFactory.setRestTemplate(restTemplate);
 		requestFactory.createResponse();
 	}
 
@@ -76,7 +80,7 @@ public class MultiThreaddedTest {
 		assertTrue(result);
 	}
 	
-	void runMultiThreaddedTest(BankService service) throws Exception{
+	void runMultiThreaddedTest(final BankService service) throws Exception{
 		ExecutorService executorService = Executors.newFixedThreadPool(THREADS);
 		List<Future<Void>> results = new ArrayList<Future<Void>>();
 		long start = System.currentTimeMillis();
@@ -85,7 +89,7 @@ public class MultiThreaddedTest {
 
 				@Override
 				public Void call() throws Exception {
-					executeTest(bankService);
+					executeTest(service);
 					return null;
 				}
 			});
