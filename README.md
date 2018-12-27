@@ -194,7 +194,7 @@ public interface BankService {
 
 which will POST a JSON object similar to:
 
-```javascript
+```json
 {
 	"fromAccount":	{
 			"accountNumber": 1234,
