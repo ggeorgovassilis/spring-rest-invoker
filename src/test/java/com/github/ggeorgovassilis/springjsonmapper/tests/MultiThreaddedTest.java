@@ -1,6 +1,24 @@
 package com.github.ggeorgovassilis.springjsonmapper.tests;
 
-import static org.junit.Assert.assertTrue;
+import com.github.ggeorgovassilis.springjsonmapper.services.Account;
+import com.github.ggeorgovassilis.springjsonmapper.services.BankService;
+import com.github.ggeorgovassilis.springjsonmapper.services.Customer;
+import com.github.ggeorgovassilis.springjsonmapper.services.spring.BankServiceSpring;
+import com.github.ggeorgovassilis.springjsonmapper.spring.SpringRestInvokerProxyFactoryBean;
+import com.github.ggeorgovassilis.springjsonmapper.support.MockRequestFactory;
+import com.github.ggeorgovassilis.springjsonmapper.support.MockRequestFactory.MockResponse;
+import com.github.ggeorgovassilis.springjsonmapper.utils.CglibProxyFactory;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.support.AnnotationConfigContextLoader;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,46 +27,77 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-import javax.annotation.Resource;
-
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.web.client.RestTemplate;
-
-import com.github.ggeorgovassilis.springjsonmapper.BaseRestInvokerProxyFactoryBean;
-import com.github.ggeorgovassilis.springjsonmapper.services.Account;
-import com.github.ggeorgovassilis.springjsonmapper.services.BankService;
-import com.github.ggeorgovassilis.springjsonmapper.services.Customer;
-import com.github.ggeorgovassilis.springjsonmapper.support.MockRequestFactory;
-import com.github.ggeorgovassilis.springjsonmapper.support.MockRequestFactory.MockResponse;
-import static com.github.ggeorgovassilis.springjsonmapper.tests.Factory.*;
+import static com.github.ggeorgovassilis.springjsonmapper.tests.Factory.account;
+import static com.github.ggeorgovassilis.springjsonmapper.tests.Factory.customer;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Runs the entire chain through concurrent invocations and asserts that nothing
  * breaks
- * 
- * @author george georgovassilis
  *
+ * @author george georgovassilis
  */
-@ContextConfiguration("classpath:test-context-bank-spring.xml")
+//@ContextConfiguration("classpath:test-context-bank-spring.xml")
+@ContextConfiguration(loader = AnnotationConfigContextLoader.class)
 @RunWith(value = SpringJUnit4ClassRunner.class)
 public class MultiThreaddedTest {
 
 	final long TEST_DURATION_MS = 3000;
 	final int THREADS = 4;
 
-	@Resource(name="BankService")
+	@Configuration
+	@PropertySource("classpath:config.properties")
+	static class ContextConfiguration {
+
+		@Bean
+		public SpringRestInvokerProxyFactoryBean normalProxyFactoryBean() {
+
+			SpringRestInvokerProxyFactoryBean factory = new SpringRestInvokerProxyFactoryBean();
+			factory.setBaseUrl("http://localhost/bankservice");
+			factory.setRemoteServiceInterfaceClass(BankServiceSpring.class);
+			return factory;
+		}
+
+		@Bean
+		public BankService bankService() {
+
+			try {
+				return (BankService) normalProxyFactoryBean().getObject();
+			} catch (Exception e) {
+				throw new RuntimeException(e);
+			}
+		}
+
+		@Bean
+		public SpringRestInvokerProxyFactoryBean opaqueProxyFactoryBean() {
+
+			SpringRestInvokerProxyFactoryBean factory = new SpringRestInvokerProxyFactoryBean();
+			factory.setBaseUrl("http://localhost/bankservice");
+			factory.setRemoteServiceInterfaceClass(BankServiceSpring.class);
+			factory.setProxyFactory(new CglibProxyFactory());
+			return factory;
+		}
+
+		@Bean
+		public BankService bankServiceOpaque() {
+
+			// set properties, etc.
+			try {
+				return (BankService) opaqueProxyFactoryBean().getObject();
+			} catch (Exception e) {
+				throw new RuntimeException(e);
+			}
+		}
+	}
+
+	@Autowired
 	protected BankService bankService;
 
-	@Resource(name="BankServiceOpaque")
+	@Autowired
 	protected BankService bankServiceOpaque;
 
-	@Resource(name = "&BankService")
-	protected BaseRestInvokerProxyFactoryBean httpProxyFactory;
+	@Autowired
+	protected List<SpringRestInvokerProxyFactoryBean> factories;
 
 	protected MockRequestFactory requestFactory;
 
@@ -56,11 +105,13 @@ public class MultiThreaddedTest {
 	public void setup() {
 		requestFactory = new MockRequestFactory();
 		RestTemplate restTemplate = new RestTemplate(requestFactory);
-		httpProxyFactory.setRestTemplate(restTemplate);
+		for (SpringRestInvokerProxyFactoryBean factory : factories) {
+			factory.setRestTemplate(restTemplate);
+		}
 		requestFactory.createResponse();
 	}
 
-	void executeTest(BankService bankService) throws Exception {
+	void executeTest(BankService bankService) {
 
 		// setup test
 		Customer customer1 = customer("Customer 1");
@@ -75,8 +126,8 @@ public class MultiThreaddedTest {
 		// verify results
 		assertTrue(result);
 	}
-	
-	void runMultiThreaddedTest(BankService service) throws Exception{
+
+	void runMultiThreaddedTest(final BankService service) throws Exception {
 		ExecutorService executorService = Executors.newFixedThreadPool(THREADS);
 		List<Future<Void>> results = new ArrayList<Future<Void>>();
 		long start = System.currentTimeMillis();
@@ -85,7 +136,7 @@ public class MultiThreaddedTest {
 
 				@Override
 				public Void call() throws Exception {
-					executeTest(bankService);
+					executeTest(service);
 					return null;
 				}
 			});
