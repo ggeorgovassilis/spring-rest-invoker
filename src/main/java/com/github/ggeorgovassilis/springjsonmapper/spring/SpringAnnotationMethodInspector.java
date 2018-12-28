@@ -3,7 +3,7 @@ package com.github.ggeorgovassilis.springjsonmapper.spring;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 
-import org.springframework.core.annotation.AnnotationUtils;
+import org.springframework.core.annotation.AnnotatedElementUtils;
 import org.springframework.http.HttpMethod;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -31,7 +31,7 @@ public class SpringAnnotationMethodInspector extends BaseAnnotationMethodInspect
 	@Override
 	public UrlMapping inspect(Method method, Object[] args) {
 		UrlMapping urlMapping = new UrlMapping();
-		RequestMapping rm = AnnotationUtils.findAnnotation(method, RequestMapping.class);
+		RequestMapping rm = AnnotatedElementUtils.getMergedAnnotation(method, RequestMapping.class);
 		if (rm == null)
 			return null;
 		if (!Utils.hasValue(rm.value()))
