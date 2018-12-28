@@ -5,7 +5,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.github.ggeorgovassilis</groupId>
 	<artifactId>spring-rest-invoker</artifactId>
-	<version>1.7.0</version>
+	<version>1.8.0</version>
 	<url>https://github.com/ggeorgovassilis/spring-rest-invoker</url>
 	<name>${project.groupId}:${project.artifactId}</name>
 	<description>Spring factory that allows consumption of a remote REST JSON service by binding it to a local Java interface and exposing it as a proxy.</description>
@@ -48,7 +48,7 @@
 		<!-- github server in ~/.m2/settings.xml -->
 		<github.global.server>github</github.global.server>
 		<spring.version>4.3.3.RELEASE</spring.version>
-		<jackson.version>2.8.8.1</jackson.version>
+		<jackson.version>2.9.8</jackson.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 	</properties>

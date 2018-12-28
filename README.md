@@ -18,7 +18,7 @@ Features:
 
 
 ## News
-TBD       : Not released yet: corrections in documentation, example for annotation-based configuration
+TBD       : Not released yet: corrections in documentation, example for annotation-based configuration, supporting more Spring annotations (thanks [Arturo Volpe](https://github.com/aVolpe)), added MT test for opaque proxy factory (thanks [Arturo Volpe](https://github.com/aVolpe)), upgraded jackson dependencies 
 
 2018-06-22: Released 1.7 to maven central
 
