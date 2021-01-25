@@ -1,17 +1,18 @@
 package com.github.ggeorgovassilis.springjsonmapper.integrationtests;
 
-import org.junit.runner.RunWith;
-import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-
 import com.github.ggeorgovassilis.springjsonmapper.services.BookService;
 import com.github.ggeorgovassilis.springjsonmapper.services.Item;
 import com.github.ggeorgovassilis.springjsonmapper.services.QueryResult;
 import com.github.ggeorgovassilis.springjsonmapper.services.VolumeInfo;
 import com.github.ggeorgovassilis.springjsonmapper.spring.SpringRestInvokerProxyFactoryBean;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 
 /**
  * Integration test with the google books API using the
@@ -19,7 +20,7 @@ import static org.junit.Assert.*;
  * 
  * @author george georgovassilis
  */
-@RunWith(SpringJUnit4ClassRunner.class)
+@ExtendWith(SpringExtension.class)
 public abstract class AbstractGoogleBooksApiTest {
 
 	@Autowired

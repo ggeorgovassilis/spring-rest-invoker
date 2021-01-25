@@ -1,7 +1,7 @@
 POST http://localhost/bankservice/authenticate
 Accept=application/json, application/*+json
 Content-Length=33
-Content-Type=application/x-www-form-urlencoded
+Content-Type=application/x-www-form-urlencoded;charset=UTF-8
 Cookie=sid=1234
 
 name=Customer+1&password=password

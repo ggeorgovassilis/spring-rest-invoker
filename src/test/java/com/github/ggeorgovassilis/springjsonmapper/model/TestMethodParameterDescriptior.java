@@ -1,12 +1,11 @@
 package com.github.ggeorgovassilis.springjsonmapper.model;
 
-import org.junit.Test;
-
 import com.github.ggeorgovassilis.springjsonmapper.model.MethodParameterDescriptor.Type;
-
-import static org.junit.Assert.*;
+import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Method;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * Test for {@link MethodParameterDescriptor}

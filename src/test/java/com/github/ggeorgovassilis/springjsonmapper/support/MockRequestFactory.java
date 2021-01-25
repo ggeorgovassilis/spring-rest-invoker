@@ -1,22 +1,17 @@
 package com.github.ggeorgovassilis.springjsonmapper.support;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.client.ClientHttpRequest;
 import org.springframework.http.client.ClientHttpRequestFactory;
 import org.springframework.http.client.ClientHttpResponse;
+
+import java.io.*;
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Factory for requests and responses that can be inspected and instrumented for
@@ -101,6 +96,11 @@ public class MockRequestFactory implements ClientHttpRequestFactory {
 		@Override
 		public HttpMethod getMethod() {
 			return method;
+		}
+
+		@Override
+		public String getMethodValue() {
+			return method.toString();
 		}
 
 		@Override

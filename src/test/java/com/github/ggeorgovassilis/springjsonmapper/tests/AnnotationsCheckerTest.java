@@ -1,21 +1,21 @@
 package com.github.ggeorgovassilis.springjsonmapper.tests;
 
-import java.lang.reflect.Method;
-
-import javax.annotation.Resource;
-
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import com.github.ggeorgovassilis.springjsonmapper.services.BookService;
+import com.github.ggeorgovassilis.springjsonmapper.support.BaseProxyClass;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.util.ReflectionUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.github.ggeorgovassilis.springjsonmapper.services.BookService;
-import com.github.ggeorgovassilis.springjsonmapper.support.BaseProxyClass;
+import javax.annotation.Resource;
+import java.lang.reflect.Method;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 
 /**
  * Verifies that annotations are correctly preserved on proxies
@@ -23,7 +23,7 @@ import static org.junit.Assert.*;
  * @author george georgovassilis
  *
  */
-@RunWith(SpringJUnit4ClassRunner.class)
+@ExtendWith(SpringExtension.class)
 @ContextConfiguration("classpath:test-context-annotations.xml")
 public class AnnotationsCheckerTest {
 

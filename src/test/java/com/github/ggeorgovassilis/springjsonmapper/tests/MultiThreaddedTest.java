@@ -1,7 +1,19 @@
 package com.github.ggeorgovassilis.springjsonmapper.tests;
 
-import static org.junit.Assert.assertTrue;
+import com.github.ggeorgovassilis.springjsonmapper.BaseRestInvokerProxyFactoryBean;
+import com.github.ggeorgovassilis.springjsonmapper.services.Account;
+import com.github.ggeorgovassilis.springjsonmapper.services.BankService;
+import com.github.ggeorgovassilis.springjsonmapper.services.Customer;
+import com.github.ggeorgovassilis.springjsonmapper.support.MockRequestFactory;
+import com.github.ggeorgovassilis.springjsonmapper.support.MockRequestFactory.MockResponse;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.web.client.RestTemplate;
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -9,23 +21,9 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-import javax.annotation.Resource;
-
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.web.client.RestTemplate;
-
-import com.github.ggeorgovassilis.springjsonmapper.BaseRestInvokerProxyFactoryBean;
-import com.github.ggeorgovassilis.springjsonmapper.services.Account;
-import com.github.ggeorgovassilis.springjsonmapper.services.BankService;
-import com.github.ggeorgovassilis.springjsonmapper.services.Customer;
-import com.github.ggeorgovassilis.springjsonmapper.support.MockRequestFactory;
-import com.github.ggeorgovassilis.springjsonmapper.support.MockRequestFactory.MockResponse;
-import static com.github.ggeorgovassilis.springjsonmapper.tests.Factory.*;
+import static com.github.ggeorgovassilis.springjsonmapper.tests.Factory.account;
+import static com.github.ggeorgovassilis.springjsonmapper.tests.Factory.customer;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Runs the entire chain through concurrent invocations and asserts that nothing
@@ -35,7 +33,7 @@ import static com.github.ggeorgovassilis.springjsonmapper.tests.Factory.*;
  *
  */
 @ContextConfiguration("classpath:test-context-bank-spring.xml")
-@RunWith(value = SpringJUnit4ClassRunner.class)
+@ExtendWith(SpringExtension.class)
 public class MultiThreaddedTest {
 
 	final long TEST_DURATION_MS = 3000;
@@ -55,7 +53,7 @@ public class MultiThreaddedTest {
 
 	protected MockRequestFactory requestFactory;
 
-	@Before
+	@BeforeEach
 	public void setup() {
 		requestFactory = new MockRequestFactory();
 		RestTemplate restTemplate = new RestTemplate(requestFactory);

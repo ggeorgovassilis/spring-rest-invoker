@@ -1,9 +1,11 @@
 package com.github.ggeorgovassilis.springjsonmapper.utils;
 
+import org.springframework.cglib.proxy.Enhancer;
+
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 
-import net.sf.cglib.proxy.Enhancer;
+//import net.sf.cglib.proxy.Enhancer;
 
 /**
  * Implements opaque proxies with cglib
@@ -17,20 +19,13 @@ public class CglibProxyFactory implements ProxyFactory {
 	protected ClassLoader classLoader;
 
 	@Override
-	public Object createProxy(ClassLoader classLoader, final Class<?>[] interfaces,
-			final InvocationHandler callback) {
+	public Object createProxy(ClassLoader classLoader, final Class<?>[] interfaces, final InvocationHandler callback) {
 		Enhancer enhancer = new Enhancer();
 		enhancer.setSuperclass(baseClass);
 		if (classLoader == null)
 			classLoader = Thread.currentThread().getContextClassLoader();
 		enhancer.setClassLoader(classLoader);
-		enhancer.setCallback(new net.sf.cglib.proxy.InvocationHandler() {
-
-			@Override
-			public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-				return callback.invoke(proxy, method, args);
-			}
-		});
+		enhancer.setCallback((org.springframework.cglib.proxy.InvocationHandler) (o, method, args) -> callback.invoke(o, method, args));
 		enhancer.setInterfaces(interfaces);
 		return enhancer.create();
 	}

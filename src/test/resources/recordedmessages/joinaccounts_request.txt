@@ -4,12 +4,12 @@ Content-Type=multipart/form-data;boundary=BOUNDARY
 
 --BOUNDARY~
 Content-Disposition: form-data; name="account1"~
-Content-Type: application/json;charset=UTF-8~
+Content-Type: application/json~
 ~
 {"accountNumber":"account 1","balance":1000,"owner":{"name":"Customer 1"}}~
 --BOUNDARY~
 Content-Disposition: form-data; name="account2"~
-Content-Type: application/json;charset=UTF-8~
+Content-Type: application/json~
 ~
 {"accountNumber":"account 2","balance":100,"owner":{"name":"Customer 2"}}~
 --BOUNDARY--~
