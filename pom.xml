@@ -63,7 +63,6 @@
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-pmd-plugin</artifactId>
-						<version>3.8</version>
 						<configuration>
 							<skipEmptyReport>false</skipEmptyReport>
 						</configuration>
@@ -71,12 +70,10 @@
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-project-info-reports-plugin</artifactId>
-						<version>2.9</version>
 					</plugin>
 					<plugin>
 						<groupId>org.pitest</groupId>
 						<artifactId>pitest-maven</artifactId>
-						<version>1.2.0</version>
 						<configuration>
 							<targetClasses>
 								<param>fauxjsp*</param>
@@ -234,27 +231,12 @@
 			<scope>provided</scope>
 		</dependency>
 
-		<!--dependency>
-			<groupId>cglib</groupId>
-			<artifactId>cglib</artifactId>
-			<version>3.2.5</version>
-			<scope>provided</scope>
-		</dependency-->
-
 		<dependency>
 			<groupId>net.bytebuddy</groupId>
 			<artifactId>byte-buddy</artifactId>
 			<version>${bytebuddy.version}</version>
 			<scope>provided</scope>
 		</dependency>
-
-
-		<!--dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>4.12</version>
-			<scope>test</scope>
-		</dependency-->
 
 		<dependency>
 			<groupId>org.springframework</groupId>
@@ -279,23 +261,8 @@
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-webmvc</artifactId>
-<!--			<version>${spring.version}</version>-->
 			<scope>test</scope>
 		</dependency>
-
-		<!--dependency>
-			<groupId>org.mockito</groupId>
-			<artifactId>mockito-all</artifactId>
-			<version>1.10.19</version>
-			<scope>test</scope>
-		</dependency-->
-
-		<!--dependency>
-			<groupId>log4j</groupId>
-			<artifactId>log4j</artifactId>
-			<version>1.2.17</version>
-			<scope>test</scope>
-		</dependency-->
 
 	</dependencies>
 
@@ -307,6 +274,26 @@
 					<artifactId>maven-compiler-plugin</artifactId>
 					<version>3.8.1</version>
 				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-project-info-reports-plugin</artifactId>
+					<version>3.1.0</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-pmd-plugin</artifactId>
+					<version>3.14.0</version>
+				</plugin>
+				<plugin>
+					<groupId>org.pitest</groupId>
+					<artifactId>pitest-maven</artifactId>
+					<version>1.6.2</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-surefire-plugin</artifactId>
+					<version>3.0.0-M5</version>
+				</plugin>
 			</plugins>
 		</pluginManagement>
 		<plugins>
@@ -315,7 +302,6 @@
 					here. -->
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
-				<version>2.20</version>
 				<configuration>
 					<trimStackTrace>false</trimStackTrace>
 					<skip>true</skip><!-- skip disables the plugin by default, otherwise 
