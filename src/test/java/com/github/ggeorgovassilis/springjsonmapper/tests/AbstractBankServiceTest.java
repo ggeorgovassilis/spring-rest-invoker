@@ -1,18 +1,5 @@
 package com.github.ggeorgovassilis.springjsonmapper.tests;
 
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import javax.annotation.Resource;
-
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.web.client.RestTemplate;
-
 import com.github.ggeorgovassilis.springjsonmapper.BaseRestInvokerProxyFactoryBean;
 import com.github.ggeorgovassilis.springjsonmapper.services.Account;
 import com.github.ggeorgovassilis.springjsonmapper.services.BankService;
@@ -21,10 +8,22 @@ import com.github.ggeorgovassilis.springjsonmapper.spring.SpringRestInvokerProxy
 import com.github.ggeorgovassilis.springjsonmapper.support.MockRequestFactory;
 import com.github.ggeorgovassilis.springjsonmapper.support.MockRequestFactory.MockRequest;
 import com.github.ggeorgovassilis.springjsonmapper.support.MockRequestFactory.MockResponse;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.web.client.RestTemplate;
 
-import static org.junit.Assert.*;
-import static com.github.ggeorgovassilis.springjsonmapper.support.Utils.*;
-import static com.github.ggeorgovassilis.springjsonmapper.tests.Factory.*;
+import javax.annotation.Resource;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import static com.github.ggeorgovassilis.springjsonmapper.support.Utils.get;
+import static com.github.ggeorgovassilis.springjsonmapper.support.Utils.sget;
+import static com.github.ggeorgovassilis.springjsonmapper.tests.Factory.account;
+import static com.github.ggeorgovassilis.springjsonmapper.tests.Factory.customer;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Tests a more complex scenario with recorded HTTP requests and responses using
@@ -33,7 +32,7 @@ import static com.github.ggeorgovassilis.springjsonmapper.tests.Factory.*;
  * @author george georgovassilis
  * 
  */
-@RunWith(value = SpringJUnit4ClassRunner.class)
+@ExtendWith(SpringExtension.class)
 public abstract class AbstractBankServiceTest {
 
 	@Resource(name="BankService")
@@ -50,7 +49,7 @@ public abstract class AbstractBankServiceTest {
 		return response;
 	}
 
-	@Before
+	@BeforeEach
 	public void setup() {
 		requestFactory = new MockRequestFactory();
 		RestTemplate restTemplate = new RestTemplate(requestFactory);
@@ -278,7 +277,7 @@ public abstract class AbstractBankServiceTest {
 		// execute test
 		List<Account> results = bankService.getAllAccounts();
 		assertEquals(2, results.size());
-		assertTrue("Item is expected to be an instance of Account", results.get(0) instanceof Account);
+		assertNotNull(results.get(0), "Item is expected to be an instance of Account");
 		assertEquals("41", results.get(0).getAccountNumber());
 
 		// validate request
