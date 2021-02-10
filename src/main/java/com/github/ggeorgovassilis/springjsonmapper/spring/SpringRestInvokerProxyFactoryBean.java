@@ -1,5 +1,12 @@
 package com.github.ggeorgovassilis.springjsonmapper.spring;
 
+import com.github.ggeorgovassilis.springjsonmapper.model.MappingDeclarationException;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -8,6 +15,13 @@ import org.springframework.web.bind.annotation.RequestPart;
 
 import com.github.ggeorgovassilis.springjsonmapper.BaseRestInvokerProxyFactoryBean;
 import com.github.ggeorgovassilis.springjsonmapper.MethodInspector;
+import org.springframework.web.client.RestOperations;
+import org.springframework.web.client.RestTemplate;
+
+import javax.annotation.PostConstruct;
+import java.lang.reflect.Method;
+import java.util.Map;
+import java.util.concurrent.Exchanger;
 
 /**
  * Binds a java interface to a remote REST service. Provide the interface class
@@ -70,6 +84,8 @@ import com.github.ggeorgovassilis.springjsonmapper.MethodInspector;
  */
 public class SpringRestInvokerProxyFactoryBean extends BaseRestInvokerProxyFactoryBean {
 
+	private RestOperations restTemplate;
+
 	@Override
 	protected MethodInspector constructDefaultMethodInspector() {
 		SpringAnnotationMethodInspector inspector = new SpringAnnotationMethodInspector();
@@ -77,4 +93,47 @@ public class SpringRestInvokerProxyFactoryBean extends BaseRestInvokerProxyFacto
 		return inspector;
 	}
 
+	protected Object executeRequest(Map<String, Object> dataObjects, Method method, String url,
+									HttpMethod httpMethod, ParameterizedTypeReference<?> returnType, Map<String, Object> parameters,
+									MultiValueMap<String, Object> formObjects, Map<String, String> cookies,
+									MultiValueMap<String, String> headers) {
+		HttpEntity<?> requestEntity = null;
+		Object dataObject = dataObjects.get("");
+		if (dataObjects.size() > 1 && dataObject != null) {
+			throw new MappingDeclarationException(
+				String.format("Found both named and anonymous arguments on method %s, that's ambiguous.",
+					method.toGenericString()),
+				method, null, -1);
+		}
+		if (dataObject == null) {
+			dataObject = formObjects.isEmpty() ? dataObjects : formObjects;
+		}
+
+		LinkedMultiValueMap<String, String> finalHeaders = new LinkedMultiValueMap<String, String>(headers);
+		augmentHeadersWithCookies(finalHeaders, cookies);
+		boolean hasBody = !HttpMethod.GET.equals(httpMethod);
+
+		if (hasBody) {
+			requestEntity = new HttpEntity<>(dataObject, finalHeaders);
+		} else {
+			requestEntity = new HttpEntity<>(headers);
+		}
+		ResponseEntity<?> responseEntity = getRestTemplate().exchange(url, httpMethod, requestEntity, returnType, parameters);
+		return responseEntity.getBody();
+	}
+
+	@PostConstruct
+	private void init() {
+		if (restTemplate == null) {
+			restTemplate = new RestTemplate();
+		}
+	}
+
+	public void setRestTemplate(RestOperations restTemplate) {
+		this.restTemplate = restTemplate;
+	}
+
+	private RestOperations getRestTemplate() {
+		return restTemplate;
+	}
 }

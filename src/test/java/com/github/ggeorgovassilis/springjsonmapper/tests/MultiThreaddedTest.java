@@ -4,6 +4,7 @@ import com.github.ggeorgovassilis.springjsonmapper.BaseRestInvokerProxyFactoryBe
 import com.github.ggeorgovassilis.springjsonmapper.services.Account;
 import com.github.ggeorgovassilis.springjsonmapper.services.BankService;
 import com.github.ggeorgovassilis.springjsonmapper.services.Customer;
+import com.github.ggeorgovassilis.springjsonmapper.spring.SpringRestInvokerProxyFactoryBean;
 import com.github.ggeorgovassilis.springjsonmapper.support.MockRequestFactory;
 import com.github.ggeorgovassilis.springjsonmapper.support.MockRequestFactory.MockResponse;
 import org.junit.jupiter.api.BeforeEach;
@@ -46,10 +47,10 @@ public class MultiThreaddedTest {
 	protected BankService bankServiceOpaque;
 
 	@Resource(name = "&BankService")
-	protected BaseRestInvokerProxyFactoryBean httpProxyFactory;
+	protected SpringRestInvokerProxyFactoryBean httpProxyFactory;
 
 	@Resource(name = "&BankServiceOpaque")
-	protected BaseRestInvokerProxyFactoryBean opaqueHttpProxyFactory;
+	protected SpringRestInvokerProxyFactoryBean opaqueHttpProxyFactory;
 
 	protected MockRequestFactory requestFactory;
 

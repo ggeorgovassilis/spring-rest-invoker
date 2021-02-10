@@ -39,7 +39,7 @@ public abstract class AbstractBankServiceTest {
 	protected BankService bankService;
 
 	@Resource(name = "&BankService")
-	protected BaseRestInvokerProxyFactoryBean httpProxyFactory;
+	protected SpringRestInvokerProxyFactoryBean httpProxyFactory;
 
 	protected MockRequestFactory requestFactory;
 

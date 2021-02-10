@@ -1,36 +1,29 @@
 package com.github.ggeorgovassilis.springjsonmapper;
 
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.LinkedHashMap;
-import java.util.Map;
-
-import javax.annotation.PostConstruct;
-
-import org.springframework.beans.factory.FactoryBean;
-import org.springframework.context.EmbeddedValueResolverAware;
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
-import org.springframework.util.ReflectionUtils;
-import org.springframework.util.StringValueResolver;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.client.RestOperations;
-import org.springframework.web.client.RestTemplate;
-
 import com.github.ggeorgovassilis.springjsonmapper.jaxrs.JaxRsInvokerProxyFactoryBean;
 import com.github.ggeorgovassilis.springjsonmapper.model.MappingDeclarationException;
 import com.github.ggeorgovassilis.springjsonmapper.model.MethodParameterDescriptor;
 import com.github.ggeorgovassilis.springjsonmapper.model.MethodParameterDescriptor.Type;
 import com.github.ggeorgovassilis.springjsonmapper.model.UrlMapping;
 import com.github.ggeorgovassilis.springjsonmapper.spring.SpringRestInvokerProxyFactoryBean;
-import com.github.ggeorgovassilis.springjsonmapper.utils.CglibProxyFactory;
 import com.github.ggeorgovassilis.springjsonmapper.utils.DynamicJavaProxyFactory;
 import com.github.ggeorgovassilis.springjsonmapper.utils.ProxyFactory;
+import org.springframework.beans.factory.FactoryBean;
+import org.springframework.context.EmbeddedValueResolverAware;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpMethod;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.util.ReflectionUtils;
+import org.springframework.util.StringValueResolver;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import javax.annotation.PostConstruct;
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * Base component for proxy factories that bind java interfaces to a remote REST
@@ -54,7 +47,6 @@ public abstract class BaseRestInvokerProxyFactoryBean
 	protected String remoteServiceInterfaceClassName;
 	protected Object remoteProxy;
 	protected String baseUrl;
-	protected RestOperations restTemplate;
 	protected MethodInspector methodInspector;
 	protected StringValueResolver expressionResolver;
 	protected ProxyFactory proxyFactory = new DynamicJavaProxyFactory();
@@ -111,19 +103,19 @@ public abstract class BaseRestInvokerProxyFactoryBean
 		this.methodInspector = methodInspector;
 	}
 
-	protected RestOperations getRestTemplate() {
-		return restTemplate;
-	}
+//	protected RestOperations getRestTemplate() {
+//		return restTemplate;
+//	}
 
-	/**
-	 * Optionally provide a {@link RestTemplate} if you need to handle http yourself
-	 * (proxies? BASIC auth?)
-	 * 
-	 * @param restTemplate RestTemplate to use
-	 */
-	public void setRestTemplate(RestOperations restTemplate) {
-		this.restTemplate = restTemplate;
-	}
+//	/**
+//	 * Optionally provide a {@link RestTemplate} if you need to handle http yourself
+//	 * (proxies? BASIC auth?)
+//	 *
+//	 * @param restTemplate RestTemplate to use
+//	 */
+//	public void setRestTemplate(RestOperations restTemplate) {
+//		this.restTemplate = restTemplate;
+//	}
 
 	public String getBaseUrl() {
 		return baseUrl;
@@ -164,10 +156,10 @@ public abstract class BaseRestInvokerProxyFactoryBean
 		this.remoteServiceInterfaceClassName = className;
 	}
 
-	protected RestTemplate constructDefaultRestTemplate() {
-		RestTemplate restTemplate = new RestTemplate();
-		return restTemplate;
-	}
+//	protected RestTemplate constructDefaultRestTemplate() {
+//		RestTemplate restTemplate = new RestTemplate();
+//		return restTemplate;
+//	}
 
 	/**
 	 * If instantiating this object programmatically then, after setting any
@@ -185,10 +177,9 @@ public abstract class BaseRestInvokerProxyFactoryBean
 				throw new RuntimeException(e);
 			}
 		}
-		if (methodInspector == null)
+		if (methodInspector == null) {
 			methodInspector = constructDefaultMethodInspector();
-		if (restTemplate == null)
-			restTemplate = constructDefaultRestTemplate();
+		}
 	}
 
 	@Override
@@ -216,13 +207,12 @@ public abstract class BaseRestInvokerProxyFactoryBean
 	}
 
 	protected Object handleRemoteInvocation(Object proxy, Method method, Object[] args, UrlMapping requestMapping) {
-		Object result = null;
 		Map<String, Object> parameters = new LinkedHashMap<String, Object>();
 		Map<String, Object> dataObjects = new LinkedHashMap<String, Object>();
 		MultiValueMap<String, String> headers = getHeaders(requestMapping);
 		Map<String, String> cookies = new LinkedHashMap<String, String>();
 		MultiValueMap<String, Object> formObjects = new LinkedMultiValueMap<String, Object>();
-		RestOperations rest = getRestTemplate();
+//		RestOperations rest = getRestTemplate();
 
 		ParameterizedTypeReference<?> returnType = getResponseType(method);
 		String url = baseUrl;
@@ -253,9 +243,7 @@ public abstract class BaseRestInvokerProxyFactoryBean
 			}
 		}
 
-		result = executeRequest(dataObjects, method, rest, url, httpMethod, returnType, parameters, formObjects,
-				cookies, headers);
-		return result;
+		return executeRequest(dataObjects, method, url, httpMethod, returnType, parameters, formObjects, cookies, headers);
 	}
 
 	@Override
@@ -271,36 +259,15 @@ public abstract class BaseRestInvokerProxyFactoryBean
 		return result;
 	}
 
-	protected Object executeRequest(Map<String, Object> dataObjects, Method method, RestOperations rest, String url,
-			HttpMethod httpMethod, ParameterizedTypeReference<?> returnType, Map<String, Object> parameters,
-			MultiValueMap<String, Object> formObjects, Map<String, String> cookies,
-			MultiValueMap<String, String> headers) {
-		HttpEntity<?> requestEntity = null;
-		Object dataObject = dataObjects.get("");
-		if (dataObjects.size() > 1 && dataObject != null)
-			throw new MappingDeclarationException(
-					String.format("Found both named and anonymous arguments on method %s, that's ambiguous.",
-							method.toGenericString()),
-					method, null, -1);
-		if (dataObject == null)
-			dataObject = formObjects.isEmpty() ? dataObjects : formObjects;
-
-		LinkedMultiValueMap<String, String> finalHeaders = new LinkedMultiValueMap<String, String>(headers);
-		augmentHeadersWithCookies(finalHeaders, cookies);
-		boolean hasBody = !HttpMethod.GET.equals(httpMethod);
-
-		if (hasBody)
-			requestEntity = new HttpEntity<Object>(dataObject, finalHeaders);
-		else
-			requestEntity = new HttpEntity<Object>(headers);
-		ResponseEntity<?> responseEntity = rest.exchange(url, httpMethod, requestEntity, returnType, parameters);
-		Object result = responseEntity.getBody();
-		return result;
-	}
+	protected abstract Object executeRequest(Map<String, Object> dataObjects, Method method, String url,
+													   HttpMethod httpMethod, ParameterizedTypeReference<?> returnType, Map<String, Object> parameters,
+													   MultiValueMap<String, Object> formObjects, Map<String, String> cookies,
+													   MultiValueMap<String, String> headers);
 
 	protected void augmentHeadersWithCookies(LinkedMultiValueMap<String, String> headers, Map<String, String> cookies) {
-		if (cookies.isEmpty())
+		if (cookies.isEmpty()) {
 			return;
+		}
 		String cookieHeader = "";
 		String prefix = "";
 		for (String cookieName : cookies.keySet()) {
@@ -312,10 +279,11 @@ public abstract class BaseRestInvokerProxyFactoryBean
 	}
 
 	protected String appendDescriptorNameParameterToUrl(String url, MethodParameterDescriptor descriptor) {
-		if (url.contains("?"))
+		if (url.contains("?")) {
 			url += "&";
-		else
+		} else {
 			url += "?";
+		}
 		url += descriptor.getName() + "={" + descriptor.getName() + "}";
 		return url;
 	}

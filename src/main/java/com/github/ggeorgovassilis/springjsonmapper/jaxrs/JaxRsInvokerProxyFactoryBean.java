@@ -71,7 +71,7 @@ import com.github.ggeorgovassilis.springjsonmapper.spring.SpringRestInvokerProxy
  * @author george georgovassilis
  * 
  */
-public class JaxRsInvokerProxyFactoryBean extends BaseRestInvokerProxyFactoryBean {
+public class JaxRsInvokerProxyFactoryBean extends SpringRestInvokerProxyFactoryBean {
 
 	@Override
 	protected MethodInspector constructDefaultMethodInspector() {
