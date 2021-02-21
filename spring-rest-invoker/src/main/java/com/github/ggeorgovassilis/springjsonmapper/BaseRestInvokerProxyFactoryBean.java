@@ -351,12 +351,7 @@ public abstract class BaseRestInvokerProxyFactoryBean
 		}
 	}
 
-	private ParameterizedTypeReference<Object> getResponseType(final Method method) {
-		return new ParameterizedTypeReference<Object>() {
-			@Override
-			public java.lang.reflect.Type getType() {
-				return method.getGenericReturnType();
-			}
-		};
+	private ParameterizedTypeReference<?> getResponseType(final Method method) {
+		return ParameterizedTypeReference.forType(method.getGenericReturnType());
 	}
 }
