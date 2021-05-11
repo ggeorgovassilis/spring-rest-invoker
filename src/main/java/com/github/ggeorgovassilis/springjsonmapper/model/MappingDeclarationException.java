@@ -23,4 +23,14 @@ public class MappingDeclarationException extends RuntimeException {
 		this.annotation = annotation;
 		this.parameterIndex = parameterIndex;
 	}
+
+	public MappingDeclarationException(String message, Method method, Throwable throwable) {
+		super(message, throwable);
+		this.method = method;
+	}
+
+	public MappingDeclarationException(String message, Method method) {
+		super(message);
+		this.method = method;
+	}
 }

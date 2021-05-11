@@ -1,13 +1,13 @@
 package com.github.ggeorgovassilis.springjsonmapper;
 
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.LinkedHashMap;
-import java.util.Map;
-
-import javax.annotation.PostConstruct;
-
+import com.github.ggeorgovassilis.springjsonmapper.jaxrs.JaxRsInvokerProxyFactoryBean;
+import com.github.ggeorgovassilis.springjsonmapper.model.MappingDeclarationException;
+import com.github.ggeorgovassilis.springjsonmapper.model.MethodParameterDescriptor;
+import com.github.ggeorgovassilis.springjsonmapper.model.MethodParameterDescriptor.Type;
+import com.github.ggeorgovassilis.springjsonmapper.model.UrlMapping;
+import com.github.ggeorgovassilis.springjsonmapper.spring.SpringRestInvokerProxyFactoryBean;
+import com.github.ggeorgovassilis.springjsonmapper.utils.DynamicJavaProxyFactory;
+import com.github.ggeorgovassilis.springjsonmapper.utils.ProxyFactory;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.context.EmbeddedValueResolverAware;
 import org.springframework.core.ParameterizedTypeReference;
@@ -22,30 +22,27 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.client.RestOperations;
 import org.springframework.web.client.RestTemplate;
 
-import com.github.ggeorgovassilis.springjsonmapper.jaxrs.JaxRsInvokerProxyFactoryBean;
-import com.github.ggeorgovassilis.springjsonmapper.model.MappingDeclarationException;
-import com.github.ggeorgovassilis.springjsonmapper.model.MethodParameterDescriptor;
-import com.github.ggeorgovassilis.springjsonmapper.model.MethodParameterDescriptor.Type;
-import com.github.ggeorgovassilis.springjsonmapper.model.UrlMapping;
-import com.github.ggeorgovassilis.springjsonmapper.spring.SpringRestInvokerProxyFactoryBean;
-import com.github.ggeorgovassilis.springjsonmapper.utils.CglibProxyFactory;
-import com.github.ggeorgovassilis.springjsonmapper.utils.DynamicJavaProxyFactory;
-import com.github.ggeorgovassilis.springjsonmapper.utils.ProxyFactory;
+import javax.annotation.PostConstruct;
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * Base component for proxy factories that bind java interfaces to a remote REST
  * service. For more information look up
  * {@link SpringRestInvokerProxyFactoryBean} and
  * {@link JaxRsInvokerProxyFactoryBean}
- * 
+ * <p>
  * Will generate by default dynamic java proxies. Use {@link #setProxyFactory(ProxyFactory)}
  * for other implementation, e.g. for having proxies extend a concrete class.
- * 
- * @see JaxRsInvokerProxyFactoryBean
- * @see SpringRestInvokerProxyFactoryBean
+ *
  * @author george georgovassilis
  * @author Maxime Guennec
- * 
+ * @author minasgull
+ * @see JaxRsInvokerProxyFactoryBean
+ * @see SpringRestInvokerProxyFactoryBean
  */
 public abstract class BaseRestInvokerProxyFactoryBean
 		implements FactoryBean<Object>, InvocationHandler, EmbeddedValueResolverAware {
@@ -63,7 +60,7 @@ public abstract class BaseRestInvokerProxyFactoryBean
 	 * Return an implementation of a {@link MethodInspector} which can look at
 	 * methods and return a {@link RequestMapping} describing how that method is to
 	 * be mapped to a URL of a remote REST service.
-	 * 
+	 *
 	 * @return {@link MethodInspector}
 	 */
 	protected abstract MethodInspector constructDefaultMethodInspector();
@@ -71,14 +68,12 @@ public abstract class BaseRestInvokerProxyFactoryBean
 	/**
 	 * Implementations inspect a method and return the corresponding
 	 * {@link RequestMapping}.
-	 * 
-	 * @param method
-	 *            Method to inspect
-	 * @param args
-	 *            method arguments
+	 *
+	 * @param method Method to inspect
+	 * @param args   method arguments
 	 * @return Must always return a {@link RequestMapping}. If there's a problem
-	 *         then implementations must throw an exception instead of returning
-	 *         null.
+	 * then implementations must throw an exception instead of returning
+	 * null.
 	 */
 	protected UrlMapping getRequestMapping(Method method, Object[] args) {
 		return methodInspector.inspect(method, args);
@@ -86,6 +81,7 @@ public abstract class BaseRestInvokerProxyFactoryBean
 
 	/**
 	 * Optionally set the proxy factory to use. Defaults to {@link DynamicJavaProxyFactory}
+	 *
 	 * @param proxyFactory
 	 */
 	public void setProxyFactory(ProxyFactory proxyFactory) {
@@ -104,7 +100,7 @@ public abstract class BaseRestInvokerProxyFactoryBean
 	/**
 	 * Override the default method inspector provided by the extending
 	 * implementation.
-	 * 
+	 *
 	 * @param methodInspector Use this inspector when visiting methods
 	 */
 	public void setMethodInspector(MethodInspector methodInspector) {
@@ -118,7 +114,7 @@ public abstract class BaseRestInvokerProxyFactoryBean
 	/**
 	 * Optionally provide a {@link RestTemplate} if you need to handle http yourself
 	 * (proxies? BASIC auth?)
-	 * 
+	 *
 	 * @param restTemplate RestTemplate to use
 	 */
 	public void setRestTemplate(RestOperations restTemplate) {
@@ -132,7 +128,7 @@ public abstract class BaseRestInvokerProxyFactoryBean
 	/**
 	 * Set the base URL of the remote REST service for HTTP requests. Further
 	 * mappings specified on service interfaces are resolved relatively to this URL.
-	 * 
+	 *
 	 * @param baseUrl baseUrl
 	 */
 	public void setBaseUrl(String baseUrl) {
@@ -146,7 +142,7 @@ public abstract class BaseRestInvokerProxyFactoryBean
 	/**
 	 * Set the class of the remote service interface. Use either this setter or
 	 * {@link #setRemoteServiceInterfaceClassName(String)}
-	 * 
+	 *
 	 * @param c
 	 */
 	public void setRemoteServiceInterfaceClass(Class<?> c) {
@@ -157,7 +153,7 @@ public abstract class BaseRestInvokerProxyFactoryBean
 	 * Set the absolute class name of the remote service interface to map to the
 	 * remote REST service. Use either this setter or
 	 * {@link #setRemoteServiceInterfaceClass(Class)}
-	 * 
+	 *
 	 * @param className
 	 */
 	public void setRemoteServiceInterfaceClassName(String className) {
@@ -226,7 +222,7 @@ public abstract class BaseRestInvokerProxyFactoryBean
 
 		ParameterizedTypeReference<?> returnType = getResponseType(method);
 		String url = baseUrl;
-		url += requestMapping.getUrl();
+		url = concatPath(url, requestMapping.getUrl());
 
 		HttpMethod httpMethod = requestMapping.getHttpMethod();
 		UrlMapping urlMapping = methodInspector.inspect(method, args);
@@ -258,6 +254,11 @@ public abstract class BaseRestInvokerProxyFactoryBean
 		return result;
 	}
 
+	private String concatPath(String first, String second) {
+		return (first.endsWith("/") ? first : first + "/") +
+				(second.startsWith("/") ? second.substring(1) : second);
+	}
+
 	@Override
 	public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
 		// no request mapping on method -> call method directly on object
@@ -272,9 +273,9 @@ public abstract class BaseRestInvokerProxyFactoryBean
 	}
 
 	protected Object executeRequest(Map<String, Object> dataObjects, Method method, RestOperations rest, String url,
-			HttpMethod httpMethod, ParameterizedTypeReference<?> returnType, Map<String, Object> parameters,
-			MultiValueMap<String, Object> formObjects, Map<String, String> cookies,
-			MultiValueMap<String, String> headers) {
+									HttpMethod httpMethod, ParameterizedTypeReference<?> returnType, Map<String, Object> parameters,
+									MultiValueMap<String, Object> formObjects, Map<String, String> cookies,
+									MultiValueMap<String, String> headers) {
 		HttpEntity<?> requestEntity = null;
 		Object dataObject = dataObjects.get("");
 		if (dataObjects.size() > 1 && dataObject != null)
@@ -360,13 +361,13 @@ public abstract class BaseRestInvokerProxyFactoryBean
 	 * Handles reflective method invocation, either invoking a method on the proxy
 	 * (equals or hashcode) or directly on the target. Implementation copied from
 	 * spring framework ServiceLocationInvocationHandler
-	 * 
-	 * @param proxy Object to proxy
+	 *
+	 * @param proxy  Object to proxy
 	 * @param method Method in object to proxy
-	 * @param args Method arguments
+	 * @param args   Method arguments
 	 * @return Return value of method invocation, if any
 	 * @throws InvocationTargetException just passing on
-	 * @throws IllegalAccessException just passing on
+	 * @throws IllegalAccessException    just passing on
 	 */
 	protected Object handleSelfMethodInvocation(Object proxy, Method method, Object[] args)
 			throws InvocationTargetException, IllegalAccessException {
