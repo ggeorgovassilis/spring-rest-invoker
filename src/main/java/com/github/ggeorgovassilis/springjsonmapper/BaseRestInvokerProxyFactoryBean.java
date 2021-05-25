@@ -255,8 +255,8 @@ public abstract class BaseRestInvokerProxyFactoryBean
 	}
 
 	private String concatPath(String first, String second) {
-		return (first.endsWith("/") ? first : first + "/") +
-				(second.startsWith("/") ? second.substring(1) : second);
+		return (first.endsWith("/") ? first.substring(0, first.length() - 1) : first) +
+				(second.startsWith("/") ? second : "/" + second);
 	}
 
 	@Override
