@@ -39,6 +39,7 @@ public class SpringAnnotationMethodInspector extends BaseAnnotationMethodInspect
 		} catch (Exception e) {
 			throw new MappingDeclarationException("Request mapping declaration parsing error", method, e);
 		}
+		urlMapping.setUrl(resolveExpression(urlMapping.getUrl()));
 		Annotation[][] parameterAnnotations = method.getParameterAnnotations();
 		if (parameterAnnotations.length != method.getParameterTypes().length)
 			throw new MappingDeclarationException(
