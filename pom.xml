@@ -1,6 +1,6 @@
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-		 xmlns="http://maven.apache.org/POM/4.0.0"
-		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+				xmlns="http://maven.apache.org/POM/4.0.0"
+				xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.github.ggeorgovassilis</groupId>
@@ -8,9 +8,7 @@
 	<version>1.8.0-SNAPSHOT</version>
 	<url>https://github.com/ggeorgovassilis/spring-rest-invoker</url>
 	<name>${project.groupId}:${project.artifactId}</name>
-	<description>Spring factory that allows consumption of a remote REST JSON service by binding it to a local Java
-		interface and exposing it as a proxy.
-	</description>
+	<description>Spring factory that allows consumption of a remote REST JSON service by binding it to a local Java interface and exposing it as a proxy.</description>
 	<licenses>
 		<license>
 			<name>Apache License, Version 2.0</name>
@@ -31,8 +29,7 @@
 	</developers>
 	<scm>
 		<connection>scm:git:https://ggeorgovassilis@github.com/ggeorgovassilis/spring-rest-invoker.git</connection>
-		<developerConnection>scm:git:https://ggeorgovassilis@github.com/ggeorgovassilis/spring-rest-invoker.git
-		</developerConnection>
+		<developerConnection>scm:git:https://ggeorgovassilis@github.com/ggeorgovassilis/spring-rest-invoker.git</developerConnection>
 		<url>http://github.com/ggeorgovassilis/spring-rest-invoker/tree/master</url>
 	</scm>
 	<distributionManagement>
