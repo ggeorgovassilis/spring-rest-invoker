@@ -4,12 +4,7 @@ import com.github.ggeorgovassilis.springjsonmapper.model.MappingDeclarationExcep
 import com.github.ggeorgovassilis.springjsonmapper.model.UrlMapping;
 import com.github.ggeorgovassilis.springjsonmapper.spring.mapping.MappingAnnotationResolver;
 import org.springframework.core.annotation.AnnotatedElementUtils;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
@@ -28,13 +23,13 @@ import java.util.stream.Stream;
  * @author minasgull
  */
 public class MappingAnnotationsInspector extends BaseAnnotationMethodInspector {
-
+	
 	private final List<MappingAnnotationResolver<? extends Annotation>> mappingAnnotationResolvers;
-
+	
 	public MappingAnnotationsInspector(List<MappingAnnotationResolver<? extends Annotation>> mappingAnnotationResolvers) {
 		this.mappingAnnotationResolvers = mappingAnnotationResolvers;
 	}
-
+	
 	@Override
 	public UrlMapping inspect(Method method, Object[] args) {
 		UrlMapping methodUrlMapping = resolveFor(method);
@@ -49,10 +44,7 @@ public class MappingAnnotationsInspector extends BaseAnnotationMethodInspector {
 		if (methodUrlMapping == null) {
 			return classUrlMapping;
 		}
-		String path = classUrlMapping.getUrl() +
-				(methodUrlMapping.getUrl().startsWith("/")
-						? methodUrlMapping.getUrl().substring(1)
-						: methodUrlMapping.getUrl());
+		String path = classUrlMapping.getUrl() + methodUrlMapping.getUrl();
 		methodUrlMapping.setUrl(path);
 		if (methodUrlMapping.getConsumes().length == 0) {
 			methodUrlMapping.setConsumes(classUrlMapping.getConsumes());
@@ -65,7 +57,7 @@ public class MappingAnnotationsInspector extends BaseAnnotationMethodInspector {
 		}
 		return methodUrlMapping;
 	}
-
+	
 	private UrlMapping resolveFor(AnnotatedElement annotatedElement) {
 		return Stream.of(
 				AnnotatedElementUtils.getMergedAnnotation(annotatedElement, RequestMapping.class),
@@ -79,7 +71,7 @@ public class MappingAnnotationsInspector extends BaseAnnotationMethodInspector {
 				.map(a -> getResolver(a).resolve(a))
 				.orElse(null);
 	}
-
+	
 	private MappingAnnotationResolver getResolver(Annotation annotation) {
 		for (MappingAnnotationResolver candidate : mappingAnnotationResolvers) {
 			if (candidate.supported(annotation.getClass())) {
@@ -88,5 +80,5 @@ public class MappingAnnotationsInspector extends BaseAnnotationMethodInspector {
 		}
 		throw new MappingDeclarationException("Not implemented resolver for annotation ", null, annotation, -1);
 	}
-
+	
 }

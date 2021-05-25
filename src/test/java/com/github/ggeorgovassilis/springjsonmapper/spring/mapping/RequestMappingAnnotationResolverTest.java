@@ -39,7 +39,7 @@ class RequestMappingAnnotationResolverTest {
 	void testDuplicatedMethod() {
 		UrlMapping actual = resolver.resolve(getAnnotation(DuplicatedMethod.class, "method"));
 		assertNotNull(actual);
-		assertEquals("bbb/", actual.getUrl());
+		assertEquals("/bbb", actual.getUrl());
 		assertEquals(HttpMethod.PATCH, actual.getHttpMethod());
 	}
 

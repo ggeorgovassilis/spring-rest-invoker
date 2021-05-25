@@ -88,7 +88,7 @@ class MappingAnnotationsInspectorTest {
 
 	@RequestMapping(value = "aaa", method = RequestMethod.POST)
 	interface BothLevel {
-		@RequestMapping(path = "/bbb", method = RequestMethod.PATCH)
+		@RequestMapping(path = "bbb", method = RequestMethod.PATCH)
 		void method();
 	}
 

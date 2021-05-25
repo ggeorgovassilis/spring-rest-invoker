@@ -14,10 +14,10 @@ import java.util.TreeSet;
  * @author minasgull
  */
 public abstract class BaseAnnotationResolver<T extends Annotation> implements MappingAnnotationResolver<T> {
-
+	
 	protected BaseAnnotationResolver() {
 	}
-
+	
 	protected String getPath(String[] paths) {
 		if (paths.length > 1) {
 			throw new AmbiguousMappingException("Declared multiple paths " + Arrays.toString(paths));
@@ -25,10 +25,14 @@ public abstract class BaseAnnotationResolver<T extends Annotation> implements Ma
 			return "/";
 		}
 		String result = paths[0];
-		result = result.endsWith("/") ? result : result + "/";
+		if (result.equals("/")) {
+			return "/";
+		}
+		result = result.startsWith("/") ? result : "/" + result;
+		result = result.endsWith("/") ? result.substring(0, result.length() - 1) : result;
 		return result;
 	}
-
+	
 	protected RequestMethod getMethod(RequestMethod[] methods) {
 		Set<RequestMethod> uniqueMethods = new TreeSet<>(Arrays.asList(methods));
 		if (uniqueMethods.size() > 1) {
@@ -39,5 +43,5 @@ public abstract class BaseAnnotationResolver<T extends Annotation> implements Ma
 			return uniqueMethods.iterator().next();
 		}
 	}
-
+	
 }
