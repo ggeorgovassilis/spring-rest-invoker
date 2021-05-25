@@ -35,11 +35,7 @@ public class MappingAnnotationsInspector extends BaseAnnotationMethodInspector {
 		UrlMapping methodUrlMapping = resolveFor(method);
 		UrlMapping classUrlMapping = resolveFor(method.getDeclaringClass());
 		if (classUrlMapping == null) {
-			if (methodUrlMapping == null) {
-				return new UrlMapping();
-			} else {
-				return methodUrlMapping;
-			}
+			return methodUrlMapping;
 		}
 		if (methodUrlMapping == null) {
 			return classUrlMapping;
