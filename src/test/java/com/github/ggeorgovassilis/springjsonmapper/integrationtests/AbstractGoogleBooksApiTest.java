@@ -40,8 +40,8 @@ public abstract class AbstractGoogleBooksApiTest {
 				hasItem(
 					hasProperty("volumeInfo",
 						allOf(
-							hasProperty("authors", hasItem(containsString("Isaac Newton"))),
-							hasProperty("title", equalTo("Philosophiae naturalis principia mathematica"))
+							hasProperty("authors", hasItem(containsStringIgnoringCase("Isaac Newton"))),
+							hasProperty("title", equalToIgnoringCase("Philosophiae naturalis principia mathematica"))
 						)
 					)
 				)
