@@ -221,8 +221,7 @@ public abstract class BaseRestInvokerProxyFactoryBean
 		RestOperations rest = getRestTemplate();
 
 		ParameterizedTypeReference<?> returnType = getResponseType(method);
-		String url = baseUrl;
-		url = concatPath(url, requestMapping.getUrl());
+		String url = concatPath(baseUrl, requestMapping.getUrl());
 
 		HttpMethod httpMethod = requestMapping.getHttpMethod();
 		UrlMapping urlMapping = methodInspector.inspect(method, args);
