@@ -1,22 +1,23 @@
 package com.github.ggeorgovassilis.springjsonmapper.model;
 
+import org.springframework.http.HttpMethod;
+
+import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.springframework.http.HttpMethod;
 
 import static com.github.ggeorgovassilis.springjsonmapper.model.MethodParameterDescriptor.Type;
 
 /**
  * A collection of {@link MethodParameterDescriptor}s which describe the mapping
  * of a method to a REST URL
- * 
- * @author george georgovassilis
  *
+ * @author george georgovassilis
  */
 public class UrlMapping {
 
 	protected HttpMethod httpMethod = HttpMethod.GET;
+	protected String url = "/";
 	protected List<MethodParameterDescriptor> parameters = new ArrayList<MethodParameterDescriptor>();
 	protected String[] headers = new String[0];
 	protected String[] consumes = new String[0];
@@ -46,8 +47,6 @@ public class UrlMapping {
 	public void setProduces(String[] produces) {
 		this.produces = produces;
 	}
-
-	protected String url;
 
 	public String[] getHeaders() {
 		return headers;

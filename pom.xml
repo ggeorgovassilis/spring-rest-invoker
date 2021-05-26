@@ -1,4 +1,4 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" 
+<project xmlns="http://maven.apache.org/POM/4.0.0"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	
@@ -113,7 +113,7 @@
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-project-info-reports-plugin</artifactId>
-						<configuration> <!-- don't write links to external dependencies; dependency lookup takes 
+						<configuration> <!-- don't write links to external dependencies; dependency lookup takes
 								long -->
 							<dependencyLocationsEnabled>false</dependencyLocationsEnabled>
 						</configuration>
@@ -298,13 +298,13 @@
 		</pluginManagement>
 		<plugins>
 			<plugin>
-				<!-- Will do integration tests with surefire. We don't need failsafe 
+				<!-- Will do integration tests with surefire. We don't need failsafe
 					here. -->
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
 				<configuration>
 					<trimStackTrace>false</trimStackTrace>
-					<skip>true</skip><!-- skip disables the plugin by default, otherwise 
+					<skip>true</skip><!-- skip disables the plugin by default, otherwise
 						it will run integration tests during the unit test phase. -->
 				</configuration>
 				<executions>

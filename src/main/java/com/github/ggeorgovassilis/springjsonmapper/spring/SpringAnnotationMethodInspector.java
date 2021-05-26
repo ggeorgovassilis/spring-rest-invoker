@@ -1,58 +1,54 @@
 package com.github.ggeorgovassilis.springjsonmapper.spring;
 
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Method;
-
-import org.springframework.core.annotation.AnnotatedElementUtils;
-import org.springframework.http.HttpMethod;
-import org.springframework.web.bind.annotation.CookieValue;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestPart;
-
+import com.github.ggeorgovassilis.springjsonmapper.MethodInspector;
 import com.github.ggeorgovassilis.springjsonmapper.model.Header;
 import com.github.ggeorgovassilis.springjsonmapper.model.MappingDeclarationException;
 import com.github.ggeorgovassilis.springjsonmapper.model.MethodParameterDescriptor;
-import com.github.ggeorgovassilis.springjsonmapper.model.UrlMapping;
 import com.github.ggeorgovassilis.springjsonmapper.model.MethodParameterDescriptor.Type;
+import com.github.ggeorgovassilis.springjsonmapper.model.UrlMapping;
 import com.github.ggeorgovassilis.springjsonmapper.utils.Utils;
+import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
+
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
 
 /**
  * Looks at methods and extracts {@link RequestParam}, {@link PathVariable},
- * {@link RequestBody} and {@link RequestMapping} annotations
- * 
+ * {@link RequestBody} and request mapping via provided {@link MappingAnnotationsInspector}
+ *
  * @author george georgovassilis
- * 
+ * @author minasgull
  */
 public class SpringAnnotationMethodInspector extends BaseAnnotationMethodInspector {
 
+	private final MethodInspector mappingAnnotationsInspection;
+
+	public SpringAnnotationMethodInspector(MethodInspector mappingAnnotationsInspection) {
+		this.mappingAnnotationsInspection = mappingAnnotationsInspection;
+	}
+
 	@Override
 	public UrlMapping inspect(Method method, Object[] args) {
-		UrlMapping urlMapping = new UrlMapping();
-		RequestMapping rm = AnnotatedElementUtils.getMergedAnnotation(method, RequestMapping.class);
-		if (rm == null)
-			return null;
-		if (!Utils.hasValue(rm.value()))
-			throw new MappingDeclarationException("Path missing from @RequestMapping on " + method.toGenericString(),
-					method, rm, -1);
-		urlMapping.setUrl(resolveExpression(rm.value()[0]));
-		urlMapping.setHeaders(rm.headers());
-		urlMapping.setConsumes(rm.consumes());
-		urlMapping.setProduces(rm.produces());
-		if (Utils.hasValue(rm.method())) {
-			if (rm.method().length != 1)
-				throw new MappingDeclarationException(
-						"Multiple HTTP methods on @RequestMapping on " + method.toGenericString(), method, rm, -1);
-			urlMapping.setHttpMethod(HttpMethod.valueOf(rm.method()[0].name()));
+		UrlMapping urlMapping;
+		try {
+			urlMapping = mappingAnnotationsInspection.inspect(method, args);
+		} catch (Exception e) {
+			throw new MappingDeclarationException("Request mapping declaration parsing error", method, e);
 		}
+		if (urlMapping == null) {
+			return null;
+		}
+		urlMapping.setUrl(resolveExpression(urlMapping.getUrl()));
 		Annotation[][] parameterAnnotations = method.getParameterAnnotations();
 		if (parameterAnnotations.length != method.getParameterTypes().length)
 			throw new MappingDeclarationException(
 					String.format("Annotation mismatch: method has %d parameters but %d have been annotated on %s",
-							parameterAnnotations.length, method.getParameterTypes().length, method.toString()),
-					method, rm, -1);
+							parameterAnnotations.length, method.getParameterTypes().length, method),
+					method);
 		int i = 0;
 		for (Annotation[] annotations : parameterAnnotations) {
 			Object value = args[i];
