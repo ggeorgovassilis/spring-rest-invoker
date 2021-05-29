@@ -1,11 +1,11 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	
+
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.github.ggeorgovassilis</groupId>
 	<artifactId>spring-rest-invoker</artifactId>
-	<version>1.8.0-SNAPSHOT</version>
+	<version>1.7.2-SNAPSHOT</version>
 	<url>https://github.com/ggeorgovassilis/spring-rest-invoker</url>
 	<name>${project.groupId}:${project.artifactId}</name>
 	<description>Spring factory that allows consumption of a remote REST JSON service by binding it to a local Java interface and exposing it as a proxy.</description>
@@ -113,7 +113,7 @@
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-project-info-reports-plugin</artifactId>
-						<configuration> <!-- don't write links to external dependencies; dependency lookup takes
+						<configuration> <!-- don't write links to external dependencies; dependency lookup takes 
 								long -->
 							<dependencyLocationsEnabled>false</dependencyLocationsEnabled>
 						</configuration>
@@ -172,6 +172,9 @@
 							<execution>
 								<id>sign-artifacts</id>
 								<phase>verify</phase>
+								<configuration>
+									<passphrase>${spring-rest-invoker.gpg.passphrase}</passphrase>
+								</configuration>
 								<goals>
 									<goal>sign</goal>
 								</goals>
@@ -301,17 +304,23 @@
 					<artifactId>maven-surefire-plugin</artifactId>
 					<version>3.0.0-M5</version>
 				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-deploy-plugin</artifactId>
+					<version>3.0.0-M1</version>
+				</plugin>
+
 			</plugins>
 		</pluginManagement>
 		<plugins>
 			<plugin>
-				<!-- Will do integration tests with surefire. We don't need failsafe
+				<!-- Will do integration tests with surefire. We don't need failsafe 
 					here. -->
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
 				<configuration>
 					<trimStackTrace>false</trimStackTrace>
-					<skip>true</skip><!-- skip disables the plugin by default, otherwise
+					<skip>true</skip><!-- skip disables the plugin by default, otherwise 
 						it will run integration tests during the unit test phase. -->
 				</configuration>
 				<executions>
