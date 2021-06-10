@@ -5,7 +5,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.github.ggeorgovassilis</groupId>
 	<artifactId>spring-rest-invoker</artifactId>
-	<version>1.7.3-SNAPSHOT</version>
+	<version>1.8.0</version>
 	<url>https://github.com/ggeorgovassilis/spring-rest-invoker</url>
 	<name>${project.groupId}:${project.artifactId}</name>
 	<description>Spring factory that allows consumption of a remote REST JSON service by binding it to a local Java interface and exposing it as a proxy.</description>
@@ -35,12 +35,8 @@
 	<distributionManagement>
 		<snapshotRepository>
 			<id>ossrh</id>
-			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
+			<url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
 		</snapshotRepository>
-		<repository>
-			<id>ossrh</id>
-			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-		</repository>
 	</distributionManagement>
 
 	<properties>
@@ -166,33 +162,51 @@
 					</plugin>
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-gpg-plugin</artifactId>
-						<version>1.5</version>
+						<artifactId>maven-antrun-plugin</artifactId>
+						<version>1.1</version>
 						<executions>
 							<execution>
-								<id>sign-artifacts</id>
 								<phase>verify</phase>
-								<configuration>
-									<passphrase>${spring-rest-invoker.gpg.passphrase}</passphrase>
-								</configuration>
 								<goals>
-									<goal>sign</goal>
+									<goal>run</goal>
 								</goals>
+								<configuration>
+									<tasks>
+										<echo>Displaying value of 'testproperty' property</echo>
+										<echo>[testproperty] ${testproperty}</echo>
+									</tasks>
+								</configuration>
 							</execution>
 						</executions>
 					</plugin>
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-release-plugin</artifactId>
-						<version>2.5.3</version>
+						<artifactId>maven-gpg-plugin</artifactId>
+						<version>3.0.1</version>
+						<executions>
+							<execution>
+								<id>sign-artifacts</id>
+								<phase>verify</phase>
+								<goals>
+									<goal>sign</goal>
+								</goals>
+								<configuration>
+									<gpgArguments></gpgArguments>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<groupId>org.sonatype.plugins</groupId>
+						<artifactId>nexus-staging-maven-plugin</artifactId>
+						<version>1.6.8</version>
+						<extensions>true</extensions>
 						<configuration>
-							<autoVersionSubmodules>true</autoVersionSubmodules>
-							<useReleaseProfile>false</useReleaseProfile>
-							<releaseProfiles>release</releaseProfiles>
-							<goals>deploy</goals>
+							<serverId>ossrh</serverId>
+							<nexusUrl>https://s01.oss.sonatype.org/</nexusUrl>
+							<autoReleaseAfterClose>false</autoReleaseAfterClose>
 						</configuration>
 					</plugin>
-
 				</plugins>
 			</build>
 		</profile>
