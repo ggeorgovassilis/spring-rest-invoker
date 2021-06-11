@@ -248,6 +248,7 @@ public class MyConfiguration{
 @PostMapping  // same as @RequestMapping(method = POST)
 @DeleteMapping // same as @RequestMapping(method = DELETE)
 @PatchMapping // same as @RequestMapping(method = PATCH)@PathVariable	// Replace parts of the @Path with the (string) value of this argument
+@PathVariable	// Replace parts of the @Path with the (string) value of this argument
 @RequestParam	// Pass argument value as URL parameter (or JSON field, see below)
 @Header		// Pass argument (string) value as HTTP header 
 @RequestBody	// Pass argument as JSON in the request body. If a @QueryParam has been specified, then encode it with that JSON field name
