@@ -18,9 +18,8 @@ Features:
 
 
 ## News
-TBD       : Not released yet: no changes
 
-2021-06-10: Released 1.8 Corrections in documentation, example for annotation-based configuration, supporting more Spring annotations (thanks [Arturo Volpe](https://github.com/aVolpe)), added MT test for opaque proxy factory (thanks [Arturo Volpe](https://github.com/aVolpe)), upgraded jackson dependencies, supporting all Spring mapping annotations (thanks [Serhii Teroshyn](https://github.com/minasgull)), supporting Spring mapping path computation (thanks [Serhii Teroshyn](https://github.com/minasgull))
+2021-06-10: Released 1.8 to maven central. Corrections in documentation, example for annotation-based configuration, supporting more Spring annotations (thanks [Arturo Volpe](https://github.com/aVolpe)), added MT test for opaque proxy factory (thanks [Arturo Volpe](https://github.com/aVolpe)), upgraded jackson dependencies, supporting all Spring mapping annotations (thanks [Serhii Teroshyn](https://github.com/minasgull)), supporting Spring mapping path computation (thanks [Serhii Teroshyn](https://github.com/minasgull))
 
 2018-06-22: Released 1.7 to maven central
 
@@ -57,7 +56,7 @@ TBD       : Not released yet: no changes
 <dependency>
   <groupId>com.github.ggeorgovassilis</groupId>
   <artifactId>spring-rest-invoker</artifactId>
-  <version>1.7.0</version>
+  <version>1.8.0</version>
 </dependency>
 ```
 
