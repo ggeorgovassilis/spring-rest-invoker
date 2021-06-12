@@ -18,7 +18,9 @@ Features:
 
 
 ## News
-TBD       : Not released yet: corrections in documentation, example for annotation-based configuration, supporting more Spring annotations (thanks [Arturo Volpe](https://github.com/aVolpe)), added MT test for opaque proxy factory (thanks [Arturo Volpe](https://github.com/aVolpe)), upgraded jackson dependencies, supporting all Spring mapping annotations (thanks [Serhii Teroshyn](https://github.com/minasgull), supporting Spring mapping path computation (thanks [Serhii Teroshyn](https://github.com/minasgull)) 
+TBD       : Not released yet: no changes
+
+2021-06-10: Released 1.8 Corrections in documentation, example for annotation-based configuration, supporting more Spring annotations (thanks [Arturo Volpe](https://github.com/aVolpe)), added MT test for opaque proxy factory (thanks [Arturo Volpe](https://github.com/aVolpe)), upgraded jackson dependencies, supporting all Spring mapping annotations (thanks [Serhii Teroshyn](https://github.com/minasgull)), supporting Spring mapping path computation (thanks [Serhii Teroshyn](https://github.com/minasgull))
 
 2018-06-22: Released 1.7 to maven central
 
@@ -78,13 +80,17 @@ jax-rs support requires a further dependency with the annotations, ie.:
 ### 1. Declare an interface, eg:
 
 ```java
+@RequestMapping("volumes")
 public interface BookService {
 
-    @RequestMapping("/volumes")
-    QueryResult findBooksByTitle(@RequestParam("q") String q);
-    
-    @RequestMapping("/volumes/{id}")
-    Item findBookById(@PathVariable("id") String id);
+	@GetMapping
+	QueryResult findBooksByTitle(@RequestParam("q") String q);
+
+	@GetMapping("{id}")
+	Item findBookById(@PathVariable("id") String id);
+
+	@PostMapping
+	Long createBook(@RequestBody NewItem newItem);
 }
 ```
 
@@ -146,7 +152,7 @@ POSTing an object:
 ```java
 public interface BankService {
 
-	@RequestMapping(value = "/verify", method = RequestMethod.POST)
+	@PostMapping(value = "verify")
 	Boolean checkAccount(@RequestBody Account account);
 
 }
@@ -169,7 +175,7 @@ POSTing multiple objects (object names are passed through parameters `@RequestPa
 
 ```java
 public interface BankService {
-    @RequestMapping(value="/transfer", method=RequestMethod.POST)
+    @PostMapping(value="transfer")
     Account transfer(
 	    @RequestBody @RequestParam("fromAccount") Account fromAccount, 
 	    @RequestBody @RequestParam("actor") Customer actor,
@@ -237,17 +243,17 @@ public class MyConfiguration{
 
 ```java
 @RequestMapping	// Specify the URL to bind to. Variable parts are written as {varname} and are replaced with the values of @PathParam. Property placeholders like ${property_name} can also be used which will be looked up in the application context.
+@GetMapping   // same as @RequestMapping(method = GET)
+@PutMapping   // same as @RequestMapping(method = PUT)
+@PostMapping  // same as @RequestMapping(method = POST)
+@DeleteMapping // same as @RequestMapping(method = DELETE)
+@PatchMapping // same as @RequestMapping(method = PATCH)@PathVariable	// Replace parts of the @Path with the (string) value of this argument
 @PathVariable	// Replace parts of the @Path with the (string) value of this argument
 @RequestParam	// Pass argument value as URL parameter (or JSON field, see below)
 @Header		// Pass argument (string) value as HTTP header 
 @RequestBody	// Pass argument as JSON in the request body. If a @QueryParam has been specified, then encode it with that JSON field name
 @RequestPart	// Pass argument as multipart form request
 @CookieValue	// Pass argument as cookie
-@GetMapping   // same as @RequestMapping(method = GET)
-@PutMapping   // same as @RequestMapping(method = PUT)
-@PostMapping  // same as @RequestMapping(method = POST)
-@DeleteMapping // same as @RequestMapping(method = DELETE)
-@PatchMapping // same as @RequestMapping(method = PATCH)
 ```
 
 
@@ -275,7 +281,7 @@ Method arguments annotated with `@RequestParam` are, unless otherwise specified,
 ```java
 public interface BookService {
 
-    @RequestMapping(value="/books")
+    @GetMapping(value="books")
     Book findBook(@RequestParam("isbn") String isbn);
 
 }
@@ -291,7 +297,7 @@ When there is also a ```@RequestBody```, then the handling is different - look f
 
 #### What does @RequestBody do?
 
-Used when sending JSON to a REST service via an HTTP POST request. Method arguments annotated with ```@RequestBody``` are serialized into JSON and sent to the remote service. If there is only a single method argument annotated with `@RequestBody`, then that argument is serialized and sent over. If multiple arguments are annotated, then each @RequestBody needs to be accompanied by a `@RequestParam` which specifies the field name of the object. 
+Used when sending JSON to a REST service via an HTTP POST request. Method arguments annotated with ```@RequestBody``` are serialized into JSON and sent to the remote service. If there is only a single method argument annotated with `@RequestBody`, then that argument is serialized and sent over. If multiple arguments are annotated, then each @RequestBody needs to be accompanied by a `@RequestParam` which specifies the field name of the object.
 
 In an ideal world we wouldn't need `@RequestParam` because the invoker would, supposedly, be able to read method argument names and pick URL parameter names accordingly; in Java that's suprisingly hard to do since the reflection API does not expose method argument names.
 
@@ -300,8 +306,8 @@ For example:
 ```java
 public interface BookService {
 
-    @RequestMapping(value="/books", method=RequestMethod.POST)
-    void saveBook(@RequestBody Book book);
+	@PostMapping(value = "books")
+	void saveBook(@RequestBody Book book);
 
 }
 ...
@@ -328,7 +334,7 @@ Using multiple arguments:
 ```java
 public interface BookService {
 
-    @RequestMapping(value="/books", method=RequestMethod.POST)
+    @PostMapping(value="books")
     void saveBook(@RequestBody @RequestParam("book") Book book, @RequestBody @RequestParam("availability") availability);
 
 }
@@ -362,10 +368,11 @@ Some REST services incorporate parameters in the URL path rather than URL parame
 `@PathVariable` is specified together with a `@RequestParam` and indicates the the method argument is not to be sent as a URL parameter. Note that you need to specify a matching placeholder with `@RequestMapping`:
 
 ```java
+
 public interface BookService {
 
-    @RequestMapping("/volumes/{id}")
-    Item findBookById(@PathVariable("id") String id);
+	@GetMapping("volumes/{id}")
+	Item findBookById(@PathVariable("id") String id);
 }
 ```
 
@@ -389,7 +396,7 @@ See the section earlier in this document about posting. In short: if you want to
 ```java
 public interface BankService {
 
-	@RequestMapping(value = "/verify", method = RequestMethod.POST)
+	@PostMapping(value = "verify")
 	Boolean checkAccount(@RequestBody Account account);
 
 }
@@ -412,7 +419,7 @@ Multiple objects can be posted through multiple method arguments, also including
 ```java
 public interface BankService {
 
-	@RequestMapping(value = "/transfer", method = RequestMethod.POST)
+	@PostMapping(value = "transfer")
 	Account transfer(@RequestBody @RequestParam("fromAccount") Account fromAccount, @RequestBody @RequestParam("actor") Customer actor,
 			@RequestBody @RequestParam("toAccount") Account toAccount, @RequestBody @RequestParam("amount") int amount,
 			@RequestParam("sendConfirmationSms") boolean sendConfirmationSms);
@@ -441,7 +448,7 @@ public interface BankService {
 Use ```@RequestPart``` instead of ```@RequestBody``` :
 
 ```java
-	@RequestMapping(value = "/join-accounts", method = RequestMethod.POST)
+	@PostMapping(value = "join-accounts")
 	Account joinAccounts(@RequestPart @RequestParam("account1") Account account1, @RequestPart @RequestParam("account2") Account account2);
 ```
 
@@ -510,7 +517,7 @@ Again the solution is to provide your own RestTemplate, see the previous section
 Just use property place holders in the URL, i.e.:
 
 ```java
-@RequestMapping(value = "${serverIp}/join-accounts", method = RequestMethod.POST)
+@PostMapping(value = "${serverIp}/join-accounts")
 Account joinAccounts(@RequestPart @RequestParam("account1") Account account1, @RequestPart @RequestParam("account2") Account account2);
 ```
 
