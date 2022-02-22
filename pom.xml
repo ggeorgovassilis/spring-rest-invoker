@@ -333,6 +333,7 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
 				<configuration>
+                    <forkCount>1.5C</forkCount>
 					<trimStackTrace>false</trimStackTrace>
 					<skip>true</skip><!-- skip disables the plugin by default, otherwise 
 						it will run integration tests during the unit test phase. -->
